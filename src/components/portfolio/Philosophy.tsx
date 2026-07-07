@@ -1,20 +1,22 @@
-const steps = [
-  { t: "Muammoni aniqlash", d: "Har bir loyiha aniq muammoni tushunishdan boshlanadi. Kim uchun? Nima uchun?" },
-  { t: "UX rejalashtirish", d: "Foydalanuvchi tajribasini xaritalash — flowlar, holatlar, mikro-detallar." },
-  { t: "Dizayn tizimi", d: "Rang, tipografiya, komponentlar. Bir marta yaratamiz — hamma joyda ishlaydi." },
-  { t: "Toza kod", d: "TypeScript, semantik markup, performance-first arxitektura." },
-  { t: "Iteratsiya", d: "Ship qilamiz, o'lchaymiz, yaxshilaymiz. Perfect emas, real." },
-];
+import { useLang } from "@/lib/i18n";
 
 export function Philosophy() {
+  const { t } = useLang();
+  const steps = [
+    { t: t("phi.1.t"), d: t("phi.1.d") },
+    { t: t("phi.2.t"), d: t("phi.2.d") },
+    { t: t("phi.3.t"), d: t("phi.3.d") },
+    { t: t("phi.4.t"), d: t("phi.4.d") },
+    { t: t("phi.5.t"), d: t("phi.5.d") },
+  ];
   return (
     <section id="philosophy" className="px-5 py-24 border-b border-border">
       <div className="mb-10 flex gap-2 items-center">
         <div className="h-[1px] w-8 bg-accent" />
-        <span className="text-[10px] uppercase tracking-widest text-accent">// Philosophy</span>
+        <span className="text-[10px] uppercase tracking-widest text-accent">{t("phi.tag")}</span>
       </div>
       <h2 className="font-display text-5xl md:text-7xl uppercase tracking-tighter mb-16 leading-[0.9]">
-        How I <br /><span className="text-accent">Build</span>
+        {t("phi.title_a")} <br /><span className="text-accent">{t("phi.title_b")}</span>
       </h2>
       <div className="space-y-10 md:space-y-14 max-w-3xl">
         {steps.map((s, i) => (
