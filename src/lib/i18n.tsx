@@ -1,0 +1,174 @@
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
+
+export type Lang = "uz" | "en";
+
+type Dict = Record<string, { uz: string; en: string }>;
+
+export const dict: Dict = {
+  // Nav
+  "nav.handle": { uz: "AVAZBEK / 16", en: "AVAZBEK / 16" },
+  "nav.status": { uz: "Ochiq · 2026", en: "Available · 2026" },
+
+  // Hero
+  "hero.chip": { uz: "EKSPERIMENTAL LAB · 2026", en: "EXPERIMENTAL LAB · 2026" },
+  "hero.first": { uz: "Avazbek", en: "Avazbek" },
+  "hero.last": { uz: "Mirzayev", en: "Mirzayev" },
+  "hero.sub": {
+    uz: "Full-stack dasturchi, UI/UX dizayner va sun'iy intellekt ustasi — Olmaliq, O'zbekistondan kelajak raqamli tizimlarini yaratadi.",
+    en: "Full-stack developer, UI/UX designer & AI enthusiast building next-gen digital systems from Olmaliq, Uzbekistan.",
+  },
+  "hero.scroll": { uz: "↓ Pastga", en: "↓ Scroll" },
+  "hero.est": { uz: "T. 2010", en: "Est. 2010" },
+  "hero.marquee": {
+    uz: "FULL-STACK · UI DIZAYNER · AI USTASI · KONTENT MUALLIFI ·",
+    en: "FULL-STACK · UI DESIGNER · AI BUILDER · CONTENT CREATOR ·",
+  },
+
+  // About
+  "about.tag": { uz: "// Kelib chiqishi", en: "// Background" },
+  "about.p1_pre": { uz: "Assalomu alaykum! Men ", en: "Hello! I'm " },
+  "about.p1_post": {
+    uz: " — zamonaviy web-ilovalar, sun'iy intellekt yechimlari va innovatsion raqamli mahsulotlar yaratishga qiziqadigan yosh dasturchiman.",
+    en: " — a young developer passionate about modern web apps, AI solutions and building innovative digital products.",
+  },
+  "about.p2": {
+    uz: "Men uchun dasturlash — bu g'oyalarni haqiqiy mahsulotlarga aylantirish. Frontend, full-stack, UI/UX dizayn, AI integratsiyasi va zamonaviy platformalar ustida ishlayman. YouTube'da texnologiya va dasturlash bo'yicha kontent yarataman.",
+    en: "For me, coding is turning ideas into real products. I work on frontend, full-stack, UI/UX design, AI integrations and modern platforms. I also create tech & programming content on YouTube.",
+  },
+  "about.age.k": { uz: "Yosh", en: "Age" },
+  "about.projects.k": { uz: "Loyihalar", en: "Projects" },
+  "about.years.k": { uz: "Kod yozgan", en: "Years Coding" },
+  "about.location.k": { uz: "Manzil", en: "Location" },
+  "about.badge": { uz: "16 YOSH", en: "16 YRS OLD" },
+
+  // WhatIDo
+  "wid.tag": { uz: "// Xizmatlar", en: "// Services" },
+  "wid.title_a": { uz: "Nima ", en: "What " },
+  "wid.title_i": { uz: "Men", en: "I" },
+  "wid.title_b": { uz: " Quraman", en: " Build" },
+  "wid.1": { uz: "Zamonaviy Web Ilovalar", en: "Modern Web Apps" },
+  "wid.2": { uz: "Full-Stack Ishlanma", en: "Full-Stack Development" },
+  "wid.3": { uz: "AI Asosidagi Loyihalar", en: "AI Powered Projects" },
+  "wid.4": { uz: "UI/UX Dizayn", en: "UI/UX Design" },
+  "wid.5": { uz: "Landing Sahifalar", en: "Landing Pages" },
+  "wid.6": { uz: "Dashboardlar", en: "Dashboards" },
+  "wid.7": { uz: "Portfolio Saytlar", en: "Portfolio Websites" },
+  "wid.8": { uz: "Avtomatlashtirish", en: "Automation Systems" },
+  "wid.9": { uz: "Texnik Kontent", en: "Technical Content" },
+
+  // Skills
+  "skills.tag": { uz: "// Imkoniyatlar", en: "// Capabilities" },
+  "skills.title_a": { uz: "Texnik", en: "Technical" },
+  "skills.title_b": { uz: "To'plam", en: "Stack" },
+  "skills.g1": { uz: "Frontend", en: "Frontend" },
+  "skills.g2": { uz: "Backend", en: "Backend" },
+  "skills.g3": { uz: "UI / UX", en: "UI / UX" },
+  "skills.g4": { uz: "AI va Vositalar", en: "AI & Tools" },
+
+  // Work
+  "work.tag": { uz: "// Arxiv", en: "// Archive" },
+  "work.title_a": { uz: "Tanlangan", en: "Selected" },
+  "work.title_b": { uz: "Ishlar", en: "Works" },
+  "work.tag.ai": { uz: "AI AGENT", en: "AI AGENT" },
+  "work.tag.design": { uz: "DIZAYN", en: "DESIGN" },
+  "work.tag.content": { uz: "KONTENT", en: "CONTENT" },
+  "work.tag.fin": { uz: "FINTECH", en: "FINTECH" },
+  "work.neural.desc": {
+    uz: "Dasturchilar uchun AI asosidagi vazifalarni avtomatlashtirish tizimi. Next.js, OpenAI, Postgres.",
+    en: "AI-driven task automation engine for developers. Next.js, OpenAI, Postgres.",
+  },
+  "work.vortex.sub": { uz: "Dizayn tizimi", en: "Design system" },
+  "work.yt.sub": { uz: "Tech kanal", en: "Tech channel" },
+  "work.fin.sub": { uz: "Realtaym analitika · grafiklar · signal", en: "Realtime analytics · charts · alerts" },
+  "work.cta.a": { uz: "Barchasini", en: "View" },
+  "work.cta.b": { uz: "Ko'rish", en: "Archive" },
+
+  // Philosophy
+  "phi.tag": { uz: "// Falsafa", en: "// Philosophy" },
+  "phi.title_a": { uz: "Qanday", en: "How I" },
+  "phi.title_b": { uz: "Quraman", en: "Build" },
+  "phi.1.t": { uz: "Muammoni aniqlash", en: "Frame the problem" },
+  "phi.1.d": { uz: "Har bir loyiha aniq muammoni tushunishdan boshlanadi. Kim uchun? Nima uchun?", en: "Every project starts by understanding a real problem. Who's it for? Why does it matter?" },
+  "phi.2.t": { uz: "UX rejalashtirish", en: "Map the UX" },
+  "phi.2.d": { uz: "Foydalanuvchi tajribasini xaritalash — flowlar, holatlar, mikro-detallar.", en: "Map the user experience — flows, states, micro-details." },
+  "phi.3.t": { uz: "Dizayn tizimi", en: "Design system" },
+  "phi.3.d": { uz: "Rang, tipografiya, komponentlar. Bir marta yaratamiz — hamma joyda ishlaydi.", en: "Color, typography, components. Build once — reuse everywhere." },
+  "phi.4.t": { uz: "Toza kod", en: "Clean code" },
+  "phi.4.d": { uz: "TypeScript, semantik markup, performance-first arxitektura.", en: "TypeScript, semantic markup, performance-first architecture." },
+  "phi.5.t": { uz: "Iteratsiya", en: "Iterate" },
+  "phi.5.d": { uz: "Ship qilamiz, o'lchaymiz, yaxshilaymiz. Perfect emas — real.", en: "Ship, measure, improve. Not perfect — real." },
+
+  // Contact
+  "contact.tag": { uz: "// Aloqa", en: "// Transmit" },
+  "contact.title_a": { uz: "Signal", en: "Ready to" },
+  "contact.title_b": { uz: "Uzatishga Tayyor?", en: "Transmit?" },
+  "contact.social": { uz: "// Ijtimoiy", en: "// Social" },
+  "contact.direct": { uz: "// To'g'ridan-to'g'ri", en: "// Direct" },
+  "contact.note": {
+    uz: "Business va hamkorlik takliflari uchun murojaat qiling. Spam yoki reklama xabarlari qabul qilinmaydi.",
+    en: "For business and collaboration inquiries only. Spam and ads will be ignored.",
+  },
+
+  // Aether
+  "aether.1": { uz: "AETHER FLOW · CHEKSIZ OQIM · KINETIK LAB", en: "AETHER FLOW · ENDLESS STREAM · KINETIC LAB" },
+  "aether.2": { uz: "KOD · DIZAYN · AI · KONTENT · TAKROR", en: "CODE · DESIGN · AI · CONTENT · REPEAT" },
+  "aether.3": { uz: "OLMALIQ → GLOBAL · 2026 →", en: "OLMALIQ → GLOBAL · 2026 →" },
+
+  // Lang switch
+  "lang.switching": { uz: "Tilni almashtirish...", en: "Switching language..." },
+};
+
+interface Ctx {
+  lang: Lang;
+  setLang: (l: Lang) => void;
+  t: (k: keyof typeof dict) => string;
+  switching: boolean;
+}
+
+const LangCtx = createContext<Ctx | null>(null);
+
+export function LangProvider({ children }: { children: ReactNode }) {
+  const [lang, setLangState] = useState<Lang>("uz");
+  const [switching, setSwitching] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("lang") as Lang | null;
+      if (saved === "uz" || saved === "en") setLangState(saved);
+    } catch {}
+  }, []);
+
+  const setLang = useCallback((l: Lang) => {
+    if (l === lang) return;
+    setSwitching(true);
+    setTimeout(() => {
+      setLangState(l);
+      try { localStorage.setItem("lang", l); } catch {}
+    }, 350);
+    setTimeout(() => setSwitching(false), 900);
+  }, [lang]);
+
+  const t = useCallback((k: keyof typeof dict) => dict[k]?.[lang] ?? String(k), [lang]);
+
+  return (
+    <LangCtx.Provider value={{ lang, setLang, t, switching }}>
+      {children}
+      {switching && (
+        <div className="fixed inset-0 z-[100] pointer-events-none">
+          <div className="absolute inset-0 bg-accent origin-left animate-lang-wipe" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="font-display text-4xl md:text-7xl uppercase text-background tracking-tighter animate-lang-label">
+              {lang === "uz" ? "EN · ENGLISH" : "UZ · O'ZBEKCHA"}
+            </span>
+          </div>
+        </div>
+      )}
+    </LangCtx.Provider>
+  );
+}
+
+export function useLang() {
+  const ctx = useContext(LangCtx);
+  if (!ctx) throw new Error("useLang outside provider");
+  return ctx;
+}

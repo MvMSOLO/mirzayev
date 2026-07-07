@@ -80,6 +80,36 @@
   animation: marquee 18s linear infinite;
 }
 
+@keyframes marquee-reverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+@utility animate-marquee-reverse {
+  animation: marquee-reverse 34s linear infinite;
+}
+
+@keyframes lang-wipe {
+  0% { transform: scaleX(0); }
+  40% { transform: scaleX(1); }
+  60% { transform: scaleX(1); }
+  100% { transform: scaleX(0); transform-origin: right; }
+}
+
+@keyframes lang-label {
+  0%, 100% { opacity: 0; transform: translateY(20px); }
+  40%, 60% { opacity: 1; transform: translateY(0); }
+}
+
+@utility animate-lang-wipe {
+  animation: lang-wipe 0.9s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+  transform-origin: left;
+}
+
+@utility animate-lang-label {
+  animation: lang-label 0.9s ease-out forwards;
+}
+
 @utility animate-float {
   animation: float-y 6s ease-in-out infinite;
 }

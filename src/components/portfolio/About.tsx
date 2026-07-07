@@ -1,11 +1,13 @@
 import portrait from "@/assets/portrait.jpg";
+import { useLang } from "@/lib/i18n";
 
 export function About() {
+  const { t } = useLang();
   return (
     <section id="about" className="px-5 py-24 relative border-b border-border">
       <div className="mb-12 flex gap-2 items-center">
         <div className="h-[1px] w-8 bg-accent" />
-        <span className="text-[10px] uppercase tracking-widest text-accent">// Background</span>
+        <span className="text-[10px] uppercase tracking-widest text-accent">{t("about.tag")}</span>
       </div>
 
       <div className="grid md:grid-cols-2 gap-12 items-start">
@@ -14,7 +16,7 @@ export function About() {
             <img src={portrait} alt="Avazbek Mirzayev portrait" width={800} height={1000} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" loading="lazy" />
           </div>
           <div className="absolute -bottom-4 -right-2 md:-right-6 bg-accent p-4 z-30 rotate-[-3deg]">
-            <span className="text-xs font-bold leading-none block uppercase">16 YRS<br />OLD</span>
+            <span className="text-xs font-bold leading-none block uppercase">{t("about.badge")}</span>
           </div>
           <div className="absolute -top-3 -left-3 bg-background border border-white/20 px-2 py-1 text-[9px] uppercase tracking-widest">
             Portrait_01
@@ -23,10 +25,10 @@ export function About() {
 
         <div className="space-y-6">
           <p className="text-lg md:text-xl leading-snug">
-            Assalomu alaykum! Men <span className="text-accent">Avazbek Mirzayev</span> — zamonaviy web-ilovalar, sun'iy intellekt yechimlari va innovatsion raqamli mahsulotlar yaratishga qiziqadigan yosh dasturchiman.
+            {t("about.p1_pre")}<span className="text-accent">Avazbek Mirzayev</span>{t("about.p1_post")}
           </p>
           <p className="text-sm text-white/60 leading-relaxed">
-            Men uchun dasturlash — bu g'oyalarni haqiqiy mahsulotlarga aylantirish imkoniyati. Frontend, full-stack, UI/UX dizayn, AI integratsiyasi va zamonaviy platformalar ustida ishlayman. Shuningdek YouTube'da texnologiya va dasturlash bo'yicha kontent yarataman.
+            {t("about.p2")}
           </p>
           <div className="flex flex-wrap gap-2 pt-4">
             {["React/TS", "Next.js", "Python", "Node.js", "AI", "UI/UX"].map((t) => (
@@ -38,10 +40,10 @@ export function About() {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-16">
         {[
-          { k: "Age", v: "16" },
-          { k: "Projects", v: "50+" },
-          { k: "Years Coding", v: "05" },
-          { k: "Location", v: "UZ" },
+          { k: t("about.age.k"), v: "16" },
+          { k: t("about.projects.k"), v: "50+" },
+          { k: t("about.years.k"), v: "05" },
+          { k: t("about.location.k"), v: "UZ" },
         ].map((s) => (
           <div key={s.k} className="border border-border p-4">
             <p className="font-display text-4xl md:text-5xl leading-none text-accent">{s.v}</p>
