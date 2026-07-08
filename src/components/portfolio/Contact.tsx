@@ -19,7 +19,7 @@ export function Contact() {
   const { t } = useLang();
   const { enter } = useUniverse();
   return (
-    <footer id="contact" className="px-5 pt-24 pb-16 relative overflow-hidden">
+    <footer id="contact" className="px-5 md:px-20 lg:px-32 pt-24 pb-16 relative overflow-hidden">
       <div className="absolute -bottom-16 left-0 whitespace-nowrap flex pointer-events-none select-none">
         <div className="flex animate-marquee shrink-0">
           {[0, 1, 2].map((k) => (

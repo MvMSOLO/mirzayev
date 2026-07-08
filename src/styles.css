@@ -34,6 +34,22 @@
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+@utility bg-grid-blueprint {
+  background-image:
+    linear-gradient(to right, var(--color-border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-border) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+@utility bg-grid-dots {
+  background-image: radial-gradient(var(--color-border) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+@utility vertical-text {
+  writing-mode: vertical-rl;
+}
+
 :root {
   --radius: 0.5rem;
   --background: #0d0c10;
@@ -202,5 +218,10 @@
 @utility animate-uni-drift { animation: uni-drift 14s ease-in-out infinite; }
 @utility animate-uni-drift-slow { animation: uni-drift-slow 18s ease-in-out infinite; }
 @utility animate-uni-morph { animation: uni-morph 8s ease-in-out infinite; }
+
+@keyframes scan-y {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(400px); }
+}
 
 .ease-expo { transition-timing-function: cubic-bezier(0.87, 0, 0.13, 1); }

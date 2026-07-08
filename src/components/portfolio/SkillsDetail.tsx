@@ -9,7 +9,9 @@ export function SkillsDetail() {
     { title: t("skills.g4"), items: ["AI Integrations", "Prompt Engineering", "AI-Assisted Dev", "Workflow Automation", "Git / GitHub", "VS Code", "Figma", "Chrome DevTools"] },
   ];
   return (
-    <section id="skills" className="px-5 py-24 border-b border-border">
+    <section id="skills" className="px-5 md:px-20 lg:px-32 py-24 border-b border-border relative">
+      <div className="absolute top-1/2 left-0 w-24 h-[1px] bg-accent/20 -translate-y-1/2 hidden lg:block" />
+      <div className="absolute top-1/2 right-0 w-24 h-[1px] bg-accent/20 -translate-y-1/2 hidden lg:block" />
       <div className="mb-10 flex gap-2 items-center">
         <div className="h-[1px] w-8 bg-accent" />
         <span className="text-[10px] uppercase tracking-widest text-accent">{t("skills.tag")}</span>
