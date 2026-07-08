@@ -145,3 +145,60 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---------- Universe (Creative) transition ---------- */
+@keyframes uni-deconstruct {
+  0% { opacity: 0; transform: scale(1); }
+  20% { opacity: 1; }
+  100% { opacity: 1; transform: scale(1.05); }
+}
+@keyframes uni-shatter {
+  0% { opacity: 0; transform: translate(0,0) scale(1) rotate(0); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translate(60vw, 60vh) scale(0.2) rotate(720deg); }
+}
+@keyframes uni-liquid {
+  0% { opacity: 0; transform: scale(1); }
+  20% { opacity: 1; }
+  100% { opacity: 1; transform: scale(1.4); }
+}
+@keyframes uni-flash {
+  0% { opacity: 0; }
+  40% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes uni-rebuild {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes uni-typewriter {
+  0% { clip-path: inset(0 100% 0 0); }
+  70% { clip-path: inset(0 0 0 0); }
+  100% { clip-path: inset(0 0 0 0); opacity: 0.85; }
+}
+
+@utility animate-uni-deconstruct { animation: uni-deconstruct 1s ease-out forwards; }
+@utility animate-uni-shatter { animation: uni-shatter 1s cubic-bezier(0.4,0,0.6,1) forwards; }
+@utility animate-uni-liquid { animation: uni-liquid 1s ease-in forwards; }
+@utility animate-uni-flash { animation: uni-flash 1s ease-out forwards; }
+@utility animate-uni-rebuild { animation: uni-rebuild 2s ease-out forwards; }
+@utility animate-uni-typewriter { animation: uni-typewriter 0.9s steps(24, end) forwards; }
+
+/* ---------- Universe organic motion ---------- */
+@keyframes uni-drift {
+  0%, 100% { transform: translate(0,0) rotate(0deg); }
+  33% { transform: translate(-1%, 1.5%) rotate(-1.5deg); }
+  66% { transform: translate(1.5%, -1%) rotate(1.5deg); }
+}
+@keyframes uni-drift-slow {
+  0%, 100% { transform: translate(0,0) rotate(0deg) scale(1); }
+  50% { transform: translate(0.5%, -0.5%) rotate(-1deg) scale(1.01); }
+}
+@keyframes uni-morph {
+  0%, 100% { border-radius: 50% 50% 50% 50%; }
+  33% { border-radius: 60% 40% 55% 45% / 45% 60% 40% 55%; }
+  66% { border-radius: 40% 60% 45% 55% / 60% 45% 55% 40%; }
+}
+@utility animate-uni-drift { animation: uni-drift 14s ease-in-out infinite; }
+@utility animate-uni-drift-slow { animation: uni-drift-slow 18s ease-in-out infinite; }
+@utility animate-uni-morph { animation: uni-morph 8s ease-in-out infinite; }
