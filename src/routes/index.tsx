@@ -9,6 +9,7 @@ import { SkillsMarquee } from "@/components/portfolio/SkillsMarquee";
 import { SkillsDetail } from "@/components/portfolio/SkillsDetail";
 import { Work } from "@/components/portfolio/Work";
 import { AetherFlow } from "@/components/portfolio/AetherFlow";
+import { TechnicalOverlay } from "@/components/portfolio/TechnicalOverlay";
 import { Philosophy } from "@/components/portfolio/Philosophy";
 import { Contact } from "@/components/portfolio/Contact";
 import { Universe } from "@/components/universe/Universe";
@@ -23,7 +24,10 @@ function Shell() {
   return (
     <>
       {mode === "kinetic" ? (
-        <main className="min-h-screen bg-background text-foreground font-mono">
+        <main className="min-h-screen bg-background text-foreground font-mono relative overflow-hidden">
+          <div className="fixed inset-0 bg-grid-blueprint opacity-[0.03] pointer-events-none" />
+          <div className="fixed inset-0 bg-grid-dots opacity-[0.1] pointer-events-none" />
+          <TechnicalOverlay />
           <Nav />
           <Hero />
           <About />

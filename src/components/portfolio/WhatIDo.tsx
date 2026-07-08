@@ -6,7 +6,7 @@ export function WhatIDo() {
     "wid.1","wid.2","wid.3","wid.4","wid.5","wid.6","wid.7","wid.8","wid.9",
   ] as const;
   return (
-    <section id="services" className="px-5 py-24 border-b border-border">
+    <section id="services" className="px-5 md:px-20 lg:px-32 py-24 border-b border-border relative overflow-hidden">
       <div className="mb-10 flex gap-2 items-center">
         <div className="h-[1px] w-8 bg-accent" />
         <span className="text-[10px] uppercase tracking-widest text-accent">{t("wid.tag")}</span>

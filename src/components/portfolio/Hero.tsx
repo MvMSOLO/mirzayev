@@ -27,8 +27,10 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="px-5 relative z-10 stagger-reveal">
-        <div className="inline-block bg-accent px-2 py-1 mb-6">
+      <div className="px-5 md:px-20 lg:px-32 relative z-10 stagger-reveal">
+        <div className="inline-block bg-accent px-2 py-1 mb-6 relative">
+          <div className="absolute -top-1 -left-1 w-2 h-2 border-t border-l border-white/40" />
+          <div className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-white/40" />
           <span className="text-[10px] font-bold uppercase tracking-widest">{t("hero.chip")}</span>
         </div>
         <h1 className="font-display text-7xl md:text-9xl uppercase leading-[0.85] tracking-tighter mb-8">

@@ -3,7 +3,7 @@ import { useLang } from "@/lib/i18n";
 export function Nav() {
   const { lang, setLang, t } = useLang();
   return (
-    <nav className="fixed top-0 w-full z-50 mix-blend-difference px-5 py-6 flex justify-between items-center">
+    <nav className="fixed top-0 w-full z-50 mix-blend-difference px-5 md:px-12 lg:px-32 py-6 flex justify-between items-center">
       <a href="#top" className="text-xs font-bold tracking-tighter">{t("nav.handle")}</a>
       <div className="flex gap-4 items-center">
         <button

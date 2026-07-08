@@ -10,7 +10,7 @@ export function Philosophy() {
     { t: t("phi.5.t"), d: t("phi.5.d") },
   ];
   return (
-    <section id="philosophy" className="px-5 py-24 border-b border-border">
+    <section id="philosophy" className="px-5 md:px-20 lg:px-32 py-24 border-b border-border relative overflow-hidden">
       <div className="mb-10 flex gap-2 items-center">
         <div className="h-[1px] w-8 bg-accent" />
         <span className="text-[10px] uppercase tracking-widest text-accent">{t("phi.tag")}</span>
