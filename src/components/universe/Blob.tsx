@@ -20,22 +20,28 @@ interface Props {
 export function Blob({ variant, src, alt, className = "", style }: Props) {
   const id = `blob-${variant}-${Math.random().toString(36).slice(2, 7)}`;
   return (
-    <svg viewBox="0 0 500 500" className={className} style={style} role="img" aria-label={alt}>
-      <defs>
-        <clipPath id={id} clipPathUnits="userSpaceOnUse">
-          <path d={paths[variant]} />
-        </clipPath>
-      </defs>
-      <image
-        href={src}
-        x="0"
-        y="0"
-        width="500"
-        height="500"
-        preserveAspectRatio="xMidYMid slice"
-        clipPath={`url(#${id})`}
+    <div className={className} style={{ position: 'relative', width: '100%', height: '100%', ...style }}>
+      <svg viewBox="0 0 500 500" style={{ position: 'absolute', width: '100%', height: '100%' }} role="img" aria-label={alt}>
+        <defs>
+          <clipPath id={id}>
+            <path d={paths[variant]} />
+          </clipPath>
+        </defs>
+      </svg>
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          clipPath: `url(#${id})`,
+          WebkitClipPath: `url(#${id})`,
+          backgroundImage: `url(${src})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
       />
-      <path d={paths[variant]} fill="none" stroke="#111" strokeOpacity="0.15" strokeWidth="1" />
-    </svg>
+      <svg viewBox="0 0 500 500" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
+        <path d={paths[variant]} fill="none" stroke="#111" strokeOpacity="0.15" strokeWidth="1" />
+      </svg>
+    </div>
   );
 }

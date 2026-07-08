@@ -202,3 +202,5 @@
 @utility animate-uni-drift { animation: uni-drift 14s ease-in-out infinite; }
 @utility animate-uni-drift-slow { animation: uni-drift-slow 18s ease-in-out infinite; }
 @utility animate-uni-morph { animation: uni-morph 8s ease-in-out infinite; }
+
+.ease-expo { transition-timing-function: cubic-bezier(0.87, 0, 0.13, 1); }
