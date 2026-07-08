@@ -116,6 +116,42 @@ export const dict: Dict = {
 
   // Lang switch
   "lang.switching": { uz: "Tilni almashtirish...", en: "Switching language..." },
+
+  // Universe CTA
+  "uni.enter": { uz: "Kreativ olamga kirish", en: "Enter creative universe" },
+  "uni.exit": { uz: "Kinetik olamga qaytish", en: "Return to kinetic" },
+
+  // Universe hero + manifesto
+  "uni.hero.desc": {
+    uz: "raqamli alkimyogar — inson tajribasini yuksaltiruvchi ta'sirchan interfeyslar va aqlli tizimlar yaratadi.",
+    en: "digital alchemist — crafting immersive interfaces & intelligent systems that elevate human experience.",
+  },
+  "uni.hero.cta": { uz: "olamga kirish", en: "enter the universe" },
+  "uni.manifesto": {
+    uz: "har bir piksel — bu she'r. har bir o'zaro ta'sir — bu marosim. dizayn nafaqat ko'rinadi, u his qilinadi, nafas oladi va o'zgaradi.",
+    en: "every pixel is a poem. every interaction, a ritual. design isn't seen — it's felt, it breathes, it transforms.",
+  },
+
+  // Universe works
+  "uni.work.solara": { uz: "veb tajriba · 2024", en: "web experience · 2024" },
+  "uni.work.lumen": { uz: "raqamli o'rnatma · 2023", en: "digital installation · 2023" },
+  "uni.work.obscura": { uz: "brend identifikatsiyasi · 2024", en: "brand identity · 2024" },
+  "uni.work.noir": { uz: "muharrirlik prototipi · 2023", en: "editorial prototype · 2023" },
+  "uni.work.etherea": { uz: "interaktiv san'at · 2024", en: "interactive art · 2024" },
+  "uni.work.aether": { uz: "webgl tajriba · 2024", en: "webgl experience · 2024" },
+
+  // Universe lab
+  "uni.lab.title": { uz: "o'zaro ta'sir laboratoriyasi", en: "interaction & elements lab" },
+  "uni.lab.liquid": { uz: "suyuq tugma", en: "liquid button" },
+  "uni.lab.text": { uz: "matn buzilishi", en: "text distortion" },
+  "uni.lab.cursor": { uz: "kursor effekti", en: "cursor gravity" },
+  "uni.lab.shape": { uz: "shakl transformatsiyasi", en: "shape morphing" },
+
+  // Universe footer
+  "uni.footer.note": {
+    uz: "biznes va hamkorlik uchun murojaat qiling. har bir loyiha — yangi olam.",
+    en: "for business and collaboration inquiries. every project is a new universe.",
+  },
 };
 
 interface Ctx {
