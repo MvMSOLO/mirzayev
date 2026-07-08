@@ -56,9 +56,7 @@ export function UniverseInteractionLab() {
             {t("uni.lab.shape")}
           </div>
           <div className="h-40 flex items-center justify-center">
-            <svg viewBox="0 0 200 200" className="w-32 h-32 animate-uni-morph text-[#111]">
-              <path fill="currentColor" d="M100,20 C150,20 180,50 180,100 C180,150 150,180 100,180 C50,180 20,150 20,100 C20,50 50,20 100,20 Z" />
-            </svg>
+            <div className="w-32 h-32 bg-[#111] animate-uni-morph" />
           </div>
         </div>
       </div>

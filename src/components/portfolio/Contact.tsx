@@ -1,4 +1,5 @@
 import { useLang } from "@/lib/i18n";
+import { useUniverse } from "@/lib/universe";
 
 const social = [
   { k: "Telegram", v: "@axz_foto", href: "https://t.me/axz_foto" },
@@ -16,6 +17,7 @@ const direct = [
 
 export function Contact() {
   const { t } = useLang();
+  const { enter } = useUniverse();
   return (
     <footer id="contact" className="px-5 pt-24 pb-16 relative overflow-hidden">
       <div className="absolute -bottom-16 left-0 whitespace-nowrap flex pointer-events-none select-none">
@@ -72,7 +74,21 @@ export function Contact() {
         <div className="border-t border-border pt-8 flex flex-wrap justify-between items-center gap-4 text-[10px] uppercase tracking-widest opacity-40 font-mono">
           <span>© 2026 LABS-AM</span>
           <span>Olmaliq · 40.9926° N, 69.5986° E</span>
-          <span>v2.0 · Kinetic Lab</span>
+          <span>v3.0 · Kinetic Lab</span>
+        </div>
+
+        <div className="mt-14 flex justify-center">
+          <button
+            onClick={enter}
+            className="group relative flex items-center gap-4 border border-accent/60 px-8 py-4 uppercase tracking-[0.3em] text-xs font-bold hover:bg-accent hover:border-accent hover:text-background transition-all duration-500"
+          >
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-70" />
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-accent" />
+            </span>
+            {t("uni.enter")}
+            <span className="text-xl">↗</span>
+          </button>
         </div>
       </div>
     </footer>
