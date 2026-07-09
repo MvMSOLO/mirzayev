@@ -92,6 +92,19 @@ bun run build
 
 ---
 
+## ☁️ Deployment (Vercel)
+
+For the best experience on Vercel, use the following settings:
+
+- **Framework Preset:** `Other`
+- **Build Command:** `bun run build`
+- **Output Directory:** `.output`
+- **Install Command:** `bun install`
+
+> **Note:** Ensure you have the `NITRO_PRESET=vercel` environment variable set if the build does not automatically detect the environment.
+
+---
+
 ## 📜 Development Guidelines (AGENTS.md)
 - **Padding:** Use `lg:px-32` for main portfolio sections to ensure alignment.
 - **Hydration:** All dynamic logic (dates, random numbers) must be in `useEffect`.
