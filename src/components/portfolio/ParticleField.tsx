@@ -1,6 +1,13 @@
 import { useEffect, useRef } from "react";
 
-interface P { x: number; y: number; z: number; vx: number; vy: number; vz: number; }
+interface P {
+  x: number;
+  y: number;
+  z: number;
+  vx: number;
+  vy: number;
+  vz: number;
+}
 
 export function ParticleField({ className = "" }: { className?: string }) {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -14,14 +21,17 @@ export function ParticleField({ className = "" }: { className?: string }) {
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    let W = 0, H = 0;
+    let W = 0,
+      H = 0;
     const particles: P[] = [];
     const COUNT = reduced ? 60 : 140;
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
-      W = rect.width; H = rect.height;
-      canvas.width = W * dpr; canvas.height = H * dpr;
+      W = rect.width;
+      H = rect.height;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
@@ -39,7 +49,8 @@ export function ParticleField({ className = "" }: { className?: string }) {
       }
     };
 
-    resize(); seed();
+    resize();
+    seed();
     window.addEventListener("resize", resize);
 
     const onMove = (e: MouseEvent) => {
@@ -48,21 +59,32 @@ export function ParticleField({ className = "" }: { className?: string }) {
       mouse.current.y = e.clientY - rect.top - H / 2;
       mouse.current.active = true;
     };
-    const onLeave = () => { mouse.current.active = false; };
+    const onLeave = () => {
+      mouse.current.active = false;
+    };
     canvas.addEventListener("mousemove", onMove);
     canvas.addEventListener("mouseleave", onLeave);
 
     let raf = 0;
     let visible = true;
-    const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0 });
+    const io = new IntersectionObserver(
+      ([e]) => {
+        visible = e.isIntersecting;
+      },
+      { threshold: 0 },
+    );
     io.observe(canvas);
 
     const draw = () => {
-      if (!visible) { raf = requestAnimationFrame(draw); return; }
+      if (!visible) {
+        raf = requestAnimationFrame(draw);
+        return;
+      }
       ctx.fillStyle = "rgba(13,12,16,0.35)";
       ctx.fillRect(0, 0, W, H);
 
-      const cx = W / 2, cy = H / 2;
+      const cx = W / 2,
+        cy = H / 2;
       const mx = mouse.current.active ? mouse.current.x * 0.0006 : 0;
       const my = mouse.current.active ? mouse.current.y * 0.0006 : 0;
 
@@ -72,7 +94,11 @@ export function ParticleField({ className = "" }: { className?: string }) {
         p.z += p.vz;
         p.x += p.vx + mx * p.z;
         p.y += p.vy + my * p.z;
-        if (p.z < 20) { p.z = 900; p.x = (Math.random() - 0.5) * W; p.y = (Math.random() - 0.5) * H; }
+        if (p.z < 20) {
+          p.z = 900;
+          p.x = (Math.random() - 0.5) * W;
+          p.y = (Math.random() - 0.5) * H;
+        }
 
         const f = 400 / p.z;
         const sx = cx + p.x * f;
@@ -88,7 +114,8 @@ export function ParticleField({ className = "" }: { className?: string }) {
       ctx.lineWidth = 0.4;
       for (let i = 0; i < pts.length; i++) {
         for (let j = i + 1; j < pts.length; j++) {
-          const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+          const dx = pts[i].x - pts[j].x,
+            dy = pts[i].y - pts[j].y;
           const d2 = dx * dx + dy * dy;
           if (d2 < 5000) {
             ctx.globalAlpha = (1 - d2 / 5000) * 0.35 * Math.min(pts[i].a, pts[j].a);

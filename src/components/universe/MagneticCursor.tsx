@@ -20,7 +20,8 @@ export function MagneticCursor() {
     const loop = () => {
       pos.x += (target.x - pos.x) * 0.2;
       pos.y += (target.y - pos.y) * 0.2;
-      if (dotRef.current) dotRef.current.style.transform = `translate(${target.x}px, ${target.y}px)`;
+      if (dotRef.current)
+        dotRef.current.style.transform = `translate(${target.x}px, ${target.y}px)`;
       if (ringRef.current) {
         ringRef.current.style.transform = `translate(${pos.x}px, ${pos.y}px) scale(${hover ? 1.8 : 1})`;
       }

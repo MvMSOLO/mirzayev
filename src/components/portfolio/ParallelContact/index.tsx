@@ -101,7 +101,9 @@ export function ParallelContact() {
     <section id="contact-parallel" className="px-5 md:px-20 lg:px-32 py-24 border-t border-border">
       <div className="mb-10 flex gap-2 items-center">
         <div className="h-[1px] w-8 bg-accent" />
-        <span className="text-[10px] uppercase tracking-widest text-accent">// PARALLEL UNIVERSE · CONTACT</span>
+        <span className="text-[10px] uppercase tracking-widest text-accent">
+          // PARALLEL UNIVERSE · CONTACT
+        </span>
       </div>
       <div className="mb-14">
         <h2 className="font-display text-5xl md:text-7xl uppercase leading-[0.85] tracking-tighter">
@@ -124,19 +126,37 @@ export function ParallelContact() {
                 {p.code}
               </span>
               <div className="relative w-10 h-10">
-                <div className="absolute inset-0 rounded-full border animate-spin" style={{ borderColor: p.accent, animationDuration: "6s" }} />
-                <div className="absolute inset-2 rounded-full border animate-spin" style={{ borderColor: p.accent, animationDuration: "3s", animationDirection: "reverse" }} />
+                <div
+                  className="absolute inset-0 rounded-full border animate-spin"
+                  style={{ borderColor: p.accent, animationDuration: "6s" }}
+                />
+                <div
+                  className="absolute inset-2 rounded-full border animate-spin"
+                  style={{
+                    borderColor: p.accent,
+                    animationDuration: "3s",
+                    animationDirection: "reverse",
+                  }}
+                />
               </div>
             </div>
             <div>
-              <div className={`text-2xl md:text-3xl uppercase tracking-tighter mb-2 ${p.font}`} style={{ color: p.accent }}>
+              <div
+                className={`text-2xl md:text-3xl uppercase tracking-tighter mb-2 ${p.font}`}
+                style={{ color: p.accent }}
+              >
                 {p.label[lang]}
               </div>
               <div className="text-[10px] uppercase tracking-widest opacity-60 group-hover:opacity-100">
                 → {lang === "uz" ? "PORTALGA KIRISH" : "ENTER PORTAL"}
               </div>
             </div>
-            <div className="absolute inset-0 bg-gradient-to-br pointer-events-none opacity-0 group-hover:opacity-40 transition-opacity" style={{ background: `radial-gradient(circle at 30% 30%, ${p.accent}30, transparent 70%)` }} />
+            <div
+              className="absolute inset-0 bg-gradient-to-br pointer-events-none opacity-0 group-hover:opacity-40 transition-opacity"
+              style={{
+                background: `radial-gradient(circle at 30% 30%, ${p.accent}30, transparent 70%)`,
+              }}
+            />
           </button>
         ))}
       </div>
@@ -144,22 +164,39 @@ export function ParallelContact() {
       {portal && (
         <div className="fixed inset-0 z-[80] bg-background/98 backdrop-blur overflow-y-auto">
           <div className="flex justify-between items-center px-5 md:px-20 py-6 border-b border-border">
-            <span className="text-[10px] font-mono uppercase tracking-widest" style={{ color: portal.accent }}>
+            <span
+              className="text-[10px] font-mono uppercase tracking-widest"
+              style={{ color: portal.accent }}
+            >
               {portal.code} · {portal.label[lang]}
             </span>
-            <button onClick={close} className="text-[10px] uppercase tracking-widest hover:text-accent">✕ CLOSE</button>
+            <button
+              onClick={close}
+              className="text-[10px] uppercase tracking-widest hover:text-accent"
+            >
+              ✕ CLOSE
+            </button>
           </div>
 
           {phase === "idle" && (
             <div className="max-w-2xl mx-auto px-6 py-16 space-y-8">
-              <h3 className={`text-4xl md:text-6xl uppercase tracking-tighter ${portal.font}`} style={{ color: portal.accent }}>
+              <h3
+                className={`text-4xl md:text-6xl uppercase tracking-tighter ${portal.font}`}
+                style={{ color: portal.accent }}
+              >
                 {portal.id === "secret"
-                  ? lang === "uz" ? "MAXFIY BRIF" : "CLASSIFIED BRIEF"
-                  : lang === "uz" ? "BRIF" : "BRIEF"}
+                  ? lang === "uz"
+                    ? "MAXFIY BRIF"
+                    : "CLASSIFIED BRIEF"
+                  : lang === "uz"
+                    ? "BRIF"
+                    : "BRIEF"}
               </h3>
               {portal.fields.map((f) => (
                 <div key={f.key} className="border-b border-border pb-4">
-                  <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-2 font-mono">{f.label[lang]}</label>
+                  <label className="text-[10px] uppercase tracking-widest opacity-60 block mb-2 font-mono">
+                    {f.label[lang]}
+                  </label>
                   <input
                     value={values[f.key] || ""}
                     onChange={(e) => setValues({ ...values, [f.key]: e.target.value })}
@@ -195,7 +232,13 @@ export function ParallelContact() {
 
           {phase === "transmit" && (
             <div className="flex flex-col items-center justify-center min-h-[70vh] gap-8 relative">
-              <svg viewBox="0 0 200 200" className="w-64 h-64" fill="none" stroke={portal.accent} strokeWidth="0.5">
+              <svg
+                viewBox="0 0 200 200"
+                className="w-64 h-64"
+                fill="none"
+                stroke={portal.accent}
+                strokeWidth="0.5"
+              >
                 {Array.from({ length: 6 }).map((_, i) => (
                   <circle
                     key={i}
@@ -209,18 +252,33 @@ export function ParallelContact() {
                 ))}
                 <circle cx="100" cy="100" r="8" fill={portal.accent} />
               </svg>
-              <div className="text-center font-mono text-xs uppercase tracking-widest space-y-2" style={{ color: portal.accent }}>
+              <div
+                className="text-center font-mono text-xs uppercase tracking-widest space-y-2"
+                style={{ color: portal.accent }}
+              >
                 <div className="animate-uni-typewriter">◉ ESTABLISHING CONNECTION…</div>
-                <div className="animate-uni-typewriter" style={{ animationDelay: "1.5s" }}>◉ SIGNAL LOCKED</div>
-                <div className="animate-uni-typewriter" style={{ animationDelay: "3.5s" }}>◉ UNIVERSE LINK ESTABLISHED</div>
+                <div className="animate-uni-typewriter" style={{ animationDelay: "1.5s" }}>
+                  ◉ SIGNAL LOCKED
+                </div>
+                <div className="animate-uni-typewriter" style={{ animationDelay: "3.5s" }}>
+                  ◉ UNIVERSE LINK ESTABLISHED
+                </div>
               </div>
             </div>
           )}
 
           {phase === "done" && (
             <div className="flex flex-col items-center justify-center min-h-[70vh] gap-6 text-center px-6">
-              <div className="text-[10px] font-mono uppercase tracking-widest" style={{ color: portal.accent }}>◉ TRANSMISSION COMPLETE</div>
-              <h3 className={`text-5xl md:text-7xl uppercase tracking-tighter ${portal.font}`} style={{ color: portal.accent }}>
+              <div
+                className="text-[10px] font-mono uppercase tracking-widest"
+                style={{ color: portal.accent }}
+              >
+                ◉ TRANSMISSION COMPLETE
+              </div>
+              <h3
+                className={`text-5xl md:text-7xl uppercase tracking-tighter ${portal.font}`}
+                style={{ color: portal.accent }}
+              >
                 {lang === "uz" ? "SIGNAL QABUL QILINDI" : "SIGNAL RECEIVED"}
               </h3>
               <p className="text-white/60 max-w-md">
@@ -228,7 +286,10 @@ export function ParallelContact() {
                   ? "Xabaringiz olamlar orasidan o'tdi. Tez orada javob bo'ladi."
                   : "Your message crossed universes. Expect a reply soon."}
               </p>
-              <button onClick={close} className="mt-6 border border-accent px-6 py-3 text-[10px] uppercase tracking-widest hover:bg-accent hover:text-background transition-colors">
+              <button
+                onClick={close}
+                className="mt-6 border border-accent px-6 py-3 text-[10px] uppercase tracking-widest hover:bg-accent hover:text-background transition-colors"
+              >
                 {lang === "uz" ? "OLAMGA QAYTISH" : "RETURN TO UNIVERSE"}
               </button>
             </div>

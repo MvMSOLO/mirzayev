@@ -76,7 +76,14 @@ export function Cinematic({ onDone, onSkip }: { onDone: () => void; onSkip: () =
           stroke="#FF4500"
           strokeWidth="0.5"
         >
-          <circle cx="50" cy="50" r="30" strokeDasharray="4 4" className="animate-spin" style={{ animationDuration: "8s" }} />
+          <circle
+            cx="50"
+            cy="50"
+            r="30"
+            strokeDasharray="4 4"
+            className="animate-spin"
+            style={{ animationDuration: "8s" }}
+          />
           <circle cx="50" cy="50" r="15" />
           <line x1="0" y1="50" x2="35" y2="50" />
           <line x1="65" y1="50" x2="100" y2="50" />
@@ -91,7 +98,8 @@ export function Cinematic({ onDone, onSkip }: { onDone: () => void; onSkip: () =
           <div
             className="absolute inset-0 origin-center"
             style={{
-              background: "conic-gradient(from 0deg, transparent 0%, #FF4500 15%, transparent 30%, transparent 100%)",
+              background:
+                "conic-gradient(from 0deg, transparent 0%, #FF4500 15%, transparent 30%, transparent 100%)",
               animation: "spin 3s linear infinite",
             }}
           />
@@ -101,12 +109,18 @@ export function Cinematic({ onDone, onSkip }: { onDone: () => void; onSkip: () =
       {/* Status text */}
       <div className="absolute top-8 left-8 text-[10px] uppercase tracking-widest space-y-2 text-accent/80">
         <div>◉ FUTURE COMPILER v2.35</div>
-        {step >= 2 && <div className="animate-uni-typewriter overflow-hidden whitespace-nowrap">SCANNING ENVIRONMENT…</div>}
+        {step >= 2 && (
+          <div className="animate-uni-typewriter overflow-hidden whitespace-nowrap">
+            SCANNING ENVIRONMENT…
+          </div>
+        )}
         {step >= 6 && <div className="animate-uni-typewriter">HTML STREAM · ONLINE</div>}
         {step >= 7 && <div className="animate-uni-typewriter">CSS ARCHITECTURE · MAPPED</div>}
         {step >= 8 && <div className="animate-uni-typewriter">JS LOGIC · WOVEN</div>}
         {step >= 9 && <div className="animate-uni-typewriter">COMPONENTS · MATERIALIZED</div>}
-        {step >= 10 && <div className="animate-uni-typewriter text-white">PREVIEW ENGINE · ACTIVE</div>}
+        {step >= 10 && (
+          <div className="animate-uni-typewriter text-white">PREVIEW ENGINE · ACTIVE</div>
+        )}
       </div>
 
       {/* Command line */}
@@ -130,8 +144,23 @@ export function Cinematic({ onDone, onSkip }: { onDone: () => void; onSkip: () =
                 animation: `scan-y ${2 + col * 0.3}s linear infinite`,
               }}
             >
-              {["<div>", "<span>", "<h1>", "<p>", "<section>", "</div>", "<a>", "<img/>", "<nav>", "</section>", "<main>", "<footer>"].map((tag, i) => (
-                <span key={i} className="text-accent/70">{tag}</span>
+              {[
+                "<div>",
+                "<span>",
+                "<h1>",
+                "<p>",
+                "<section>",
+                "</div>",
+                "<a>",
+                "<img/>",
+                "<nav>",
+                "</section>",
+                "<main>",
+                "<footer>",
+              ].map((tag, i) => (
+                <span key={i} className="text-accent/70">
+                  {tag}
+                </span>
               ))}
             </div>
           ))}
@@ -140,7 +169,13 @@ export function Cinematic({ onDone, onSkip }: { onDone: () => void; onSkip: () =
 
       {/* CSS map / JS network */}
       {step >= 7 && step < 10 && (
-        <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-50" viewBox="0 0 1000 600" fill="none" stroke="#FF4500" strokeWidth="0.5">
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none opacity-50"
+          viewBox="0 0 1000 600"
+          fill="none"
+          stroke="#FF4500"
+          strokeWidth="0.5"
+        >
           {Array.from({ length: 20 }).map((_, i) => {
             const x1 = (i * 71) % 1000;
             const y1 = (i * 137) % 600;
@@ -172,7 +207,9 @@ export function Cinematic({ onDone, onSkip }: { onDone: () => void; onSkip: () =
       )}
 
       {/* Final flash */}
-      {step >= 11 && <div className="absolute inset-0 bg-white animate-uni-flash pointer-events-none" />}
+      {step >= 11 && (
+        <div className="absolute inset-0 bg-white animate-uni-flash pointer-events-none" />
+      )}
 
       {/* Skip */}
       <button

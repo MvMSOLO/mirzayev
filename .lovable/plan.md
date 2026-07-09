@@ -1,4 +1,3 @@
-
 # V4 — Immersive Portfolio Expansion
 
 Massive upgrade adding rich animations, filling desktop empty space, migrating portfolio data into Creative Universe, plus three signature experiences: Future Compiler, Design Archaeology, and Parallel Universe Contact.
@@ -6,6 +5,7 @@ Massive upgrade adding rich animations, filling desktop empty space, migrating p
 ## 1. Animation infrastructure
 
 Add premium motion libs (install once, use across both universes):
+
 - `motion` (Framer Motion v11 successor) — page/section reveals, layout animations
 - `gsap` + `@gsap/react` — timelines, ScrollTrigger, cinematic sequences
 - `lenis` — buttery smooth scroll (both universes)
@@ -13,12 +13,14 @@ Add premium motion libs (install once, use across both universes):
 - Keep existing canvas particles
 
 New shared hooks in `src/hooks/`:
+
 - `useLenis.ts` — global smooth scroll
 - `useScrollReveal.ts` — GSAP ScrollTrigger wrapper
 - `useMagnetic.ts` — magnetic cursor targets
 - `useSplitText.ts` — character/word splits with stagger
 
 Apply throughout Kinetic Lab:
+
 - Hero headline: char-by-char reveal with skew + blur
 - Section headings: masked slide-up + subtle scramble
 - Work cards: parallax on scroll, hover tilt (vanilla-tilt style, GSAP-driven)
@@ -47,6 +49,7 @@ All new content localized in `i18n.tsx` (UZ + EN).
 ## 3. Creative Universe cleanup + parity
 
 Current creative tree has some filler sections (Philosophy, WhatIDo, Skills, About duplicates). Refactor:
+
 - Remove: `About.tsx`, `WhatIDo.tsx`, `Skills.tsx`, `Philosophy.tsx` from `src/components/universe/`
 - Keep the editorial voice, but port real portfolio data into creative-styled sections:
   - **Hero** — same asymmetric editorial, real name/tagline
@@ -68,6 +71,7 @@ New route section rendered inside Kinetic Lab (between Work and Philosophy).
 **Intro CTA**: full-viewport panel with `<PLAY EXPERIENCE>` button (magnetic + goo hover).
 
 **Cinematic (22s GSAP timeline)** — pure code, no video:
+
 1. Fade to black (0.5s)
 2. Crosshair SVG assembles from scan lines (2s)
 3. "SCANNING ENVIRONMENT…" typewriter + radar sweep (3s)
@@ -84,6 +88,7 @@ New route section rendered inside Kinetic Lab (between Work and Philosophy).
 Scanlines, motion blur (CSS filter), chromatic aberration, camera shake via transform. Skippable with Esc or button. Sets `localStorage` on complete.
 
 **Workspace (permanent, real)**:
+
 - Prompt textarea: "Describe your website idea"
 - Submit → status cycles: `THINKING → BUILDING → COMPILING → OPTIMIZING` (fake progress bar, 4–6s total; no streaming code shown)
 - Backed by **Lovable AI Gateway** (`google/gemini-2.5-flash`) via a `createServerFn` — prompt asks model to output strictly `{html, css, js}` JSON (vanilla only, no frameworks)
@@ -118,17 +123,20 @@ Replace current contact CTA area (keep footer credits + social lists).
 
 **Portal select**:
 Four portal cards with animated SVG rings + particle bursts on hover:
+
 - 001 STARTUP FOUNDER
 - 002 CREATIVE AGENCY
 - 003 GLOBAL BRAND
 - 004 SECRET PROJECT
 
 **On select** → full theme swap for the section:
+
 - Different accent color, typography weight, motion easing
 - Custom "brief" fields for that persona (Mission, Speed, Goal / Mission, Focus, Goal / Mission, Focus, Goal / Classification, Access, Status)
 - Secret Project uses redacted-bar aesthetics + monospace
 
 **Submission flow (GSAP timeline, 6s)**:
+
 1. Particles converge to center
 2. Signal lines connect from 4 corners
 3. Transmission bars fill
@@ -138,6 +146,7 @@ Four portal cards with animated SVG rings + particle bursts on hover:
 ## Data / backend
 
 Enable **Lovable Cloud** for:
+
 - `contact_messages` table (id, universe_type, payload jsonb, created_at) — anon INSERT policy, service_role select
 - AI Gateway server function for Future Compiler code generation (uses `LOVABLE_API_KEY`, `google/gemini-2.5-flash`)
 
@@ -148,6 +157,7 @@ Enable **Lovable Cloud** for:
 ## Files
 
 ### Create
+
 - `src/hooks/useLenis.ts`, `useScrollReveal.ts`, `useMagnetic.ts`, `useSplitText.ts`
 - `src/components/portfolio/LabLog.tsx`
 - `src/components/portfolio/ToolkitGrid.tsx`
@@ -166,6 +176,7 @@ Enable **Lovable Cloud** for:
 - Supabase migration: `contact_messages` table + grants + RLS
 
 ### Edit
+
 - All Kinetic portfolio components (motion + density additions)
 - `src/routes/index.tsx` (mount new sections, Lenis provider)
 - `src/lib/i18n.tsx` (add all new copy UZ + EN)
@@ -174,6 +185,7 @@ Enable **Lovable Cloud** for:
 - `src/components/portfolio/Contact.tsx` (integrate ParallelContact, keep Enter Universe CTA)
 
 ### Delete
+
 - `src/components/universe/About.tsx`
 - `src/components/universe/WhatIDo.tsx`
 - `src/components/universe/Skills.tsx`

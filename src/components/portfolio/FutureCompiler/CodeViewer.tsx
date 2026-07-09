@@ -27,7 +27,10 @@ export function CodeViewer({ bundle }: { bundle: Bundle }) {
 
   const download = async () => {
     const zip = new JSZip();
-    zip.file("index.html", `<!doctype html><html><head><meta charset="utf-8"><title>${bundle.title}</title><link rel="stylesheet" href="style.css"></head><body>${bundle.html}<script src="script.js"></script></body></html>`);
+    zip.file(
+      "index.html",
+      `<!doctype html><html><head><meta charset="utf-8"><title>${bundle.title}</title><link rel="stylesheet" href="style.css"></head><body>${bundle.html}<script src="script.js"></script></body></html>`,
+    );
     zip.file("style.css", bundle.css);
     zip.file("script.js", bundle.js);
     const blob = await zip.generateAsync({ type: "blob" });
@@ -39,7 +42,8 @@ export function CodeViewer({ bundle }: { bundle: Bundle }) {
     URL.revokeObjectURL(url);
   };
 
-  const code = tab === "html" ? bundle.html : tab === "css" ? bundle.css : tab === "js" ? bundle.js : "";
+  const code =
+    tab === "html" ? bundle.html : tab === "css" ? bundle.css : tab === "js" ? bundle.js : "";
   const language = tab === "html" ? "markup" : tab === "css" ? "css" : "javascript";
 
   return (
@@ -89,10 +93,15 @@ export function CodeViewer({ bundle }: { bundle: Bundle }) {
         <div className="max-h-[500px] overflow-auto">
           <Highlight theme={themes.nightOwl} code={code || "// empty"} language={language}>
             {({ className, style, tokens, getLineProps, getTokenProps }) => (
-              <pre className={className + " text-[11px] p-4 leading-relaxed"} style={{ ...style, background: "transparent" }}>
+              <pre
+                className={className + " text-[11px] p-4 leading-relaxed"}
+                style={{ ...style, background: "transparent" }}
+              >
                 {tokens.map((line, i) => (
                   <div key={i} {...getLineProps({ line })}>
-                    <span className="text-white/20 mr-4 select-none">{String(i + 1).padStart(3, "0")}</span>
+                    <span className="text-white/20 mr-4 select-none">
+                      {String(i + 1).padStart(3, "0")}
+                    </span>
                     {line.map((token, key) => (
                       <span key={key} {...getTokenProps({ token })} />
                     ))}

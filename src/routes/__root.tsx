@@ -78,24 +78,47 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Avazbek Mirzayev — Full-Stack Developer & UI Designer" },
-      { name: "description", content: "Portfolio of Avazbek Mirzayev — 16-year-old full-stack developer, UI/UX designer, AI enthusiast and content creator from Olmaliq, Uzbekistan." },
+      {
+        name: "description",
+        content:
+          "Portfolio of Avazbek Mirzayev — 16-year-old full-stack developer, UI/UX designer, AI enthusiast and content creator from Olmaliq, Uzbekistan.",
+      },
       { name: "author", content: "Avazbek Mirzayev" },
       { property: "og:title", content: "Avazbek Mirzayev — Full-Stack Developer & UI Designer" },
-      { property: "og:description", content: "Portfolio of Avazbek Mirzayev — 16-year-old full-stack developer, UI/UX designer, AI enthusiast and content creator from Olmaliq, Uzbekistan." },
+      {
+        property: "og:description",
+        content:
+          "Portfolio of Avazbek Mirzayev — 16-year-old full-stack developer, UI/UX designer, AI enthusiast and content creator from Olmaliq, Uzbekistan.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@avazbekdev" },
       { name: "twitter:title", content: "Avazbek Mirzayev — Full-Stack Developer & UI Designer" },
-      { name: "twitter:description", content: "Portfolio of Avazbek Mirzayev — 16-year-old full-stack developer, UI/UX designer, AI enthusiast and content creator from Olmaliq, Uzbekistan." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4417bf41-fddd-4ae4-b980-6cdbdc1cf524/id-preview-7c68e531--be31eb19-65ea-476c-9523-cacbbc7f7050.lovable.app-1783438766439.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4417bf41-fddd-4ae4-b980-6cdbdc1cf524/id-preview-7c68e531--be31eb19-65ea-476c-9523-cacbbc7f7050.lovable.app-1783438766439.png" },
+      {
+        name: "twitter:description",
+        content:
+          "Portfolio of Avazbek Mirzayev — 16-year-old full-stack developer, UI/UX designer, AI enthusiast and content creator from Olmaliq, Uzbekistan.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4417bf41-fddd-4ae4-b980-6cdbdc1cf524/id-preview-7c68e531--be31eb19-65ea-476c-9523-cacbbc7f7050.lovable.app-1783438766439.png",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4417bf41-fddd-4ae4-b980-6cdbdc1cf524/id-preview-7c68e531--be31eb19-65ea-476c-9523-cacbbc7f7050.lovable.app-1783438766439.png",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,600&family=Inter+Tight:wght@300;400;500;600&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,600&family=Inter+Tight:wght@300;400;500;600&display=swap",
+      },
     ],
   }),
   shellComponent: RootShell,
