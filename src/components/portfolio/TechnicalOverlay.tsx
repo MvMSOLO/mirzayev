@@ -23,7 +23,7 @@ export function TechnicalOverlay() {
       year: new Date().getFullYear(),
       streamId: Math.random().toString(16).slice(2, 10).toUpperCase(),
       hexBlocks: Array.from({ length: 6 }).map(() =>
-        Math.random().toString(16).slice(2, 6).toUpperCase()
+        Math.random().toString(16).slice(2, 6).toUpperCase(),
       ),
     });
 
@@ -43,7 +43,9 @@ export function TechnicalOverlay() {
       <div className="absolute bottom-12 left-12 font-mono text-[10px] text-accent/40 flex flex-col gap-1">
         <div className="flex gap-2">
           <span className="opacity-60">LOC:</span>
-          <span>{coords.x.toString().padStart(4, "0")} / {coords.y.toString().padStart(4, "0")}</span>
+          <span>
+            {coords.x.toString().padStart(4, "0")} / {coords.y.toString().padStart(4, "0")}
+          </span>
         </div>
         <div className="flex gap-2">
           <span className="opacity-60">SYS:</span>

@@ -19,7 +19,9 @@ export function FutureCompiler() {
 
   const play = () => setPhase("cinematic");
   const finish = () => {
-    try { localStorage.setItem(KEY, "1"); } catch {}
+    try {
+      localStorage.setItem(KEY, "1");
+    } catch {}
     setPhase("workspace");
   };
 
@@ -27,7 +29,9 @@ export function FutureCompiler() {
     <section className="px-5 md:px-20 lg:px-32 py-24 border-t border-border relative">
       <div className="mb-10 flex gap-2 items-center">
         <div className="h-[1px] w-8 bg-accent" />
-        <span className="text-[10px] uppercase tracking-widest text-accent">// FUTURE COMPILER · IDE 2035</span>
+        <span className="text-[10px] uppercase tracking-widest text-accent">
+          // FUTURE COMPILER · IDE 2035
+        </span>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-10 mb-14">
@@ -45,10 +49,16 @@ export function FutureCompiler() {
 
       {phase === "intro" && (
         <div className="border border-accent/40 bg-gradient-to-br from-black/60 via-secondary/40 to-black/80 py-24 flex flex-col items-center justify-center gap-6 relative overflow-hidden">
-          <div className="absolute inset-0 pointer-events-none opacity-20" style={{
-            backgroundImage: "repeating-linear-gradient(180deg, rgba(255,69,0,0.15) 0, rgba(255,69,0,0.15) 1px, transparent 1px, transparent 6px)"
-          }} />
-          <span className="text-[10px] uppercase tracking-[0.4em] text-accent/70 font-mono">◉ ONE-TIME EXPERIENCE · 22s</span>
+          <div
+            className="absolute inset-0 pointer-events-none opacity-20"
+            style={{
+              backgroundImage:
+                "repeating-linear-gradient(180deg, rgba(255,69,0,0.15) 0, rgba(255,69,0,0.15) 1px, transparent 1px, transparent 6px)",
+            }}
+          />
+          <span className="text-[10px] uppercase tracking-[0.4em] text-accent/70 font-mono">
+            ◉ ONE-TIME EXPERIENCE · 22s
+          </span>
           <button
             ref={magnet}
             onClick={play}

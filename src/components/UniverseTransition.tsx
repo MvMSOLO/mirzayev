@@ -47,7 +47,13 @@ export function UniverseTransition() {
         <defs>
           <filter id="liquify">
             <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="4">
-              <animate attributeName="baseFrequency" from="0.005" to="0.04" dur="1s" fill="freeze" />
+              <animate
+                attributeName="baseFrequency"
+                from="0.005"
+                to="0.04"
+                dur="1s"
+                fill="freeze"
+              />
             </feTurbulence>
             <feDisplacementMap in="SourceGraphic" scale="0">
               <animate attributeName="scale" from="0" to="120" dur="1s" fill="freeze" />
@@ -58,7 +64,10 @@ export function UniverseTransition() {
 
       {/* Phase 1: Deconstruct — dark screen with radial shatter */}
       {phase === "deconstruct" && (
-        <div className="absolute inset-0 overflow-hidden animate-uni-deconstruct" style={{ background: mode === "kinetic" ? "#0D0C10" : "#F9F6F0" }}>
+        <div
+          className="absolute inset-0 overflow-hidden animate-uni-deconstruct"
+          style={{ background: mode === "kinetic" ? "#0D0C10" : "#F9F6F0" }}
+        >
           {Array.from({ length: 24 }).map((_, i) => (
             <span
               key={i}
@@ -79,9 +88,18 @@ export function UniverseTransition() {
 
       {/* Phase 2: Liquid — SVG displacement melt */}
       {phase === "liquid" && (
-        <div className="absolute inset-0 animate-uni-liquid" style={{ background: mode === "kinetic" ? "#0D0C10" : "#F9F6F0", filter: "url(#liquify)" }}>
+        <div
+          className="absolute inset-0 animate-uni-liquid"
+          style={{
+            background: mode === "kinetic" ? "#0D0C10" : "#F9F6F0",
+            filter: "url(#liquify)",
+          }}
+        >
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="font-display uppercase text-[18vw] tracking-tighter" style={{ color: mode === "kinetic" ? "#FF4500" : "#C7D9C1" }}>
+            <span
+              className="font-display uppercase text-[18vw] tracking-tighter"
+              style={{ color: mode === "kinetic" ? "#FF4500" : "#C7D9C1" }}
+            >
               MELT
             </span>
           </div>
@@ -90,11 +108,19 @@ export function UniverseTransition() {
 
       {/* Phase 3: White flash + reconstructing text */}
       {phase === "flash" && (
-        <div className="absolute inset-0 flex items-center justify-center animate-uni-flash" style={{ background: "#F9F6F0" }}>
+        <div
+          className="absolute inset-0 flex items-center justify-center animate-uni-flash"
+          style={{ background: "#F9F6F0" }}
+        >
           <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
           <div className="relative z-10 text-center">
-            <div className="text-[10px] uppercase tracking-[0.4em] text-black/60 mb-3 font-mono">40.8447° N · 69.5986° E</div>
-            <div className="italic text-2xl md:text-4xl text-black animate-uni-typewriter" style={{ fontFamily: '"Instrument Serif", serif' }}>
+            <div className="text-[10px] uppercase tracking-[0.4em] text-black/60 mb-3 font-mono">
+              40.8447° N · 69.5986° E
+            </div>
+            <div
+              className="italic text-2xl md:text-4xl text-black animate-uni-typewriter"
+              style={{ fontFamily: '"Instrument Serif", serif' }}
+            >
               reconstructing universe
             </div>
           </div>
@@ -103,7 +129,10 @@ export function UniverseTransition() {
 
       {/* Phase 4: Rebuild — final layer fades out */}
       {phase === "rebuild" && (
-        <div className="absolute inset-0 animate-uni-rebuild" style={{ background: mode === "creative" ? "#F9F6F0" : "#0D0C10" }} />
+        <div
+          className="absolute inset-0 animate-uni-rebuild"
+          style={{ background: mode === "creative" ? "#F9F6F0" : "#0D0C10" }}
+        />
       )}
     </div>
   );

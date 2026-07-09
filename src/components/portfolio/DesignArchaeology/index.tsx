@@ -12,26 +12,50 @@ const projects: Project[] = [
   {
     id: "aether",
     name: "AETHER",
-    origin: { uz: "Bir tunda notebook chetiga chizilgan spiral.", en: "A spiral doodled on a notebook margin one night." },
-    problem: { uz: "Statik saytlar zerikarli. Kod harakatlanmasa — u yashamaydi.", en: "Static sites feel dead. If code doesn't move, it isn't alive." },
+    origin: {
+      uz: "Bir tunda notebook chetiga chizilgan spiral.",
+      en: "A spiral doodled on a notebook margin one night.",
+    },
+    problem: {
+      uz: "Statik saytlar zerikarli. Kod harakatlanmasa — u yashamaydi.",
+      en: "Static sites feel dead. If code doesn't move, it isn't alive.",
+    },
   },
   {
     id: "neural",
     name: "NEURAL",
-    origin: { uz: "Dasturchilar bir xil ishni takrorlayotgani kuzatildi.", en: "Watched developers repeat the same task twenty times a day." },
-    problem: { uz: "Ijodkorlar biror joyda takrorlanuvchi ishga vaqt yo'qotadi.", en: "Creators lose hours to work that should be automated." },
+    origin: {
+      uz: "Dasturchilar bir xil ishni takrorlayotgani kuzatildi.",
+      en: "Watched developers repeat the same task twenty times a day.",
+    },
+    problem: {
+      uz: "Ijodkorlar biror joyda takrorlanuvchi ishga vaqt yo'qotadi.",
+      en: "Creators lose hours to work that should be automated.",
+    },
   },
   {
     id: "vortex",
     name: "VORTEX",
-    origin: { uz: "Bruklindagi eski afisha uchun tunda chizilgan skitch.", en: "A late-night sketch inspired by a Brooklyn poster archive." },
-    problem: { uz: "Dizayn tizimlari bir xil ko'rinadi. Xarakter kerak.", en: "Design systems all look the same. Give it teeth." },
+    origin: {
+      uz: "Bruklindagi eski afisha uchun tunda chizilgan skitch.",
+      en: "A late-night sketch inspired by a Brooklyn poster archive.",
+    },
+    problem: {
+      uz: "Dizayn tizimlari bir xil ko'rinadi. Xarakter kerak.",
+      en: "Design systems all look the same. Give it teeth.",
+    },
   },
   {
     id: "youtube",
     name: "MVMSOLO",
-    origin: { uz: "Kimga texnologiya haqida yozardim? O'zimga.", en: "Wrote to teach the version of me who was still learning." },
-    problem: { uz: "Ta'lim kontenti quruq. Ilhomsiz.", en: "Learning content is dry. Uninspired. It shouldn't be." },
+    origin: {
+      uz: "Kimga texnologiya haqida yozardim? O'zimga.",
+      en: "Wrote to teach the version of me who was still learning.",
+    },
+    problem: {
+      uz: "Ta'lim kontenti quruq. Ilhomsiz.",
+      en: "Learning content is dry. Uninspired. It shouldn't be.",
+    },
   },
 ];
 
@@ -64,7 +88,9 @@ export function DesignArchaeology() {
     <section className="px-5 md:px-20 lg:px-32 py-24 border-t border-border">
       <div className="mb-10 flex gap-2 items-center">
         <div className="h-[1px] w-8 bg-accent" />
-        <span className="text-[10px] uppercase tracking-widest text-accent">// DESIGN ARCHAEOLOGY</span>
+        <span className="text-[10px] uppercase tracking-widest text-accent">
+          // DESIGN ARCHAEOLOGY
+        </span>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-10 mb-12">
         <h2 className="font-display text-5xl md:text-7xl uppercase leading-[0.85] tracking-tighter">
@@ -90,7 +116,9 @@ export function DesignArchaeology() {
               {String(projects.indexOf(p) + 1).padStart(2, "0")} / 04
             </span>
             <div>
-              <div className="font-display text-2xl md:text-4xl uppercase tracking-tighter">{p.name}</div>
+              <div className="font-display text-2xl md:text-4xl uppercase tracking-tighter">
+                {p.name}
+              </div>
               <div className="text-[10px] uppercase tracking-widest mt-2 opacity-60">
                 {lang === "uz" ? "→ QAZISH" : "→ EXCAVATE"}
               </div>
@@ -110,7 +138,10 @@ export function DesignArchaeology() {
                 {stage < 8 ? `STAGE ${stage + 1}/8 · ${stagesUz[stage]}` : "ORIGIN"}
               </span>
             </div>
-            <button onClick={close} className="text-[10px] uppercase tracking-widest hover:text-accent">
+            <button
+              onClick={close}
+              className="text-[10px] uppercase tracking-widest hover:text-accent"
+            >
               ✕ CLOSE
             </button>
           </div>
@@ -149,7 +180,15 @@ export function DesignArchaeology() {
   );
 }
 
-function ArtifactStage({ stage, project, lang }: { stage: number; project: Project; lang: "uz" | "en" }) {
+function ArtifactStage({
+  stage,
+  project,
+  lang,
+}: {
+  stage: number;
+  project: Project;
+  lang: "uz" | "en";
+}) {
   // Progressive deconstruction visuals
   const opacityScale = Math.max(0.2, 1 - stage * 0.11);
   const grayscale = Math.min(stage * 15, 100);
@@ -162,7 +201,9 @@ function ArtifactStage({ stage, project, lang }: { stage: number; project: Proje
         </div>
         <div className="border-t border-b border-accent/30 py-6 space-y-6 text-left">
           <div>
-            <div className="text-[10px] uppercase tracking-widest text-accent mb-2">// FIRST SPARK</div>
+            <div className="text-[10px] uppercase tracking-widest text-accent mb-2">
+              // FIRST SPARK
+            </div>
             <p className="text-lg italic">{project.origin[lang]}</p>
           </div>
           <div>
@@ -185,9 +226,12 @@ function ArtifactStage({ stage, project, lang }: { stage: number; project: Proje
           <>
             <div className="flex justify-between items-center mb-8">
               <div className="font-display text-3xl md:text-5xl uppercase tracking-tighter">
-                {project.name}<span className="text-accent">.</span>
+                {project.name}
+                <span className="text-accent">.</span>
               </div>
-              {stage <= 1 && <div className="text-[10px] uppercase tracking-widest text-accent">● LIVE</div>}
+              {stage <= 1 && (
+                <div className="text-[10px] uppercase tracking-widest text-accent">● LIVE</div>
+              )}
             </div>
             <div className="grid grid-cols-3 gap-4 mb-6">
               {Array.from({ length: 6 - Math.min(stage, 3) }).map((_, i) => (
@@ -204,43 +248,119 @@ function ArtifactStage({ stage, project, lang }: { stage: number; project: Proje
         {stage === 4 && (
           <div className="space-y-4">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="border border-dashed border-accent/50 h-16 flex items-center px-4">
-                <span className="text-[10px] font-mono uppercase text-accent/60">module.{i + 1}</span>
+              <div
+                key={i}
+                className="border border-dashed border-accent/50 h-16 flex items-center px-4"
+              >
+                <span className="text-[10px] font-mono uppercase text-accent/60">
+                  module.{i + 1}
+                </span>
               </div>
             ))}
           </div>
         )}
         {stage === 5 && (
-          <svg viewBox="0 0 400 300" className="w-full h-64" fill="none" stroke="#FF4500" strokeWidth="2">
+          <svg
+            viewBox="0 0 400 300"
+            className="w-full h-64"
+            fill="none"
+            stroke="#FF4500"
+            strokeWidth="2"
+          >
             <rect x="20" y="20" width="360" height="60" strokeDasharray="6 4" />
             <rect x="20" y="100" width="170" height="80" strokeDasharray="6 4" />
             <rect x="210" y="100" width="170" height="80" strokeDasharray="6 4" />
             <rect x="20" y="200" width="360" height="80" strokeDasharray="6 4" />
-            <text x="200" y="55" textAnchor="middle" fill="#FF4500" fontSize="10" fontFamily="monospace">HEADER</text>
-            <text x="105" y="140" textAnchor="middle" fill="#FF4500" fontSize="10" fontFamily="monospace">CARD A</text>
-            <text x="295" y="140" textAnchor="middle" fill="#FF4500" fontSize="10" fontFamily="monospace">CARD B</text>
+            <text
+              x="200"
+              y="55"
+              textAnchor="middle"
+              fill="#FF4500"
+              fontSize="10"
+              fontFamily="monospace"
+            >
+              HEADER
+            </text>
+            <text
+              x="105"
+              y="140"
+              textAnchor="middle"
+              fill="#FF4500"
+              fontSize="10"
+              fontFamily="monospace"
+            >
+              CARD A
+            </text>
+            <text
+              x="295"
+              y="140"
+              textAnchor="middle"
+              fill="#FF4500"
+              fontSize="10"
+              fontFamily="monospace"
+            >
+              CARD B
+            </text>
           </svg>
         )}
         {stage === 6 && (
-          <svg viewBox="0 0 400 300" className="w-full h-64" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round">
+          <svg
+            viewBox="0 0 400 300"
+            className="w-full h-64"
+            fill="none"
+            stroke="rgba(255,255,255,0.6)"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          >
             <path d="M20 40 Q 100 20, 200 40 T 380 40" />
             <path d="M20 80 L 380 80" strokeDasharray="4 4" />
             <path d="M40 130 L 60 110 L 100 140 L 140 100 L 180 150" />
             <circle cx="250" cy="180" r="30" />
             <path d="M300 200 L 360 240 L 320 260 Z" />
-            <text x="80" y="270" fill="rgba(255,255,255,0.7)" fontSize="14" fontFamily="cursive">idea → shape → feeling</text>
+            <text x="80" y="270" fill="rgba(255,255,255,0.7)" fontSize="14" fontFamily="cursive">
+              idea → shape → feeling
+            </text>
           </svg>
         )}
         {stage === 7 && (
-          <div className="relative py-8" style={{ backgroundImage: "repeating-linear-gradient(90deg, transparent 0 39px, rgba(255,255,255,0.05) 39px 40px), repeating-linear-gradient(0deg, transparent 0 39px, rgba(255,255,255,0.05) 39px 40px)" }}>
-            <svg viewBox="0 0 400 240" className="w-full h-56" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="1.2" strokeLinecap="round">
+          <div
+            className="relative py-8"
+            style={{
+              backgroundImage:
+                "repeating-linear-gradient(90deg, transparent 0 39px, rgba(255,255,255,0.05) 39px 40px), repeating-linear-gradient(0deg, transparent 0 39px, rgba(255,255,255,0.05) 39px 40px)",
+            }}
+          >
+            <svg
+              viewBox="0 0 400 240"
+              className="w-full h-56"
+              fill="none"
+              stroke="rgba(255,255,255,0.7)"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+            >
               <path d="M30 60 Q 80 20, 130 70 T 250 40" strokeDasharray="2 3" />
-              <text x="140" y="120" fill="rgba(255,255,255,0.7)" fontSize="16" fontFamily="cursive" transform="rotate(-4 140 120)">
+              <text
+                x="140"
+                y="120"
+                fill="rgba(255,255,255,0.7)"
+                fontSize="16"
+                fontFamily="cursive"
+                transform="rotate(-4 140 120)"
+              >
                 what if code could feel alive?
               </text>
               <path d="M60 160 L 90 180 M 90 180 L 80 170 M 90 180 L 84 190" strokeWidth="1.5" />
               <circle cx="260" cy="180" r="18" strokeDasharray="3 3" />
-              <text x="260" y="184" textAnchor="middle" fill="rgba(255,255,255,0.7)" fontSize="10" fontFamily="cursive">core</text>
+              <text
+                x="260"
+                y="184"
+                textAnchor="middle"
+                fill="rgba(255,255,255,0.7)"
+                fontSize="10"
+                fontFamily="cursive"
+              >
+                core
+              </text>
             </svg>
           </div>
         )}

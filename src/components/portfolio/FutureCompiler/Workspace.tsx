@@ -46,7 +46,11 @@ export function Workspace() {
         <textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          placeholder={lang === "uz" ? "Masalan: mahalliy qahvaxona uchun landing sahifa..." : "e.g. landing page for a local coffee roastery..."}
+          placeholder={
+            lang === "uz"
+              ? "Masalan: mahalliy qahvaxona uchun landing sahifa..."
+              : "e.g. landing page for a local coffee roastery..."
+          }
           rows={4}
           disabled={status !== null}
           className="w-full bg-background/60 border border-accent/30 p-4 font-mono text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-accent resize-none disabled:opacity-50"
@@ -70,7 +74,11 @@ export function Workspace() {
             {status ? "COMPILING…" : lang === "uz" ? "→ QURISH" : "→ COMPILE"}
           </button>
         </div>
-        {err && <p className="mt-3 text-[10px] uppercase tracking-widest text-red-500 font-mono">✕ {err}</p>}
+        {err && (
+          <p className="mt-3 text-[10px] uppercase tracking-widest text-red-500 font-mono">
+            ✕ {err}
+          </p>
+        )}
       </div>
 
       {bundle && <CodeViewer bundle={bundle} />}

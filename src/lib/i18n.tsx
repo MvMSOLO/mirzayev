@@ -79,7 +79,10 @@ export const dict: Dict = {
   },
   "work.vortex.sub": { uz: "Dizayn tizimi", en: "Design system" },
   "work.yt.sub": { uz: "Tech kanal", en: "Tech channel" },
-  "work.fin.sub": { uz: "Realtaym analitika · grafiklar · signal", en: "Realtime analytics · charts · alerts" },
+  "work.fin.sub": {
+    uz: "Realtaym analitika · grafiklar · signal",
+    en: "Realtime analytics · charts · alerts",
+  },
   "work.cta.a": { uz: "Barchasini", en: "View" },
   "work.cta.b": { uz: "Ko'rish", en: "Archive" },
 
@@ -88,15 +91,30 @@ export const dict: Dict = {
   "phi.title_a": { uz: "Qanday", en: "How I" },
   "phi.title_b": { uz: "Quraman", en: "Build" },
   "phi.1.t": { uz: "Muammoni aniqlash", en: "Frame the problem" },
-  "phi.1.d": { uz: "Har bir loyiha aniq muammoni tushunishdan boshlanadi. Kim uchun? Nima uchun?", en: "Every project starts by understanding a real problem. Who's it for? Why does it matter?" },
+  "phi.1.d": {
+    uz: "Har bir loyiha aniq muammoni tushunishdan boshlanadi. Kim uchun? Nima uchun?",
+    en: "Every project starts by understanding a real problem. Who's it for? Why does it matter?",
+  },
   "phi.2.t": { uz: "UX rejalashtirish", en: "Map the UX" },
-  "phi.2.d": { uz: "Foydalanuvchi tajribasini xaritalash — flowlar, holatlar, mikro-detallar.", en: "Map the user experience — flows, states, micro-details." },
+  "phi.2.d": {
+    uz: "Foydalanuvchi tajribasini xaritalash — flowlar, holatlar, mikro-detallar.",
+    en: "Map the user experience — flows, states, micro-details.",
+  },
   "phi.3.t": { uz: "Dizayn tizimi", en: "Design system" },
-  "phi.3.d": { uz: "Rang, tipografiya, komponentlar. Bir marta yaratamiz — hamma joyda ishlaydi.", en: "Color, typography, components. Build once — reuse everywhere." },
+  "phi.3.d": {
+    uz: "Rang, tipografiya, komponentlar. Bir marta yaratamiz — hamma joyda ishlaydi.",
+    en: "Color, typography, components. Build once — reuse everywhere.",
+  },
   "phi.4.t": { uz: "Toza kod", en: "Clean code" },
-  "phi.4.d": { uz: "TypeScript, semantik markup, performance-first arxitektura.", en: "TypeScript, semantic markup, performance-first architecture." },
+  "phi.4.d": {
+    uz: "TypeScript, semantik markup, performance-first arxitektura.",
+    en: "TypeScript, semantic markup, performance-first architecture.",
+  },
   "phi.5.t": { uz: "Iteratsiya", en: "Iterate" },
-  "phi.5.d": { uz: "Ship qilamiz, o'lchaymiz, yaxshilaymiz. Perfect emas — real.", en: "Ship, measure, improve. Not perfect — real." },
+  "phi.5.d": {
+    uz: "Ship qilamiz, o'lchaymiz, yaxshilaymiz. Perfect emas — real.",
+    en: "Ship, measure, improve. Not perfect — real.",
+  },
 
   // Contact
   "contact.tag": { uz: "// Aloqa", en: "// Transmit" },
@@ -110,8 +128,14 @@ export const dict: Dict = {
   },
 
   // Aether
-  "aether.1": { uz: "AETHER FLOW · CHEKSIZ OQIM · KINETIK LAB", en: "AETHER FLOW · ENDLESS STREAM · KINETIC LAB" },
-  "aether.2": { uz: "KOD · DIZAYN · AI · KONTENT · TAKROR", en: "CODE · DESIGN · AI · CONTENT · REPEAT" },
+  "aether.1": {
+    uz: "AETHER FLOW · CHEKSIZ OQIM · KINETIK LAB",
+    en: "AETHER FLOW · ENDLESS STREAM · KINETIC LAB",
+  },
+  "aether.2": {
+    uz: "KOD · DIZAYN · AI · KONTENT · TAKROR",
+    en: "CODE · DESIGN · AI · CONTENT · REPEAT",
+  },
   "aether.3": { uz: "OLMALIQ → GLOBAL · 2026 →", en: "OLMALIQ → GLOBAL · 2026 →" },
 
   // Lang switch
@@ -174,15 +198,20 @@ export function LangProvider({ children }: { children: ReactNode }) {
     } catch {}
   }, []);
 
-  const setLang = useCallback((l: Lang) => {
-    if (l === lang) return;
-    setSwitching(true);
-    setTimeout(() => {
-      setLangState(l);
-      try { localStorage.setItem("lang", l); } catch {}
-    }, 350);
-    setTimeout(() => setSwitching(false), 900);
-  }, [lang]);
+  const setLang = useCallback(
+    (l: Lang) => {
+      if (l === lang) return;
+      setSwitching(true);
+      setTimeout(() => {
+        setLangState(l);
+        try {
+          localStorage.setItem("lang", l);
+        } catch {}
+      }, 350);
+      setTimeout(() => setSwitching(false), 900);
+    },
+    [lang],
+  );
 
   const t = useCallback((k: keyof typeof dict) => dict[k]?.[lang] ?? String(k), [lang]);
 

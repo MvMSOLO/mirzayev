@@ -2,21 +2,35 @@ import etherea from "@/assets/universe/etherea.jpg";
 import { useLang } from "@/lib/i18n";
 import { LiquidButton } from "./LiquidButton";
 import { Blob } from "./Blob";
+import { motion } from "framer-motion";
 
 export function UniverseHero() {
   const { t } = useLang();
   return (
     <section className="relative min-h-[100svh] w-full overflow-hidden pt-24 md:pt-32">
       {/* Center blob image */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none px-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9, filter: "blur(20px)" }}
+        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+        transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute inset-0 flex items-center justify-center pointer-events-none px-4"
+      >
         <div className="relative w-full max-w-[880px] aspect-square">
-          <Blob variant="a" src={etherea} alt="avazbek mirzayev creative universe" className="w-full h-full animate-uni-drift" />
+          <Blob
+            variant="a"
+            src={etherea}
+            alt="avazbek mirzayev creative universe"
+            className="w-full h-full animate-uni-drift"
+          />
         </div>
-      </div>
+      </motion.div>
 
       {/* Asymmetric typography */}
       <div className="relative z-10 pointer-events-none select-none px-6 md:px-[4vw]">
-        <h1
+        <motion.h1
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
           className="font-serif italic leading-[0.85] text-[#111]"
           style={{
             fontFamily: '"Instrument Serif", "Cormorant Garamond", serif',
@@ -26,9 +40,12 @@ export function UniverseHero() {
           }}
         >
           avazbek
-        </h1>
+        </motion.h1>
         <div className="flex justify-end">
-          <span
+          <motion.span
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.7 }}
             className="font-serif italic leading-[0.85] text-[#111] -mt-[2vw] md:-mt-[4vw]"
             style={{
               fontFamily: '"Instrument Serif", "Cormorant Garamond", serif',
@@ -37,25 +54,38 @@ export function UniverseHero() {
             }}
           >
             mirzayev
-          </span>
+          </motion.span>
         </div>
       </div>
 
       {/* Manifesto snippet */}
-      <div className="absolute bottom-12 md:bottom-24 left-6 md:left-[8vw] max-w-[32ch] z-20">
-        <p className="text-base md:text-xl text-[#111] leading-relaxed mb-8" style={{ fontFamily: '"Instrument Serif", serif' }}>
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1.2, delay: 1 }}
+        className="absolute bottom-12 md:bottom-24 left-6 md:left-[8vw] max-w-[32ch] z-20"
+      >
+        <p
+          className="text-base md:text-xl text-[#111] leading-relaxed mb-8"
+          style={{ fontFamily: '"Instrument Serif", serif' }}
+        >
           {t("uni.hero.desc")}
         </p>
         <div>
           <LiquidButton href="#uni-works">{t("uni.hero.cta")}</LiquidButton>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="absolute bottom-12 right-6 md:right-[8vw] z-20 hidden md:block">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5 }}
+        className="absolute bottom-12 right-6 md:right-[8vw] z-20 hidden md:block"
+      >
         <div className="text-[10px] uppercase tracking-[0.4em] text-[#111]/40 font-mono rotate-90 origin-right translate-y-full">
-           scroll to explore
+          scroll to explore
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
