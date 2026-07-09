@@ -5,7 +5,7 @@ import youtube from "@/assets/work-youtube.jpg";
 import etherea from "@/assets/universe/etherea.jpg";
 import { useLang } from "@/lib/i18n";
 import { Blob } from "./Blob";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 
 const works = [
   {
@@ -83,7 +83,7 @@ export function UniverseWorks() {
     return t(`uni.work.${key}` as never);
   };
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -93,7 +93,7 @@ export function UniverseWorks() {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 30, scale: 0.95 },
     visible: {
       opacity: 1,

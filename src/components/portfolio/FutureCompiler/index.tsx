@@ -3,6 +3,8 @@ import { Cinematic } from "./Cinematic";
 import { Workspace } from "./Workspace";
 import { useLang } from "@/lib/i18n";
 import { useMagnetic } from "@/hooks/useMagnetic";
+import { useSound } from "@/hooks/useSound";
+import { Volume2, VolumeX } from "lucide-react";
 
 const KEY = "future-compiler-played";
 
@@ -10,6 +12,7 @@ export function FutureCompiler() {
   const { lang } = useLang();
   const [phase, setPhase] = useState<"intro" | "cinematic" | "workspace">("intro");
   const magnet = useMagnetic<HTMLButtonElement>(0.4);
+  const { play, toggleMute, isMuted } = useSound();
 
   useEffect(() => {
     try {
@@ -17,7 +20,10 @@ export function FutureCompiler() {
     } catch {}
   }, []);
 
-  const play = () => setPhase("cinematic");
+  const startPlay = () => {
+    play("boot");
+    setPhase("cinematic");
+  };
   const finish = () => {
     try {
       localStorage.setItem(KEY, "1");
@@ -27,11 +33,22 @@ export function FutureCompiler() {
 
   return (
     <section className="px-5 md:px-20 lg:px-32 py-24 border-t border-border relative">
-      <div className="mb-10 flex gap-2 items-center">
-        <div className="h-[1px] w-8 bg-accent" />
-        <span className="text-[10px] uppercase tracking-widest text-accent">
-          // FUTURE COMPILER · IDE 2035
-        </span>
+      <div className="mb-10 flex gap-2 items-center justify-between">
+        <div className="flex gap-2 items-center">
+          <div className="h-[1px] w-8 bg-accent" />
+          <span className="text-[10px] uppercase tracking-widest text-accent font-mono">
+            // FUTURE COMPILER · IDE 2035
+          </span>
+        </div>
+        <button
+          onClick={toggleMute}
+          className="text-accent/50 hover:text-accent transition-colors flex items-center gap-2 text-[10px] uppercase tracking-widest font-mono"
+        >
+          {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+          <span className="hidden sm:inline">
+            {lang === "uz" ? "Ovoz" : "Sound"} [{isMuted ? "OFF" : "ON"}]
+          </span>
+        </button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-10 mb-14">
@@ -61,7 +78,7 @@ export function FutureCompiler() {
           </span>
           <button
             ref={magnet}
-            onClick={play}
+            onClick={startPlay}
             className="font-display text-4xl md:text-6xl tracking-tighter uppercase border-2 border-accent px-10 py-6 bg-transparent text-accent hover:bg-accent hover:text-background transition-all duration-500 relative"
           >
             ▶ PLAY EXPERIENCE

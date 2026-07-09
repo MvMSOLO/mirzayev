@@ -20,6 +20,7 @@ import { DesignArchaeology } from "@/components/portfolio/DesignArchaeology";
 import { ParallelContact } from "@/components/portfolio/ParallelContact";
 import { Universe } from "@/components/universe/Universe";
 import { UniverseTransition } from "@/components/UniverseTransition";
+import { KineticCursor } from "@/components/portfolio/KineticCursor";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -32,6 +33,7 @@ function Shell() {
     <>
       {mode === "kinetic" ? (
         <main className="min-h-screen bg-background text-foreground font-mono relative overflow-hidden">
+          <KineticCursor />
           <div className="fixed inset-0 bg-grid-blueprint opacity-[0.03] pointer-events-none" />
           <div className="fixed inset-0 bg-grid-dots opacity-[0.1] pointer-events-none" />
           <TechnicalOverlay />

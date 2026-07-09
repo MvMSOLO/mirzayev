@@ -1,0 +1,1 @@
+- [Parallel design subagents on shared concerns](parallel-design-subagents.md) — briefs must name the exact shared hook/file to reuse, or subagents invent duplicate incompatible versions.

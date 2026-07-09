@@ -1,5 +1,6 @@
 import { useLang } from "@/lib/i18n";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
+import { RevealBox, WordReveal } from "./TextReveal";
 
 const tools = [
   "REACT",
@@ -31,7 +32,7 @@ const tools = [
 export function ToolkitGrid() {
   const { lang } = useLang();
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -41,25 +42,26 @@ export function ToolkitGrid() {
     },
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, scale: 0.8, rotate: -5 },
     visible: {
       opacity: 1,
       scale: 1,
-      transition: { duration: 0.4, ease: "easeOut" },
+      rotate: 0,
+      transition: { type: "spring", stiffness: 200, damping: 15 },
     },
   };
 
   return (
     <section className="px-5 md:px-20 lg:px-32 py-24 border-t border-border relative overflow-hidden">
-      <div className="mb-10 flex gap-2 items-center">
+      <RevealBox className="mb-10 flex gap-2 items-center">
         <div className="h-[1px] w-8 bg-accent" />
         <span className="text-[10px] uppercase tracking-widest text-accent">
           // TOOLKIT · 24 CH
         </span>
-      </div>
+      </RevealBox>
       <h2 className="font-display text-5xl md:text-7xl uppercase leading-[0.85] tracking-tighter mb-12">
-        {lang === "uz" ? "Ishlash arsenali" : "Working arsenal"}
+        <WordReveal text={lang === "uz" ? "Ishlash arsenali" : "Working arsenal"} sound />
         <span className="text-accent">.</span>
       </h2>
 
@@ -67,21 +69,25 @@ export function ToolkitGrid() {
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true }}
-        className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-px bg-border"
+        viewport={{ once: true, margin: "-5%" }}
+        className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-px bg-border [perspective:1000px]"
       >
         {tools.map((tool, i) => (
           <motion.div
             key={tool}
             variants={itemVariants}
-            className="aspect-square bg-background flex items-center justify-center relative group hover:bg-accent transition-colors duration-300 cursor-default"
+            whileHover={{ scale: 1.05, zIndex: 10, rotateY: 10, rotateX: -10 }}
+            className="aspect-square bg-background flex items-center justify-center relative group hover:bg-accent transition-colors duration-300 cursor-default shadow-sm hover:shadow-[0_0_20px_rgba(255,69,0,0.3)]"
           >
-            <span className="font-mono text-[10px] md:text-xs uppercase tracking-widest group-hover:text-background transition-colors">
+            <span className="font-mono text-[10px] md:text-xs uppercase tracking-widest group-hover:text-background transition-colors group-hover:scale-110 duration-300">
               {tool}
             </span>
             <span className="absolute top-1 left-1 text-[8px] text-white/30 group-hover:text-background/70 font-mono">
               {String(i + 1).padStart(2, "0")}
             </span>
+            {/* Technical corners on hover */}
+            <div className="absolute top-1 right-1 w-1.5 h-1.5 border-t border-r border-background opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute bottom-1 left-1 w-1.5 h-1.5 border-b border-l border-background opacity-0 group-hover:opacity-100 transition-opacity" />
           </motion.div>
         ))}
       </motion.div>

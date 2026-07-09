@@ -1,12 +1,13 @@
 import { useLang } from "@/lib/i18n";
 import { ParticleField } from "./ParticleField";
 import { HeroRails } from "./HeroRails";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
+import { WordReveal, RevealBox } from "./TextReveal";
 
 export function Hero() {
   const { t } = useLang();
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -17,25 +18,13 @@ export function Hero() {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         duration: 0.8,
-        ease: [0.16, 1, 0.3, 1],
-      },
-    },
-  };
-
-  const titleVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 1,
         ease: [0.16, 1, 0.3, 1],
       },
     },
@@ -89,12 +78,12 @@ export function Hero() {
           <div className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-white/40" />
           <span className="text-[10px] font-bold uppercase tracking-widest">{t("hero.chip")}</span>
         </motion.div>
-        <motion.h1
-          variants={titleVariants}
-          className="font-display text-7xl md:text-9xl uppercase leading-[0.85] tracking-tighter mb-8"
-        >
-          {t("hero.first")} <br /> <span className="text-accent">{t("hero.last")}</span>
-        </motion.h1>
+        <h1 className="font-display text-7xl md:text-9xl uppercase leading-[0.85] tracking-tighter mb-8">
+          <WordReveal text={t("hero.first")} sound /> <br />
+          <span className="text-accent">
+            <WordReveal text={t("hero.last")} delay={0.2} />
+          </span>
+        </h1>
         <motion.p
           variants={itemVariants}
           className="max-w-[36ch] text-sm md:text-base text-white/70 leading-relaxed mb-10"

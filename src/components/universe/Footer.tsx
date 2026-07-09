@@ -1,7 +1,7 @@
 import { useLang } from "@/lib/i18n";
 import { useUniverse } from "@/lib/universe";
 import { LiquidButton } from "./LiquidButton";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 
 const socials = [
   { k: "Telegram", href: "https://t.me/axz_foto" },
@@ -15,7 +15,7 @@ export function UniverseFooter() {
   const { t } = useLang();
   const { exit } = useUniverse();
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -25,7 +25,7 @@ export function UniverseFooter() {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,

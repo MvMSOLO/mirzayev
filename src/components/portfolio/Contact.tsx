@@ -1,6 +1,8 @@
 import { useLang } from "@/lib/i18n";
 import { useUniverse } from "@/lib/universe";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
+import { RevealBox, WordReveal } from "./TextReveal";
+import { KineticButton } from "./KineticButton";
 
 const social = [
   { k: "Telegram", v: "@axz_foto", href: "https://t.me/axz_foto" },
@@ -20,7 +22,7 @@ export function Contact() {
   const { t } = useLang();
   const { enter } = useUniverse();
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -30,12 +32,12 @@ export function Contact() {
     },
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, x: -20 },
     visible: {
       opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
+      x: 0,
+      transition: { duration: 0.5, ease: "easeOut" },
     },
   };
 
@@ -55,12 +57,7 @@ export function Contact() {
       </div>
 
       <div className="relative z-10">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
+        <RevealBox>
           <div className="mb-10 flex gap-2 items-center">
             <div className="h-[1px] w-8 bg-accent" />
             <span className="text-[10px] uppercase tracking-widest text-accent">
@@ -69,19 +66,21 @@ export function Contact() {
           </div>
 
           <h2 className="font-display text-6xl md:text-9xl uppercase leading-[0.85] mb-6 tracking-tighter">
-            {t("contact.title_a")} <br />
-            <span className="text-accent">{t("contact.title_b")}</span>
+            <WordReveal text={t("contact.title_a")} sound /> <br />
+            <span className="text-accent">
+              <WordReveal text={t("contact.title_b")} delay={0.2} />
+            </span>
           </h2>
 
           <p className="text-xs md:text-sm text-white/50 max-w-[52ch] mb-14">{t("contact.note")}</p>
-        </motion.div>
+        </RevealBox>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-20">
           <motion.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-10%" }}
           >
             <span className="text-[10px] uppercase text-white/40 tracking-widest mb-4 block">
               {t("contact.social")}
@@ -93,12 +92,13 @@ export function Contact() {
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex justify-between py-4 group items-center"
+                    className="flex justify-between py-4 group items-center relative overflow-hidden"
                   >
-                    <span className="text-sm uppercase font-bold group-hover:text-accent transition-colors">
+                    <div className="absolute inset-0 bg-accent/5 scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
+                    <span className="text-sm uppercase font-bold group-hover:text-accent transition-colors relative z-10 group-hover:translate-x-2 duration-300">
                       {s.k}
                     </span>
-                    <span className="text-sm text-white/50 group-hover:text-accent transition-colors flex items-center gap-2">
+                    <span className="text-sm text-white/50 group-hover:text-accent transition-colors flex items-center gap-2 relative z-10 group-hover:-translate-x-2 duration-300">
                       {s.v}
                       <span className="opacity-0 group-hover:opacity-100 transition-opacity">
                         ↗
@@ -113,7 +113,7 @@ export function Contact() {
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-10%" }}
           >
             <span className="text-[10px] uppercase text-white/40 tracking-widest mb-4 block">
               {t("contact.direct")}
@@ -125,12 +125,13 @@ export function Contact() {
                     href={s.href}
                     target={s.href.startsWith("mailto:") ? undefined : "_blank"}
                     rel="noopener noreferrer"
-                    className="flex justify-between py-4 group items-center"
+                    className="flex justify-between py-4 group items-center relative overflow-hidden"
                   >
-                    <span className="text-sm uppercase font-bold group-hover:text-accent transition-colors">
+                    <div className="absolute inset-0 bg-accent/5 scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
+                    <span className="text-sm uppercase font-bold group-hover:text-accent transition-colors relative z-10 group-hover:translate-x-2 duration-300">
                       {s.k}
                     </span>
-                    <span className="text-sm text-white/50 group-hover:text-accent transition-colors flex items-center gap-2 truncate max-w-[60%]">
+                    <span className="text-sm text-white/50 group-hover:text-accent transition-colors flex items-center gap-2 truncate max-w-[60%] relative z-10 group-hover:-translate-x-2 duration-300">
                       {s.v}
                       <span className="opacity-0 group-hover:opacity-100 transition-opacity">
                         ↗
@@ -154,24 +155,12 @@ export function Contact() {
           <span>v3.0 · Kinetic Lab</span>
         </motion.div>
 
-        <div className="mt-14 flex justify-center">
-          <motion.button
-            onClick={enter}
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="group relative flex items-center gap-4 border border-accent/60 px-8 py-4 uppercase tracking-[0.3em] text-xs font-bold hover:bg-accent hover:border-accent hover:text-background transition-all duration-500 cursor-pointer"
-          >
-            <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-70" />
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-accent" />
-            </span>
+        <RevealBox className="mt-14 flex justify-center">
+          <KineticButton onClick={enter} primary>
             {t("uni.enter")}
             <span className="text-xl">↗</span>
-          </motion.button>
-        </div>
+          </KineticButton>
+        </RevealBox>
       </div>
     </footer>
   );

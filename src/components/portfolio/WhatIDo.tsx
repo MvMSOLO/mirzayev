@@ -1,5 +1,6 @@
 import { useLang } from "@/lib/i18n";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
+import { RevealBox, WordReveal } from "./TextReveal";
 
 export function WhatIDo() {
   const { t } = useLang();
@@ -15,22 +16,23 @@ export function WhatIDo() {
     "wid.9",
   ] as const;
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.05,
+        staggerChildren: 0.1,
       },
     },
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 10 },
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, scale: 0.95, rotateX: 10 },
     visible: {
       opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, ease: "easeOut" },
+      scale: 1,
+      rotateX: 0,
+      transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
     },
   };
 
@@ -39,32 +41,37 @@ export function WhatIDo() {
       id="services"
       className="px-5 md:px-20 lg:px-32 py-24 border-b border-border relative overflow-hidden"
     >
-      <div className="mb-10 flex gap-2 items-center">
+      <RevealBox className="mb-10 flex gap-2 items-center">
         <div className="h-[1px] w-8 bg-accent" />
         <span className="text-[10px] uppercase tracking-widest text-accent">{t("wid.tag")}</span>
-      </div>
+      </RevealBox>
       <h2 className="font-display text-5xl md:text-7xl uppercase tracking-tighter mb-12 leading-[0.9]">
-        {t("wid.title_a")}
-        <span className="text-accent">{t("wid.title_i")}</span>
-        {t("wid.title_b")}
+        <WordReveal text={t("wid.title_a")} sound />
+        <span className="text-accent ml-2 mr-2">
+          <WordReveal text={t("wid.title_i")} delay={0.1} />
+        </span>
+        <WordReveal text={t("wid.title_b")} delay={0.2} />
       </h2>
       <motion.div
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border"
+        viewport={{ once: true, margin: "-10%" }}
+        className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border [perspective:1000px]"
       >
         {items.map((k, i) => (
           <motion.div
             key={k}
             variants={itemVariants}
-            className="group bg-background p-6 flex items-baseline justify-between hover:bg-accent hover:text-background transition-colors cursor-default"
+            className="group relative bg-background p-6 flex items-baseline justify-between overflow-hidden cursor-default min-h-[140px]"
           >
-            <span className="font-display text-2xl md:text-3xl uppercase tracking-tight">
+            {/* Hover Background Expansion */}
+            <div className="absolute inset-0 bg-accent scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] z-0" />
+
+            <span className="font-display text-2xl md:text-3xl uppercase tracking-tight relative z-10 group-hover:text-background transition-colors duration-300">
               {t(k)}
             </span>
-            <span className="font-mono text-[10px] opacity-40 group-hover:opacity-100">
+            <span className="font-mono text-[10px] opacity-40 group-hover:opacity-100 relative z-10 group-hover:text-background transition-colors duration-300">
               0{i + 1}
             </span>
           </motion.div>

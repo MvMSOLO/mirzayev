@@ -8,6 +8,24 @@ export const dict: Dict = {
   // Nav
   "nav.handle": { uz: "AVAZBEK / 16", en: "AVAZBEK / 16" },
   "nav.status": { uz: "Ochiq · 2026", en: "Available · 2026" },
+  "nav.menu": { uz: "Menyu", en: "Menu" },
+  "nav.close": { uz: "Yopish", en: "Close" },
+  "nav.about": { uz: "Men haqimda", en: "About" },
+  "nav.work": { uz: "Ishlar", en: "Work" },
+  "nav.services": { uz: "Xizmatlar", en: "Services" },
+  "nav.lab": { uz: "Laboratoriya", en: "Lab" },
+  "nav.contact": { uz: "Aloqa", en: "Contact" },
+
+  // Sound & Music
+  "sound.on": { uz: "Ovoz: Yoqilgan", en: "Sound: On" },
+  "sound.off": { uz: "Ovoz: O'chirilgan", en: "Sound: Off" },
+  "music.search": { uz: "Qidirish (yoki link)", en: "Search (or link)" },
+  "music.playing": { uz: "O'ynalmoqda", en: "Playing" },
+  "music.paused": { uz: "To'xtatilgan", en: "Paused" },
+  "music.collapse": { uz: "Musiqa panelini yopish", en: "Collapse music player" },
+  "music.expand": { uz: "Musiqa panelini ochish", en: "Expand music player" },
+  "music.play": { uz: "Ijro etish", en: "Play" },
+  "music.pause": { uz: "To'xtatish", en: "Pause" },
 
   // Hero
   "hero.chip": { uz: "EKSPERIMENTAL LAB · 2026", en: "EXPERIMENTAL LAB · 2026" },
@@ -176,6 +194,24 @@ export const dict: Dict = {
     uz: "biznes va hamkorlik uchun murojaat qiling. har bir loyiha — yangi olam.",
     en: "for business and collaboration inquiries. every project is a new universe.",
   },
+  "fc.prompt.placeholder.1": {
+    uz: "masalan: minimalist portfolio...",
+    en: "e.g. minimalist portfolio...",
+  },
+  "fc.prompt.placeholder.2": {
+    uz: "masalan: qahvaxona uchun landing...",
+    en: "e.g. coffee shop landing page...",
+  },
+  "fc.prompt.placeholder.3": {
+    uz: "masalan: saas platformasi dashboardi...",
+    en: "e.g. saas platform dashboard...",
+  },
+  "fc.prompt.chip.1": { uz: "E-tijorat do'koni", en: "E-commerce store" },
+  "fc.prompt.chip.2": { uz: "Kripto treker", en: "Crypto tracker" },
+  "fc.prompt.chip.3": { uz: "Shaxsiy blog", en: "Personal blog" },
+  "fc.prompt.label": { uz: "TIZIMGA KIRITISH", en: "SYSTEM INPUT" },
+  "fc.prompt.submit": { uz: "KOMPILYATSIYA QILISH", en: "INITIALIZE BUILD" },
+  "fc.prompt.thinking": { uz: "NEYRON TARMOQ TAHLIL QILMOQDA", en: "NEURAL NETWORK ANALYZING" },
 };
 
 interface Ctx {
