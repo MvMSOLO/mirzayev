@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LangProvider } from "@/lib/i18n";
 import { UniverseProvider, useUniverse } from "@/lib/universe";
+import { useLenis } from "@/hooks/useLenis";
 import { Nav } from "@/components/portfolio/Nav";
 import { Hero } from "@/components/portfolio/Hero";
 import { About } from "@/components/portfolio/About";
@@ -12,6 +13,11 @@ import { AetherFlow } from "@/components/portfolio/AetherFlow";
 import { TechnicalOverlay } from "@/components/portfolio/TechnicalOverlay";
 import { Philosophy } from "@/components/portfolio/Philosophy";
 import { Contact } from "@/components/portfolio/Contact";
+import { LabLog } from "@/components/portfolio/LabLog";
+import { ToolkitGrid } from "@/components/portfolio/ToolkitGrid";
+import { FutureCompiler } from "@/components/portfolio/FutureCompiler";
+import { DesignArchaeology } from "@/components/portfolio/DesignArchaeology";
+import { ParallelContact } from "@/components/portfolio/ParallelContact";
 import { Universe } from "@/components/universe/Universe";
 import { UniverseTransition } from "@/components/UniverseTransition";
 
@@ -21,6 +27,7 @@ export const Route = createFileRoute("/")({
 
 function Shell() {
   const { mode } = useUniverse();
+  useLenis();
   return (
     <>
       {mode === "kinetic" ? (
@@ -34,9 +41,14 @@ function Shell() {
           <WhatIDo />
           <SkillsMarquee />
           <SkillsDetail />
+          <ToolkitGrid />
           <AetherFlow />
           <Work />
+          <DesignArchaeology />
+          <FutureCompiler />
           <Philosophy />
+          <LabLog />
+          <ParallelContact />
           <Contact />
         </main>
       ) : (

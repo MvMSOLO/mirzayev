@@ -1,11 +1,13 @@
 import { useLang } from "@/lib/i18n";
 import { ParticleField } from "./ParticleField";
+import { HeroRails } from "./HeroRails";
 
 export function Hero() {
   const { t } = useLang();
   return (
     <section id="top" className="relative pt-32 pb-24 overflow-hidden border-b border-border min-h-[92vh] flex flex-col justify-center">
       <ParticleField className="opacity-80" />
+      <HeroRails />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/10 to-background pointer-events-none" />
 
       <div className="absolute -top-6 left-0 whitespace-nowrap flex pointer-events-none select-none">
