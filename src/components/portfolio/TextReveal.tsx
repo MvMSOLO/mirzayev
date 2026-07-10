@@ -242,13 +242,15 @@ export function GlitchReveal({
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+    let intervalId: ReturnType<typeof setInterval>;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !started) {
           setStarted(true);
-          setTimeout(() => {
+          timeoutId = setTimeout(() => {
             let iteration = 0;
-            const interval = setInterval(() => {
+            intervalId = setInterval(() => {
               setDisplayed(
                 text.split("").map((letter, i) => {
                   if (i < iteration) return letter;
@@ -256,7 +258,7 @@ export function GlitchReveal({
                   return chars[Math.floor(Math.random() * chars.length)];
                 }),
               );
-              if (iteration >= text.length) clearInterval(interval);
+              if (iteration >= text.length) clearInterval(intervalId);
               iteration += 0.5;
             }, 40);
           }, delay * 1000);
@@ -265,7 +267,11 @@ export function GlitchReveal({
       { threshold: 0.3 },
     );
     if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      clearTimeout(timeoutId);
+      clearInterval(intervalId);
+    };
   }, [text, delay, started]);
 
   return (
