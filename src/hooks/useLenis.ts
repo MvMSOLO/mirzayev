@@ -14,17 +14,40 @@ export function useLenis() {
 
     installed = true;
     gsap.registerPlugin(ScrollTrigger);
-    const lenis = new Lenis({ duration: 1.15, smoothWheel: true });
+
+    const lenis = new Lenis({
+      duration: 1.4,
+      smoothWheel: true,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // expo ease out
+      touchMultiplier: 2,
+      infinite: false,
+    });
+
     function raf(time: number) {
       lenis.raf(time * 1000);
     }
+
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
     lenis.on("scroll", ScrollTrigger.update);
 
+    // Subtle scroll sound feedback using native scroll event
+    let scrollTimeout: ReturnType<typeof setTimeout>;
+    let lastY = 0;
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (Math.abs(y - lastY) > 80) {
+        lastY = y;
+      }
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {}, 150);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
     return () => {
       gsap.ticker.remove(raf);
       lenis.destroy();
+      window.removeEventListener("scroll", onScroll);
       installed = false;
     };
   }, []);

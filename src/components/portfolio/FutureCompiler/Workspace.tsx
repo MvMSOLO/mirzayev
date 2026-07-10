@@ -12,207 +12,450 @@ interface Bundle {
   js: string;
 }
 
-const STAGES = ["THINKING", "BUILDING", "COMPILING", "OPTIMIZING"] as const;
+const STAGES = [
+  { id: "PARSING", label: "Parsing intent", pct: 15 },
+  { id: "THINKING", label: "Neural analysis", pct: 35 },
+  { id: "BUILDING", label: "Generating structure", pct: 60 },
+  { id: "COMPILING", label: "Compiling modules", pct: 80 },
+  { id: "OPTIMIZING", label: "Optimizing output", pct: 95 },
+] as const;
+
+type Stage = (typeof STAGES)[number]["id"];
+
+const SAMPLE_PROMPTS_EN = [
+  "a dark portfolio for a music producer with waveform visualizers",
+  "a futuristic crypto dashboard with glowing charts",
+  "a minimal blog with serif typography and code blocks",
+  "a landing page for an AI startup with neural animations",
+];
+const SAMPLE_PROMPTS_UZ = [
+  "musiqa ishlab chiqaruvchi uchun to'lqin vizualizatori bilan qorong'i portfolio",
+  "neon grafiklar bilan kriptovalyuta dashboard",
+  "kod bloklari bilan minimal blog",
+  "neyron animatsiyalar bilan AI startap sahifasi",
+];
+
+const TERMINAL_LINES_EN = [
+  "◉ FUTURE COMPILER v2035 — ONLINE",
+  "◉ Neural engine initialized",
+  "◉ Vanilla JS runtime loaded",
+  "◉ No frameworks. No libraries. Pure code.",
+  "◉ Ready for compilation...",
+];
+const TERMINAL_LINES_UZ = [
+  "◉ KELAJAK KOMPILYATORI v2035 — FAOL",
+  "◉ Neyron dvigatel ishga tushdi",
+  "◉ Vanilla JS runtime yuklandi",
+  "◉ Freymvork yo'q. Kutubxona yo'q. Toza kod.",
+  "◉ Kompilyatsiyaga tayyor...",
+];
 
 export function Workspace() {
   const { lang, t } = useLang();
   const { play } = useSound();
   const [prompt, setPrompt] = useState("");
-  const [status, setStatus] = useState<(typeof STAGES)[number] | null>(null);
+  const [stageIndex, setStageIndex] = useState(-1);
   const [bundle, setBundle] = useState<Bundle | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [isFocused, setIsFocused] = useState(false);
-  const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const [terminalLines, setTerminalLines] = useState<string[]>([]);
+  const [cursorVisible, setCursorVisible] = useState(true);
+  const [lineCount, setLineCount] = useState(1);
+  const terminalRef = useRef<HTMLDivElement>(null);
+  const isRunning = stageIndex >= 0 && stageIndex < STAGES.length;
 
-  const placeholders = [
-    t("fc.prompt.placeholder.1"),
-    t("fc.prompt.placeholder.2"),
-    t("fc.prompt.placeholder.3"),
-  ];
+  const bootLines = lang === "uz" ? TERMINAL_LINES_UZ : TERMINAL_LINES_EN;
 
-  const chips = [t("fc.prompt.chip.1"), t("fc.prompt.chip.2"), t("fc.prompt.chip.3")];
-
+  // Boot terminal animation
   useEffect(() => {
-    const interval = setInterval(() => {
-      setPlaceholderIndex((prev) => (prev + 1) % placeholders.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [placeholders.length]);
+    let cancelled = false;
+    setTerminalLines([]);
+    const addLine = async (i: number) => {
+      if (cancelled || i >= bootLines.length) return;
+      await new Promise((r) => setTimeout(r, 300 + i * 200));
+      if (!cancelled) {
+        setTerminalLines((prev) => [...prev, bootLines[i]]);
+        play("type");
+        addLine(i + 1);
+      }
+    };
+    addLine(0);
+    return () => { cancelled = true; };
+  }, [lang]);
+
+  // Cursor blink
+  useEffect(() => {
+    const id = setInterval(() => setCursorVisible((v) => !v), 530);
+    return () => clearInterval(id);
+  }, []);
+
+  // Auto-scroll terminal
+  useEffect(() => {
+    if (terminalRef.current) {
+      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+    }
+  }, [terminalLines]);
+
+  // Track line count
+  useEffect(() => {
+    setLineCount(prompt.split("\n").length);
+  }, [prompt]);
+
+  const addTerminalLine = (line: string) => {
+    setTerminalLines((prev) => [...prev, line]);
+    play("type");
+  };
 
   const generate = async () => {
-    if (!prompt.trim()) return;
+    if (!prompt.trim() || isRunning) return;
     play("submit");
     setErr(null);
     setBundle(null);
+    setStageIndex(0);
+
+    const runLines =
+      lang === "uz"
+        ? [
+            `> Prompt qabul qilindi: "${prompt.slice(0, 40)}${prompt.length > 40 ? "..." : ""}"`,
+            "> Neyron tarmoq tahlil qilmoqda...",
+            "> HTML/CSS/JS strukturasi yaratilmoqda...",
+            "> Vanilla kompilyatsiyasi...",
+            "> Optimizatsiya qilinmoqda...",
+          ]
+        : [
+            `> Received: "${prompt.slice(0, 40)}${prompt.length > 40 ? "..." : ""}"`,
+            "> Neural network analyzing...",
+            "> Generating HTML/CSS/JS structure...",
+            "> Vanilla compilation pass...",
+            "> Optimizing output...",
+          ];
+
     for (let i = 0; i < STAGES.length; i++) {
-      setStatus(STAGES[i]);
+      setStageIndex(i);
       play("scan");
+      addTerminalLine(runLines[i]);
       await new Promise((r) => setTimeout(r, 900));
     }
+
     try {
       const result = await compileWebsite({ data: { prompt } });
       setBundle(result);
-      setStatus(null);
+      setStageIndex(-1);
+      play("success");
+      addTerminalLine(
+        lang === "uz" ? "✓ Kompilyatsiya muvaffaqiyatli yakunlandi" : "✓ Compilation successful"
+      );
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Compile failed");
-      setStatus(null);
+      setStageIndex(-1);
       play("error");
+      addTerminalLine(
+        lang === "uz" ? "✗ Xato yuz berdi" : `✗ Error: ${e instanceof Error ? e.message : "Compile failed"}`
+      );
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      if (!status && prompt.trim()) generate();
+      if (!isRunning && prompt.trim()) generate();
     } else {
       play("type");
     }
   };
 
+  const samples = lang === "uz" ? SAMPLE_PROMPTS_UZ : SAMPLE_PROMPTS_EN;
+  const currentStage = stageIndex >= 0 ? STAGES[stageIndex] : null;
+
   return (
-    <div className="max-w-5xl mx-auto space-y-12">
+    <div className="space-y-6">
+      {/* IDE Window */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative group"
+        className="border border-accent/30 bg-black/90 backdrop-blur-xl shadow-[0_0_60px_rgba(255,69,0,0.08)] overflow-hidden"
       >
-        <div
-          className={`absolute -inset-[1px] bg-gradient-to-r from-accent/0 via-accent/50 to-accent/0 opacity-0 transition-opacity duration-1000 blur-sm pointer-events-none ${isFocused ? "opacity-100" : "group-hover:opacity-50"}`}
-        />
-
-        <div className="relative border border-accent/40 bg-black/80 backdrop-blur-xl p-6 md:p-10 shadow-2xl overflow-hidden">
-          {/* Background scanline effect */}
-          <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[linear-gradient(rgba(255,255,255,1)_1px,transparent_1px)] bg-[size:100%_4px]" />
-
-          <div className="flex justify-between items-start mb-6">
-            <label className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-accent font-mono flex items-center gap-2">
-              <span className="w-2 h-2 bg-accent inline-block animate-pulse" />
-              {t("fc.prompt.label")}
-            </label>
-            <div className="text-[9px] uppercase tracking-widest text-white/30 font-mono hidden sm:block">
-              // NO LIBRARIES · NO FRAMEWORKS
-            </div>
+        {/* Title bar */}
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-accent/20 bg-black/60">
+          <div className="flex gap-1.5">
+            <div className="w-3 h-3 rounded-full bg-red-500/70 hover:bg-red-500 transition-colors cursor-default" />
+            <div className="w-3 h-3 rounded-full bg-yellow-500/70 hover:bg-yellow-500 transition-colors cursor-default" />
+            <div className="w-3 h-3 rounded-full bg-green-500/70 hover:bg-green-500 transition-colors cursor-default" />
           </div>
-
-          <div className="relative">
-            <span className="absolute left-0 top-4 text-accent/50 font-display text-2xl md:text-4xl select-none">
-              ›
+          <div className="flex-1 text-center">
+            <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">
+              FUTURE_COMPILER.exe — {lang === "uz" ? "Loyiha Muharriri" : "Project Editor"} — v2035
             </span>
-            <textarea
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              onKeyDown={handleKeyDown}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
-              rows={3}
-              disabled={status !== null}
-              className="w-full bg-transparent pl-8 md:pl-12 py-4 font-mono text-base md:text-xl text-white focus:outline-none resize-none disabled:opacity-50 relative z-10"
-            />
-            {!prompt && !status && (
-              <div className="absolute left-8 md:left-12 top-4 pointer-events-none text-white/20 font-mono text-base md:text-xl overflow-hidden flex items-center">
-                <AnimatePresence mode="wait">
-                  <motion.span
-                    key={placeholderIndex}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {placeholders[placeholderIndex]}
-                  </motion.span>
-                </AnimatePresence>
-                <span className="ml-1 w-2 h-6 bg-accent/50 animate-pulse inline-block" />
-              </div>
-            )}
           </div>
+          <div className="flex items-center gap-1">
+            <div className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse" />
+            <span className="text-[9px] font-mono text-accent/60 uppercase tracking-widest">LIVE</span>
+          </div>
+        </div>
 
-          <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-            <div className="flex gap-2 flex-wrap">
-              {chips.map((chip, i) => (
-                <button
-                  key={i}
-                  onClick={() => {
-                    setPrompt(chip);
-                    play("type");
-                  }}
-                  disabled={status !== null}
-                  className="px-3 py-1.5 border border-white/10 hover:border-accent/40 bg-white/5 hover:bg-accent/10 text-white/60 hover:text-accent transition-colors text-[10px] font-mono uppercase tracking-widest disabled:opacity-40"
+        {/* IDE Body */}
+        <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] divide-y lg:divide-y-0 lg:divide-x divide-accent/10">
+          {/* Sidebar */}
+          <div className="bg-black/40 p-4 hidden lg:block">
+            <div className="text-[9px] font-mono text-white/30 uppercase tracking-widest mb-3">
+              EXPLORER
+            </div>
+            <div className="space-y-1">
+              {[
+                { name: "prompt.txt", icon: "◎", active: true },
+                { name: "output.html", icon: "◻", active: false },
+                { name: "styles.css", icon: "◈", active: false },
+                { name: "script.js", icon: "◆", active: false },
+                { name: "README.md", icon: "▷", active: false },
+              ].map((f) => (
+                <div
+                  key={f.name}
+                  className={`flex items-center gap-2 px-2 py-1.5 text-[10px] font-mono rounded cursor-default transition-colors ${
+                    f.active
+                      ? "bg-accent/20 text-accent border-l-2 border-accent"
+                      : "text-white/30 hover:text-white/50 hover:bg-white/5"
+                  }`}
                 >
-                  {chip}
-                </button>
+                  <span>{f.icon}</span>
+                  <span>{f.name}</span>
+                </div>
               ))}
             </div>
 
-            <button
-              onClick={generate}
-              disabled={status !== null || !prompt.trim()}
-              className="group/btn relative px-8 py-4 bg-accent text-background text-xs uppercase tracking-[0.3em] font-bold overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
-            >
-              <span className="absolute inset-0 w-full h-full bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 ease-out" />
-              <span className="relative z-10 flex items-center justify-center gap-3">
-                {status ? (
-                  <>
-                    <span
-                      className="w-1.5 h-1.5 bg-background rounded-full animate-bounce"
-                      style={{ animationDelay: "0ms" }}
-                    />
-                    <span
-                      className="w-1.5 h-1.5 bg-background rounded-full animate-bounce"
-                      style={{ animationDelay: "150ms" }}
-                    />
-                    <span
-                      className="w-1.5 h-1.5 bg-background rounded-full animate-bounce"
-                      style={{ animationDelay: "300ms" }}
-                    />
-                  </>
-                ) : (
-                  <>
-                    {t("fc.prompt.submit")}{" "}
-                    <span className="font-display text-lg leading-none">→</span>
-                  </>
+            <div className="mt-6 pt-4 border-t border-white/5">
+              <div className="text-[9px] font-mono text-white/20 uppercase tracking-widest mb-2">
+                OUTLINE
+              </div>
+              <div className="space-y-1 text-[9px] font-mono text-white/20">
+                <div>  ▸ &lt;html&gt;</div>
+                <div>    ▸ &lt;head&gt;</div>
+                <div>    ▸ &lt;body&gt;</div>
+                <div>  ▸ styles</div>
+                <div>  ▸ scripts</div>
+              </div>
+            </div>
+
+            <div className="mt-auto pt-6">
+              <div className="text-[9px] font-mono text-white/20 uppercase tracking-widest">
+                ENGINE: NEURAL v2035
+              </div>
+              <div className="mt-1 h-1 bg-white/10 rounded overflow-hidden">
+                <motion.div
+                  className="h-full bg-accent/60"
+                  animate={{ width: isRunning ? `${currentStage?.pct ?? 0}%` : "100%" }}
+                  transition={{ duration: 0.5 }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Editor pane */}
+          <div className="flex flex-col min-h-[360px]">
+            {/* Tab bar */}
+            <div className="flex items-center border-b border-accent/10 bg-black/30 overflow-x-auto">
+              {["prompt.txt", "∴ neural.config"].map((tab, i) => (
+                <div
+                  key={tab}
+                  className={`px-4 py-2.5 text-[10px] font-mono border-r border-accent/10 whitespace-nowrap cursor-default ${
+                    i === 0 ? "bg-black/40 text-accent border-b-2 border-b-accent" : "text-white/30"
+                  }`}
+                >
+                  {tab}
+                </div>
+              ))}
+            </div>
+
+            {/* Editor area with line numbers */}
+            <div className="flex flex-1 relative">
+              {/* Line numbers */}
+              <div className="hidden sm:flex flex-col py-4 bg-black/20 border-r border-white/5 select-none">
+                {Array.from({ length: Math.max(lineCount, 8) }).map((_, i) => (
+                  <div
+                    key={i}
+                    className={`ide-line-number py-0 px-3 leading-7 text-[11px] ${
+                      i === 0 && isFocused ? "ide-gutter-active" : ""
+                    }`}
+                  >
+                    {i + 1}
+                  </div>
+                ))}
+              </div>
+
+              {/* Textarea */}
+              <div className="flex-1 relative">
+                <div className="absolute left-3 top-4 flex items-center gap-2 text-[10px] font-mono text-accent/60 pointer-events-none z-10">
+                  <span className="animate-pulse">›</span>
+                </div>
+                <textarea
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                  placeholder={
+                    lang === "uz"
+                      ? "// G'oyangizni tasvirlab bering...\n// Misol: minimalist portfolio site"
+                      : "// Describe your idea...\n// Example: a dark portfolio for a music producer"
+                  }
+                  disabled={isRunning}
+                  rows={6}
+                  className="w-full h-full min-h-[200px] bg-transparent text-white/90 font-mono text-sm leading-7 py-4 pl-8 pr-4 resize-none outline-none placeholder:text-white/15 disabled:opacity-50"
+                />
+
+                {/* Focus border glow */}
+                {isFocused && (
+                  <div className="absolute inset-0 pointer-events-none border border-accent/20 shadow-[inset_0_0_30px_rgba(255,69,0,0.03)]" />
                 )}
-              </span>
-            </button>
+              </div>
+            </div>
+
+            {/* Status bar */}
+            <div className="flex items-center justify-between px-4 py-2 border-t border-accent/10 bg-black/40">
+              <div className="flex items-center gap-4 text-[9px] font-mono text-white/25">
+                <span>UTF-8</span>
+                <span>PLAINTEXT</span>
+                <span>{prompt.length} chars</span>
+              </div>
+              <div className="flex items-center gap-2 text-[9px] font-mono text-white/25">
+                {isFocused && (
+                  <span className="text-accent/60 animate-pulse">● EDITING</span>
+                )}
+                <span>Ln {lineCount}, Col {prompt.split("\n").pop()?.length ?? 0 + 1}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom action bar */}
+        <div className="flex items-center justify-between gap-4 px-4 py-3 border-t border-accent/20 bg-black/60 flex-wrap">
+          {/* Sample chips */}
+          <div className="flex flex-wrap gap-2">
+            {samples.slice(0, 2).map((s) => (
+              <button
+                key={s}
+                onClick={() => { setPrompt(s); play("type"); }}
+                disabled={isRunning}
+                className="text-[9px] font-mono text-white/30 border border-white/10 px-2 py-1 hover:border-accent/40 hover:text-accent/60 transition-colors uppercase tracking-widest truncate max-w-[160px] disabled:opacity-30"
+              >
+                {s.slice(0, 24)}...
+              </button>
+            ))}
+          </div>
+
+          {/* Run button */}
+          <motion.button
+            onClick={generate}
+            disabled={isRunning || !prompt.trim()}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="relative font-mono text-[11px] uppercase tracking-widest border border-accent px-6 py-2.5 bg-accent/10 text-accent hover:bg-accent hover:text-background transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-3 overflow-hidden group"
+          >
+            <div className="absolute inset-0 bg-accent scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300" />
+            <span className="relative z-10 flex items-center gap-2">
+              {isRunning ? (
+                <>
+                  <div className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin" />
+                  {currentStage?.label ?? "Running"}
+                </>
+              ) : (
+                <>
+                  <span>▶</span>
+                  {lang === "uz" ? "ISHGA TUSHIR" : "COMPILE"}
+                </>
+              )}
+            </span>
+          </motion.button>
+        </div>
+
+        {/* Progress bar */}
+        <AnimatePresence>
+          {isRunning && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="px-4 py-3 border-t border-accent/20 bg-black/40"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2 text-accent font-mono text-[10px] uppercase tracking-widest">
+                  <div className="w-3 h-3 border border-accent border-t-transparent rounded-full animate-spin" />
+                  <span>{currentStage?.label}</span>
+                </div>
+                <span className="text-[10px] font-mono text-accent/60">{currentStage?.pct}%</span>
+              </div>
+              <div className="h-[2px] w-full bg-white/5 relative overflow-hidden">
+                <motion.div
+                  className="absolute inset-y-0 left-0 bg-accent shadow-[0_0_10px_rgba(255,69,0,0.8)]"
+                  initial={{ width: "0%" }}
+                  animate={{ width: `${currentStage?.pct ?? 0}%` }}
+                  transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                />
+                {/* Shimmer */}
+                <div className="absolute inset-y-0 w-24 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+
+      {/* Terminal */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.6 }}
+        className="border border-white/10 bg-black/80 backdrop-blur overflow-hidden animate-terminal-flicker"
+      >
+        {/* Terminal title bar */}
+        <div className="flex items-center gap-3 px-4 py-2 border-b border-white/5 bg-black/40">
+          <div className="flex gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-full bg-red-500/50" />
+            <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50" />
+            <div className="w-2.5 h-2.5 rounded-full bg-green-500/50" />
+          </div>
+          <span className="text-[9px] font-mono text-white/30 uppercase tracking-widest">
+            TERMINAL — neural_compiler@2035
+          </span>
+          <div className="ml-auto flex items-center gap-1">
+            <div className="w-1 h-1 bg-green-500/60 rounded-full animate-pulse" />
+            <span className="text-[8px] font-mono text-white/20">ACTIVE</span>
+          </div>
+        </div>
+
+        {/* Terminal content */}
+        <div
+          ref={terminalRef}
+          className="p-4 font-mono text-[11px] text-green-400/70 max-h-40 overflow-y-auto space-y-1 leading-relaxed"
+        >
+          {terminalLines.map((line, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -5 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {line}
+            </motion.div>
+          ))}
+          {/* Cursor */}
+          <div className="flex items-center gap-1 text-green-400/50">
+            <span>›</span>
+            <span
+              className="inline-block w-2 h-4 bg-green-400/60"
+              style={{ opacity: cursorVisible ? 1 : 0 }}
+            />
           </div>
 
           {err && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              className="mt-6 p-4 border border-red-500/30 bg-red-500/10 text-red-400 font-mono text-[10px] uppercase tracking-widest flex items-center gap-3"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-red-400/80 flex items-center gap-2 mt-2"
             >
               <span className="w-2 h-2 bg-red-500 rounded-full" />
-              {err}
+              ERROR: {err}
             </motion.div>
           )}
-
-          <AnimatePresence>
-            {status && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                className="mt-6 pt-6 border-t border-accent/20"
-              >
-                <div className="flex items-center gap-4 text-accent font-mono text-[10px] uppercase tracking-[0.2em]">
-                  <div className="w-4 h-4 border border-accent border-t-transparent rounded-full animate-spin" />
-                  <span>
-                    {t("fc.prompt.thinking")} · {status}
-                  </span>
-                </div>
-                {/* Progress visualization */}
-                <div className="mt-4 h-[1px] w-full bg-white/10 relative overflow-hidden">
-                  <motion.div
-                    className="absolute inset-y-0 left-0 bg-accent shadow-[0_0_10px_rgba(255,69,0,0.8)]"
-                    initial={{ width: "0%" }}
-                    animate={{ width: `${((STAGES.indexOf(status) + 1) / STAGES.length) * 100}%` }}
-                    transition={{ duration: 0.9, ease: "linear" }}
-                  />
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
       </motion.div>
 

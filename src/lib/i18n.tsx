@@ -95,6 +95,11 @@ export const dict: Dict = {
     uz: "Dasturchilar uchun AI asosidagi vazifalarni avtomatlashtirish tizimi. Next.js, OpenAI, Postgres.",
     en: "AI-driven task automation engine for developers. Next.js, OpenAI, Postgres.",
   },
+  "work.neural.sub": {
+    uz: "AI asosidagi avtomatlashtirish · Next.js · OpenAI",
+    en: "AI-driven automation · Next.js · OpenAI",
+  },
+  "work.tag.yt": { uz: "KONTENT", en: "CONTENT" },
   "work.vortex.sub": { uz: "Dizayn tizimi", en: "Design system" },
   "work.yt.sub": { uz: "Tech kanal", en: "Tech channel" },
   "work.fin.sub": {

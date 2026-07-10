@@ -1,16 +1,21 @@
 import portrait from "@/assets/portrait.jpg";
 import { useLang } from "@/lib/i18n";
 import { motion } from "framer-motion";
-import { WordReveal, RevealBox } from "./TextReveal";
+import { WordReveal, RevealBox, CountUp, BlurReveal } from "./TextReveal";
+import { useSound } from "@/hooks/useSound";
 
 export function About() {
   const { t } = useLang();
+  const { playHover } = useSound();
 
   return (
     <section
       id="about"
       className="px-5 md:px-20 lg:px-32 py-24 relative border-b border-border overflow-hidden"
     >
+      {/* Decorative background glow */}
+      <div className="absolute -top-32 -right-32 w-96 h-96 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
+
       {/* Section Decor */}
       <div className="absolute top-8 left-8 font-mono text-[8px] text-white/10 hidden lg:block vertical-text uppercase tracking-widest h-32 border-l border-white/10 pl-2">
         DATA_SCAN // BIO_METRICS // CORE_01
@@ -22,6 +27,7 @@ export function About() {
       </RevealBox>
 
       <div className="grid md:grid-cols-2 gap-12 items-start relative">
+        {/* Portrait */}
         <RevealBox>
           <div className="relative w-56 md:w-80 aspect-[3/4] bg-neutral-900 border border-white/10 overflow-hidden animate-float shadow-[0_0_50px_rgba(255,69,0,0.05)] group">
             <img
@@ -34,29 +40,44 @@ export function About() {
             />
             <div className="absolute inset-0 bg-gradient-to-tr from-accent/10 to-transparent pointer-events-none" />
 
-            {/* Portrait Scanning Effect */}
-            <div className="absolute inset-x-0 top-0 h-[1px] bg-accent/50 shadow-[0_0_10px_#ff4500] animate-[scan-y_4s_linear_infinite] opacity-0 group-hover:opacity-100" />
+            {/* Scanning effect */}
+            <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent shadow-[0_0_15px_#ff4500] animate-[scan-y_3s_linear_infinite] opacity-0 group-hover:opacity-100 transition-opacity" />
+
+            {/* Corner brackets on hover */}
+            <div className="absolute top-2 left-2 w-4 h-4 border-t border-l border-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute top-2 right-2 w-4 h-4 border-t border-r border-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute bottom-2 left-2 w-4 h-4 border-b border-l border-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r border-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
             <div className="absolute bottom-2 left-2 font-mono text-[8px] text-white/40 opacity-0 group-hover:opacity-100 transition-opacity">
               STATUS: SCANNING_IDENT...
             </div>
+
+            {/* Glowing border on hover */}
+            <div className="absolute inset-0 border border-accent/0 group-hover:border-accent/30 transition-all duration-500 shadow-[inset_0_0_20px_rgba(255,69,0,0)] group-hover:shadow-[inset_0_0_20px_rgba(255,69,0,0.1)]" />
           </div>
+
+          {/* Badge */}
           <motion.div
             initial={{ scale: 0, rotate: -20 }}
             whileInView={{ scale: 1, rotate: -3 }}
             viewport={{ once: true }}
             transition={{ delay: 0.5, type: "spring", stiffness: 200, damping: 15 }}
-            className="absolute -bottom-4 -right-2 md:-right-6 bg-accent p-4 z-30"
+            whileHover={{ rotate: 3, scale: 1.05 }}
+            className="absolute -bottom-4 -right-2 md:-right-6 bg-accent p-4 z-30 cursor-default"
+            onMouseEnter={playHover}
           >
             <span className="text-xs font-bold leading-none block uppercase text-background">
               {t("about.badge")}
             </span>
           </motion.div>
+
           <div className="absolute -top-3 -left-3 bg-background border border-white/20 px-2 py-1 text-[9px] uppercase tracking-widest">
             Portrait_01
           </div>
         </RevealBox>
 
+        {/* Text content */}
         <div className="space-y-6">
           <h3 className="text-lg md:text-xl leading-snug font-display tracking-tight text-white/90">
             <WordReveal text={t("about.p1_pre")} sound />
@@ -68,39 +89,61 @@ export function About() {
           <p className="text-sm text-white/60 leading-relaxed">
             <WordReveal text={t("about.p2")} delay={0.6} />
           </p>
+
+          {/* Tags */}
           <RevealBox delay={0.8} className="flex flex-wrap gap-2 pt-4">
-            {["React/TS", "Next.js", "Python", "Node.js", "AI", "UI/UX"].map((tag, i) => (
+            {["React/TS", "Next.js", "Python", "Node.js", "AI", "UI/UX"].map((tag) => (
               <motion.span
                 key={tag}
-                whileHover={{ scale: 1.05, borderColor: "var(--accent)", color: "var(--accent)" }}
-                className="px-2 py-1 border border-border text-[10px] uppercase tracking-widest transition-colors cursor-default"
+                whileHover={{
+                  scale: 1.08,
+                  borderColor: "var(--accent)",
+                  color: "var(--accent)",
+                  boxShadow: "0 0 15px rgba(255,69,0,0.3)",
+                }}
+                whileTap={{ scale: 0.95 }}
+                className="px-2 py-1 border border-border text-[10px] uppercase tracking-widest transition-colors cursor-default relative overflow-hidden group"
+                onMouseEnter={playHover}
               >
-                {tag}
+                <span className="relative z-10">{tag}</span>
+                <span className="absolute inset-0 bg-accent/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
               </motion.span>
             ))}
           </RevealBox>
         </div>
       </div>
 
+      {/* Stats with CountUp */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-16">
         {[
-          { k: t("about.age.k"), v: "16" },
-          { k: t("about.projects.k"), v: "50+" },
-          { k: t("about.years.k"), v: "05" },
-          { k: t("about.location.k"), v: "UZ" },
+          { k: t("about.age.k"), v: 16, suffix: "" },
+          { k: t("about.projects.k"), v: 50, suffix: "+" },
+          { k: t("about.years.k"), v: 5, suffix: "" },
+          { k: t("about.location.k"), raw: "UZ" },
         ].map((s, i) => (
           <RevealBox
             key={s.k}
             delay={0.2 * i}
-            className="border border-border p-4 group hover:border-accent transition-colors relative overflow-hidden"
+            className="border border-border p-4 group hover:border-accent transition-colors relative overflow-hidden cursor-default"
           >
+            {/* Hover fill */}
             <div className="absolute inset-0 bg-accent/5 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+            {/* Corner accent */}
+            <div className="absolute top-0 right-0 w-0 h-0 border-l-[16px] border-l-transparent border-t-[16px] border-t-accent/20 group-hover:border-t-accent/50 transition-colors" />
+
             <p className="font-display text-4xl md:text-5xl leading-none text-accent relative z-10">
-              {s.v}
+              {s.raw ? (
+                s.raw
+              ) : (
+                <CountUp end={s.v!} suffix={s.suffix} />
+              )}
             </p>
             <p className="text-[10px] uppercase tracking-widest text-white/40 mt-3 relative z-10 group-hover:text-white/80 transition-colors">
               {s.k}
             </p>
+
+            {/* Glow on hover */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none shadow-[inset_0_0_20px_rgba(255,69,0,0.05)]" />
           </RevealBox>
         ))}
       </div>
