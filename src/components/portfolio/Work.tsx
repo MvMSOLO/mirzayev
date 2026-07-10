@@ -33,7 +33,7 @@ export function Work() {
   return (
     <section
       id="work"
-      className="px-5 md:px-20 lg:px-32 py-24 border-b border-border relative overflow-hidden"
+      className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-b border-border relative overflow-hidden"
     >
       {/* Decorative */}
       <div className="absolute top-0 right-0 p-4 font-mono text-[8px] text-white/10 hidden lg:block">

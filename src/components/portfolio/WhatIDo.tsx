@@ -46,7 +46,7 @@ export function WhatIDo() {
   return (
     <section
       id="services"
-      className="px-5 md:px-20 lg:px-32 py-24 border-b border-border relative overflow-hidden"
+      className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-b border-border relative overflow-hidden"
     >
       {/* Background grid accent */}
       <div className="absolute inset-0 pointer-events-none opacity-30">

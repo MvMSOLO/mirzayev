@@ -92,7 +92,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@avazbekdev" },
+      { name: "twitter:site", content: "@mvmsolo" },
       { name: "twitter:title", content: "Avazbek Mirzayev — Full-Stack Developer & UI Designer" },
       {
         name: "twitter:description",

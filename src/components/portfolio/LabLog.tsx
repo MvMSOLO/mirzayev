@@ -5,7 +5,7 @@ import { RevealBox, WordReveal } from "./TextReveal";
 const entries = [
   { v: "v6.0.0", uz: "500+ animatsiya, IDE qayta qurildi", en: "500+ animations, IDE rebuilt" },
   { v: "v5.2.0", uz: "Parallel Universe kontakt portallari", en: "Parallel Universe contact portals" },
-  { v: "v5.1.0", uz: "Replit AI yordamida optimallashtirildi", en: "Optimized with Replit AI" },
+  { v: "v5.1.0", uz: "AI tizimlari va IDE dvigateli optimallashtirildi", en: "AI engines and IDE core optimized" },
   { v: "v5.0.0", uz: "Kreativ olam qo'shildi", en: "Creative universe shipped" },
   { v: "v4.1.0", uz: "Kelajak Kompilyatori ishga tushdi", en: "Future Compiler launched" },
   { v: "v4.0.0", uz: "Dizayn arxeologiyasi ochildi", en: "Design archaeology unveiled" },
@@ -37,7 +37,7 @@ export function LabLog() {
   };
 
   return (
-    <section id="lab" className="px-5 md:px-20 lg:px-32 py-24 border-t border-border relative overflow-hidden">
+    <section id="lab" className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-t border-border relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-accent/20 via-transparent to-transparent pointer-events-none" />
 

@@ -24,7 +24,7 @@ const updates: Update[] = [
       { uz: "Studio AI IDE to'liq qayta qurildi", en: "Studio AI IDE completely rebuilt" },
       { uz: "Scroll satisfying Lenis bilan yangilandi", en: "Scroll experience upgraded with Lenis" },
       { uz: "Ovoz effektlari hamma joyga qo'shildi", en: "Sound effects integrated everywhere" },
-      { uz: "Replit tomonidan qurildi", en: "Built with Replit" },
+      { uz: "Avazbek Mirzayev tomonidan to'liq loyihalashtirildi va ishlab chiqildi", en: "Fully designed and engineered by Avazbek Mirzayev" },
     ],
   },
   {
@@ -96,7 +96,7 @@ export function Updates() {
   return (
     <section
       id="updates"
-      className="px-5 md:px-20 lg:px-32 py-24 border-t border-border relative overflow-hidden"
+      className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-t border-border relative overflow-hidden"
     >
       {/* Background decoration */}
       <div className="absolute inset-0 pointer-events-none">
@@ -188,23 +188,23 @@ export function Updates() {
         </motion.div>
       </div>
 
-      {/* Made by Replit badge */}
+      {/* Custom AM badge */}
       <RevealBox delay={0.3}>
         <div className="border-t border-border pt-10 flex flex-wrap items-center justify-between gap-6">
           <div className="flex items-center gap-4">
             <div className="relative">
               <div className="w-8 h-8 bg-accent flex items-center justify-center">
-                <span className="text-background font-bold text-xs">R</span>
+                <span className="text-background font-bold text-xs">AM</span>
               </div>
               <div className="absolute -inset-1 bg-accent/20 rounded animate-ping-lg" />
             </div>
             <div>
               <p className="text-[10px] uppercase tracking-widest text-white/40 font-mono">
-                {lang === "uz" ? "Qurildi" : "Made with"}
+                {lang === "uz" ? "Muallif" : "Creator"}
               </p>
               <p className="text-sm font-bold tracking-tight">
-                <span className="text-accent">Replit</span>
-                <span className="text-white/60"> · AI-Assisted</span>
+                <span className="text-accent">Avazbek Mirzayev</span>
+                <span className="text-white/60"> · Portfolio Labs</span>
               </p>
             </div>
           </div>

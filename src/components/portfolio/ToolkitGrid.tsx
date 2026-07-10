@@ -54,7 +54,7 @@ export function ToolkitGrid() {
   };
 
   return (
-    <section className="px-5 md:px-20 lg:px-32 py-24 border-t border-border relative overflow-hidden">
+    <section className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-t border-border relative overflow-hidden">
       {/* Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-32 bg-accent/5 blur-3xl pointer-events-none" />
 

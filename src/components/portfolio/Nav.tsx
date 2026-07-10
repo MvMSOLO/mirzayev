@@ -161,7 +161,7 @@ export function Nav() {
 
                   <div className="flex gap-4">
                     <a
-                      href="https://github.com/avazbek"
+                      href="https://github.com/MvMSOLO"
                       target="_blank"
                       rel="noreferrer"
                       onMouseEnter={playHover}
@@ -170,7 +170,7 @@ export function Nav() {
                       Github
                     </a>
                     <a
-                      href="https://linkedin.com/in/avazbek"
+                      href="https://linkedin.com/in/avazbek-mirzayev"
                       target="_blank"
                       rel="noreferrer"
                       onMouseEnter={playHover}
@@ -179,7 +179,7 @@ export function Nav() {
                       LinkedIn
                     </a>
                     <a
-                      href="https://youtube.com/@avazbek"
+                      href="https://youtube.com/@mvmsolo"
                       target="_blank"
                       rel="noreferrer"
                       onMouseEnter={playHover}

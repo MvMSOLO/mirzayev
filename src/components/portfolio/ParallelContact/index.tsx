@@ -98,7 +98,7 @@ export function ParallelContact() {
   };
 
   return (
-    <section id="contact-parallel" className="px-5 md:px-20 lg:px-32 py-24 border-t border-border">
+    <section id="contact-parallel" className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-t border-border">
       <div className="mb-10 flex gap-2 items-center">
         <div className="h-[1px] w-8 bg-accent" />
         <span className="text-[10px] uppercase tracking-widest text-accent">

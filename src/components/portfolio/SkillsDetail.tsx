@@ -57,7 +57,7 @@ export function SkillsDetail() {
     },
   ];
   return (
-    <section id="skills" className="px-5 md:px-20 lg:px-32 py-24 border-b border-border relative">
+    <section id="skills" className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-b border-border relative">
       <div className="absolute top-1/2 left-0 w-24 h-[1px] bg-accent/20 -translate-y-1/2 hidden lg:block" />
       <div className="absolute top-1/2 right-0 w-24 h-[1px] bg-accent/20 -translate-y-1/2 hidden lg:block" />
       <RevealBox className="mb-10 flex gap-2 items-center">
