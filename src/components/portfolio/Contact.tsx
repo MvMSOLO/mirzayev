@@ -43,7 +43,7 @@ export function Contact() {
   };
 
   return (
-    <footer id="contact" className="px-5 md:px-20 lg:px-32 pt-24 pb-16 relative overflow-hidden">
+    <footer id="contact" className="px-5 md:px-20 lg:px-32 pt-16 pb-12 md:pt-24 md:pb-16 relative overflow-hidden">
       {/* Glow */}
       <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
 
@@ -190,7 +190,7 @@ export function Contact() {
           <div className="flex items-center gap-2">
             <span className="opacity-40">v6.0.0 · Kinetic Lab</span>
             <span className="text-white/20">·</span>
-            <span className="text-accent/60">Made with Replit</span>
+            <span className="text-accent/60">Designed & Built by Avazbek Mirzayev</span>
           </div>
         </motion.div>
 

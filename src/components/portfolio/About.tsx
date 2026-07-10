@@ -4,14 +4,57 @@ import { motion } from "framer-motion";
 import { WordReveal, RevealBox, CountUp, BlurReveal } from "./TextReveal";
 import { useSound } from "@/hooks/useSound";
 
+const ecosystemNodes = [
+  {
+    id: "design",
+    num: "01",
+    title: { uz: "UI/UX DIZAYN", en: "UI/UX CRAFT" },
+    subtitle: { uz: "Interfeyslarni mukammal o'rganish", en: "Mastering interactive flows" },
+    desc: {
+      uz: "O'zaro bog'liqliklar, vizual xarakter va foydalanuvchi tajribasini (UX) chuqur tahlil qilish.",
+      en: "Analyzing user behaviors, wireframes, style guides, and crafting visual identities.",
+    },
+  },
+  {
+    id: "dev",
+    num: "02",
+    title: { uz: "SYSTEMS DEV", en: "SYSTEMS DEV" },
+    subtitle: { uz: "Tezkor va xavfsiz tizimlar", en: "Fast and reliable backends" },
+    desc: {
+      uz: "React 19, TypeScript, TanStack va Node.js platformalarida toza kod yozish madaniyati.",
+      en: "Structuring type-safe scalable client applications and high performance APIs.",
+    },
+  },
+  {
+    id: "ai",
+    num: "03",
+    title: { uz: "SUN'IY INTELLEKT", en: "AI INTEGRATIONS" },
+    subtitle: { uz: "Kelajak kompilyatorlari", en: "Next-gen intelligent apps" },
+    desc: {
+      uz: "Katta til modellari (LLMs), prompt muhandisligi va avtomatlashtirish tizimlari integratsiyasi.",
+      en: "Harnessing deep neural models, context vector DBs, and prompt engineering.",
+    },
+  },
+  {
+    id: "content",
+    num: "04",
+    title: { uz: "KONTENT LABORATORIYA", en: "CONTENT LAB" },
+    subtitle: { uz: "Bilim va hamjamiyat", en: "Knowledge sharing" },
+    desc: {
+      uz: "MvMSOLO YouTube kanali va IT hamjamiyatlari orqali yoshlarga texnologiyani o'rgatish.",
+      en: "Sharing engineering knowledge through video & community via MvMSOLO YouTube hub.",
+    },
+  },
+];
+
 export function About() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const { playHover } = useSound();
 
   return (
     <section
       id="about"
-      className="px-5 md:px-20 lg:px-32 py-24 relative border-b border-border overflow-hidden"
+      className="px-5 md:px-20 lg:px-32 py-16 md:py-24 relative border-b border-border overflow-hidden"
     >
       {/* Decorative background glow */}
       <div className="absolute -top-32 -right-32 w-96 h-96 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
@@ -110,6 +153,47 @@ export function About() {
               </motion.span>
             ))}
           </RevealBox>
+
+          {/* Ecosystem Matrix Diagram */}
+          <div className="pt-6 border-t border-white/5">
+            <span className="text-[10px] uppercase text-accent/60 tracking-widest block mb-4 font-mono">
+              // ECOSYSTEM SCHEMATIC (VISUAL FLOW)
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 relative">
+              {/* Central laser cross lines for styling */}
+              <div className="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-accent/0 via-accent/20 to-accent/0 pointer-events-none hidden sm:block" />
+              <div className="absolute top-0 bottom-0 left-1/2 w-px bg-gradient-to-b from-accent/0 via-accent/20 to-accent/0 pointer-events-none hidden sm:block" />
+
+              {ecosystemNodes.map((node) => (
+                <div
+                  key={node.id}
+                  className="p-4 border border-border bg-background/50 hover:border-accent/40 hover:bg-accent/2 transition-all duration-300 relative group overflow-hidden"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="text-[10px] font-mono text-accent/60 group-hover:text-accent font-bold">
+                      [{node.num}]
+                    </span>
+                    <span className="text-[8px] font-mono text-white/20 group-hover:text-white/40 transition-colors uppercase tracking-widest animate-pulse">
+                      flow_active
+                    </span>
+                  </div>
+                  <h4 className="font-display text-sm uppercase tracking-wider text-white/90 group-hover:text-accent transition-colors">
+                    {node.title[lang]}
+                  </h4>
+                  <p className="text-[10px] font-mono text-white/40 mb-2">
+                    {node.subtitle[lang]}
+                  </p>
+                  <p className="text-[11px] text-white/50 leading-relaxed group-hover:text-white/70 transition-colors">
+                    {node.desc[lang]}
+                  </p>
+
+                  {/* Glowing accent border top-left */}
+                  <div className="absolute top-0 left-0 w-2 h-[1px] bg-accent/0 group-hover:bg-accent transition-colors" />
+                  <div className="absolute top-0 left-0 h-2 w-[1px] bg-accent/0 group-hover:bg-accent transition-colors" />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 

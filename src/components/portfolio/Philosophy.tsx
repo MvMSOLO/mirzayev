@@ -18,7 +18,7 @@ export function Philosophy() {
   return (
     <section
       id="philosophy"
-      className="px-5 md:px-20 lg:px-32 py-24 border-b border-border relative overflow-hidden"
+      className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-b border-border relative overflow-hidden"
     >
       {/* Decorative background */}
       <div className="absolute -bottom-24 right-0 w-80 h-80 bg-accent/3 rounded-full blur-3xl pointer-events-none" />

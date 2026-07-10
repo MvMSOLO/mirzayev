@@ -85,7 +85,7 @@ export function DesignArchaeology() {
   const prev = () => setStage((s) => Math.max(s - 1, 0));
 
   return (
-    <section className="px-5 md:px-20 lg:px-32 py-24 border-t border-border">
+    <section className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-t border-border">
       <div className="mb-10 flex gap-2 items-center">
         <div className="h-[1px] w-8 bg-accent" />
         <span className="text-[10px] uppercase tracking-widest text-accent">
