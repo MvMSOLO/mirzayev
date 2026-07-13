@@ -276,13 +276,13 @@ function MagneticNavItem({
     <li className="overflow-hidden p-2 -m-2">
       <motion.a
         ref={ref}
-        initial={{ y: "100%", rotateZ: 5, opacity: 0 }}
+        initial={{ y: "110%", rotateZ: 8, opacity: 0 }}
         animate={{ y: 0, rotateZ: 0, opacity: 1 }}
-        exit={{ y: "-100%", rotateZ: -5, opacity: 0 }}
+        exit={{ y: "-110%", rotateZ: -8, opacity: 0 }}
         transition={{
-          duration: 0.8,
+          duration: 0.9,
           ease: [0.16, 1, 0.3, 1],
-          delay: 0.2 + idx * 0.05,
+          delay: 0.15 + idx * 0.06,
         }}
         href={item.href}
         onClick={onClick}
@@ -290,10 +290,28 @@ function MagneticNavItem({
         className="group flex items-center gap-6 text-5xl md:text-7xl lg:text-[7vw] font-bold uppercase tracking-tighter leading-none hover:text-accent transition-colors cursor-pointer"
         style={{ fontFamily: "var(--font-display, inherit)" }}
       >
-        <span className="text-sm font-mono tracking-widest text-white/30 group-hover:text-accent/50 transition-colors">
+        <span className="text-sm font-mono tracking-widest text-white/30 group-hover:text-accent/50 transition-colors group-hover:translate-x-2 duration-300">
           0{idx + 1}
         </span>
-        {item.label}
+
+        {/* Dynamic letter splitting for bouncy spring wave hover effect */}
+        <span className="relative overflow-hidden inline-flex">
+          {item.label.split("").map((char: string, charIdx: number) => (
+            <motion.span
+              key={charIdx}
+              className="inline-block"
+              whileHover={{
+                y: -12,
+                scale: 1.12,
+                color: "var(--color-accent, #ea580c)",
+                transition: { type: "spring", stiffness: 400, damping: 8 }
+              }}
+              style={{ display: char === " " ? "inline-block" : "inline-block", minWidth: char === " " ? "0.25em" : "auto" }}
+            >
+              {char}
+            </motion.span>
+          ))}
+        </span>
       </motion.a>
     </li>
   );

@@ -60,45 +60,95 @@ export function UniverseNav() {
         </div>
       </nav>
 
-      {/* Overlay Menu */}
+      {/* Overlay Menu with Custom Elastic SVG Wave Morphing */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ y: "-100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "-100%" }}
-            transition={{ duration: 0.8, ease: [0.87, 0, 0.13, 1] }}
-            className="fixed inset-0 z-50 bg-[#F9F6F0]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { delay: 0.4 } }}
+            className="fixed inset-0 z-50 overflow-hidden"
           >
-            <div className="h-full flex flex-col justify-center px-6 md:px-[10vw]">
+            {/* Morphing Liquid SVG Backing Panel */}
+            <div className="absolute inset-0 pointer-events-none">
+              <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <motion.path
+                  initial={{ d: "M 0 0 L 100 0 L 100 0 Q 50 0 0 0 Z" }}
+                  animate={{
+                    d: [
+                      "M 0 0 L 100 0 L 100 0 Q 50 0 0 0 Z",
+                      "M 0 0 L 100 0 L 100 70 Q 50 120 0 70 Z",
+                      "M 0 0 L 100 0 L 100 100 Q 50 100 0 100 Z"
+                    ]
+                  }}
+                  exit={{
+                    d: [
+                      "M 0 0 L 100 0 L 100 100 Q 50 100 0 100 Z",
+                      "M 0 0 L 100 0 L 100 70 Q 50 0 0 70 Z",
+                      "M 0 0 L 100 0 L 100 0 Q 50 0 0 0 Z"
+                    ]
+                  }}
+                  transition={{
+                    duration: 0.85,
+                    times: [0, 0.6, 1],
+                    ease: [0.76, 0, 0.24, 1]
+                  }}
+                  fill="#F9F6F0"
+                />
+              </svg>
+            </div>
+
+            <div className="h-full flex flex-col justify-center px-6 md:px-[10vw] relative z-10">
               <ul className="space-y-4 md:space-y-8">
                 {menuItems.map((item, idx) => (
                   <li key={item.label} className="overflow-hidden">
                     <motion.a
-                      initial={{ y: "100%", opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
+                      initial={{ y: "110%", rotate: 8, opacity: 0 }}
+                      animate={{ y: 0, rotate: 0, opacity: 1 }}
+                      exit={{ y: "-110%", rotate: -8, opacity: 0 }}
                       transition={{
-                        duration: 0.8,
+                        duration: 0.9,
                         ease: [0.16, 1, 0.3, 1],
-                        delay: 0.4 + idx * 0.1,
+                        delay: 0.15 + idx * 0.08,
                       }}
                       href={item.href}
                       onClick={() => setIsOpen(false)}
-                      className="block italic text-6xl md:text-[10vw] leading-none text-[#111] hover:text-[#C7D9C1] transition-colors"
+                      className="group flex items-baseline gap-6 italic text-5xl md:text-[9vw] leading-none text-[#111] hover:text-accent transition-colors"
                       style={{
                         fontFamily: '"Instrument Serif", serif',
                       }}
                     >
-                      {item.label}
+                      {/* Interactive Staggered Letter Spring Animation on Hover */}
+                      <span className="text-[10px] font-mono tracking-widest text-[#111]/30 not-italic group-hover:text-accent group-hover:translate-x-2 transition-all duration-300">
+                        0{idx + 1}
+                      </span>
+
+                      <span className="relative overflow-hidden inline-block">
+                        {item.label.split("").map((char, charIdx) => (
+                          <motion.span
+                            key={charIdx}
+                            className="inline-block"
+                            whileHover={{
+                              y: -8,
+                              scale: 1.15,
+                              color: "var(--color-accent, #ea580c)",
+                              transition: { type: "spring", stiffness: 350, damping: 10 }
+                            }}
+                          >
+                            {char}
+                          </motion.span>
+                        ))}
+                      </span>
                     </motion.a>
                   </li>
                 ))}
               </ul>
 
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1 }}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ delay: 0.5, duration: 0.7 }}
                 className="mt-20 flex flex-wrap gap-10 border-t border-[#111]/10 pt-10"
               >
                 <button
