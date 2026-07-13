@@ -113,30 +113,25 @@ export const dict: Dict = {
   "phi.tag": { uz: "// Falsafa", en: "// Philosophy" },
   "phi.title_a": { uz: "Qanday", en: "How I" },
   "phi.title_b": { uz: "Quraman", en: "Build" },
-  "phi.1.t": { uz: "Muammoni aniqlash", en: "Frame the problem" },
+  "phi.1.t": { uz: "O'ylash va Izlanish", en: "Thinking & Researching" },
   "phi.1.d": {
-    uz: "Har bir loyiha aniq muammoni tushunishdan boshlanadi. Kim uchun? Nima uchun?",
-    en: "Every project starts by understanding a real problem. Who's it for? Why does it matter?",
+    uz: "Muammoni har tomonlama o'rganish, foydalanuvchilar ehtiyojini tushunish, loyiha strategiyasini chizish va tizim me'morchiligini chuqur loyihalash.",
+    en: "Framing the challenge, setting milestones, analyzing user needs, and planning out technical architectures deeply.",
   },
-  "phi.2.t": { uz: "UX rejalashtirish", en: "Map the UX" },
+  "phi.2.t": { uz: "Tushunish va Kodlash", en: "Understanding & Coding" },
   "phi.2.d": {
-    uz: "Foydalanuvchi tajribasini xaritalash — flowlar, holatlar, mikro-detallar.",
-    en: "Map the user experience — flows, states, micro-details.",
+    uz: "Yozilgan har bir qator kodning ishlash mantig'ini chuqur anglash. Pristine, xavfsiz va kelajakka moslashuvchan TypeScript tizimlarini yaratish.",
+    en: "Translating complex logic into readable, pristine, secure, and highly optimized TypeScript component architectures.",
   },
-  "phi.3.t": { uz: "Dizayn tizimi", en: "Design system" },
+  "phi.3.t": { uz: "Sinab Ko'rish", en: "Testing & Verification" },
   "phi.3.d": {
-    uz: "Rang, tipografiya, komponentlar. Bir marta yaratamiz — hamma joyda ishlaydi.",
-    en: "Color, typography, components. Build once — reuse everywhere.",
+    uz: "Loyiha yuklanish tezligi, unumdorligi va turli xil qurilmalarda ishlash holatlarini ekstremal testlar hamda avtomatlashtirilgan testlar orqali sinovdan o'tkazish.",
+    en: "Simulating simulated environments, measuring performance scores, stress testing responsiveness, and running unit test pipelines.",
   },
-  "phi.4.t": { uz: "Toza kod", en: "Clean code" },
+  "phi.4.t": { uz: "Yetkazish va Yakunlash", en: "Delivering & Finalizing" } ,
   "phi.4.d": {
-    uz: "TypeScript, semantik markup, performance-first arxitektura.",
-    en: "TypeScript, semantic markup, performance-first architecture.",
-  },
-  "phi.5.t": { uz: "Iteratsiya", en: "Iterate" },
-  "phi.5.d": {
-    uz: "Ship qilamiz, o'lchaymiz, yaxshilaymiz. Perfect emas — real.",
-    en: "Ship, measure, improve. Not perfect — real.",
+    uz: "Tayyor loyihani global chekka serverlarga yuklash, CDN orqali eng yuqori unumdorlik va satifying tezlik bilan foydalanuvchiga taqdim etish.",
+    en: "Deploying high-performance builds to edge nodes globally, ensuring impeccable delivery, and launching smoothly.",
   },
 
   // Contact
