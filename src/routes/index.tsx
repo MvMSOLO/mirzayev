@@ -16,7 +16,7 @@ import { Contact } from "@/components/portfolio/Contact";
 import { LabLog } from "@/components/portfolio/LabLog";
 import { ToolkitGrid } from "@/components/portfolio/ToolkitGrid";
 import { FutureCompiler } from "@/components/portfolio/FutureCompiler";
-import { DesignArchaeology } from "@/components/portfolio/DesignArchaeology";
+import { ProjectShowroom } from "@/components/portfolio/ProjectShowroom";
 import { ParallelContact } from "@/components/portfolio/ParallelContact";
 import { Updates } from "@/components/portfolio/Updates";
 import { Universe } from "@/components/universe/Universe";
@@ -49,7 +49,7 @@ function Shell() {
           <ToolkitGrid />
           <AetherFlow />
           <Work />
-          <DesignArchaeology />
+          <ProjectShowroom />
           <FutureCompiler />
           <Philosophy />
           <LabLog />
