@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, no-useless-escape */
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLang } from "@/lib/i18n";
@@ -37,11 +38,51 @@ const TRACKS = [
   },
 ];
 
+const INVIDIOUS_INSTANCES = ["https://invidious.flokinet.to", "https://yt.chocolatemoo53.com"];
+
+async function searchInvidious(query: string): Promise<any[]> {
+  if (!query.trim()) return [];
+  const q = encodeURIComponent(query.trim());
+
+  for (const instance of INVIDIOUS_INSTANCES) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+      const response = await fetch(`${instance}/api/v1/search?q=${q}&type=video`, {
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          return data
+            .filter((item: any) => item.type === "video" && item.videoId)
+            .map((item: any) => ({
+              id: item.videoId,
+              title: item.title,
+              artist: item.author || "Unknown Artist",
+              thumb:
+                item.videoThumbnails?.find((t: any) => t.quality === "medium")?.url ||
+                `https://img.youtube.com/vi/${item.videoId}/mqdefault.jpg`,
+            }));
+        }
+      }
+    } catch (e) {
+      console.warn(`Failed searching with Invidious instance ${instance}:`, e);
+    }
+  }
+  return [];
+}
+
 export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
   const { t } = useLang();
   const { playHover, playClick } = useSoundEffects();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [searchedTracks, setSearchedTracks] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(TRACKS[0]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [ytPlayer, setYtPlayer] = useState<any>(null);
@@ -61,6 +102,31 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
   useEffect(() => {
     trackRef.current = currentTrack;
   }, [currentTrack]);
+
+  // Debounced search watcher for Invidious search
+  useEffect(() => {
+    if (!search.trim()) {
+      setSearchedTracks([]);
+      setIsSearching(false);
+      return;
+    }
+
+    const ytRegex =
+      /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+    if (ytRegex.test(search)) {
+      return;
+    }
+
+    setIsSearching(true);
+
+    const delayDebounce = setTimeout(async () => {
+      const results = await searchInvidious(search);
+      setSearchedTracks(results);
+      setIsSearching(false);
+    }, 600);
+
+    return () => clearTimeout(delayDebounce);
+  }, [search]);
 
   // Lazily create the (invisible) YouTube player only once the user has
   // actually opened the menu — avoids loading the iframe API / spinning up a
@@ -120,6 +186,66 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
     };
   }, []);
 
+  // Web Media Session API to register active background playback in Chrome and support system/keyboard media keys
+  useEffect(() => {
+    if (typeof window === "undefined" || !("mediaSession" in navigator)) return;
+
+    try {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: currentTrack.title,
+        artist: currentTrack.artist,
+        artwork: [
+          {
+            src: currentTrack.thumb,
+            sizes: "120x90",
+            type: "image/jpeg",
+          },
+          {
+            src: currentTrack.thumb.replace("mqdefault", "hqdefault"),
+            sizes: "480x360",
+            type: "image/jpeg",
+          },
+        ],
+      });
+    } catch (e) {
+      console.warn("Failed to set MediaSession metadata:", e);
+    }
+  }, [currentTrack]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !("mediaSession" in navigator)) return;
+
+    try {
+      navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
+
+      navigator.mediaSession.setActionHandler("play", () => {
+        if (ytPlayer && typeof ytPlayer.playVideo === "function") {
+          ytPlayer.playVideo();
+        } else {
+          setIsPlaying(true);
+        }
+      });
+
+      navigator.mediaSession.setActionHandler("pause", () => {
+        if (ytPlayer && typeof ytPlayer.pauseVideo === "function") {
+          ytPlayer.pauseVideo();
+        } else {
+          setIsPlaying(false);
+        }
+      });
+
+      navigator.mediaSession.setActionHandler("stop", () => {
+        if (ytPlayer && typeof ytPlayer.stopVideo === "function") {
+          ytPlayer.stopVideo();
+        } else {
+          setIsPlaying(false);
+        }
+      });
+    } catch (e) {
+      console.warn("Failed to set MediaSession action handlers:", e);
+    }
+  }, [isPlaying, ytPlayer]);
+
   const handlePlayPause = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     playClick();
@@ -157,11 +283,21 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
     }
   };
 
-  const filtered = TRACKS.filter(
-    (t) =>
-      t.title.toLowerCase().includes(search.toLowerCase()) ||
-      t.artist.toLowerCase().includes(search.toLowerCase()),
-  );
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (!search.trim()) return;
+
+      const ytRegex =
+        /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+      if (ytRegex.test(search)) return;
+
+      setIsSearching(true);
+      const results = await searchInvidious(search);
+      setSearchedTracks(results);
+      setIsSearching(false);
+    }
+  };
 
   return (
     <div
@@ -171,8 +307,19 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
           : "translate-y-10 opacity-0 pointer-events-none"
       }`}
     >
-      {/* Hidden YT Player */}
-      <div className="hidden" ref={playerRef} />
+      {/* Hidden YT Player - positioned offscreen and made microscopic to prevent Chrome/browser background audio suspension */}
+      <div
+        ref={playerRef}
+        className="absolute pointer-events-none"
+        style={{
+          width: "1px",
+          height: "1px",
+          opacity: 0.01,
+          overflow: "hidden",
+          left: "-9999px",
+          top: "-9999px",
+        }}
+      />
 
       <AnimatePresence>
         {isOpen && (
@@ -191,6 +338,7 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
                 placeholder={t("music.search")}
                 value={search}
                 onChange={(e) => handleSearch(e.target.value)}
+                onKeyDown={handleKeyDown}
                 className="bg-transparent border-none outline-none text-xs text-white placeholder:text-white/40 flex-1 font-mono tracking-wide"
               />
               <button
@@ -206,48 +354,105 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
 
             {/* Track List */}
             <div className="max-h-48 overflow-y-auto p-2 space-y-1">
-              {filtered.map((track) => (
-                <button
-                  key={track.id}
-                  onMouseEnter={playHover}
-                  onClick={() => handleSelectTrack(track)}
-                  className={`w-full flex items-center gap-3 p-2 rounded-xl transition-all text-left ${currentTrack.id === track.id ? "bg-accent/20" : "hover:bg-white/5"}`}
-                >
-                  <img
-                    src={track.thumb}
-                    alt={track.title}
-                    className="w-10 h-10 object-cover rounded-md"
-                  />
-                  <div className="flex-1 overflow-hidden">
-                    <p
-                      className={`text-xs font-bold truncate ${currentTrack.id === track.id ? "text-accent" : "text-white"}`}
-                    >
-                      {track.title}
-                    </p>
-                    <p className="text-[10px] text-white/50 truncate font-mono uppercase">
-                      {track.artist}
-                    </p>
-                  </div>
-                  {currentTrack.id === track.id && isPlaying && (
-                    <div className="flex gap-[2px] items-end h-3 mr-1">
-                      {[...Array(3)].map((_, i) => (
-                        <motion.div
-                          key={i}
-                          className="w-[3px] bg-accent rounded-t-[1px]"
-                          animate={{ height: ["20%", "100%", "40%", "80%", "20%"] }}
-                          transition={{
-                            repeat: Infinity,
-                            duration: 0.4 + i * 0.15,
-                            ease: "easeInOut",
-                          }}
-                        />
+              {isSearching ? (
+                <div className="flex flex-col items-center justify-center py-6 gap-2">
+                  <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+                  <p className="text-[10px] text-white/50 font-mono uppercase tracking-widest">
+                    Searching...
+                  </p>
+                </div>
+              ) : (
+                <>
+                  {search.trim()
+                    ? // Searched Tracks
+                      searchedTracks.map((track) => (
+                        <button
+                          key={track.id}
+                          onMouseEnter={playHover}
+                          onClick={() => handleSelectTrack(track)}
+                          className={`w-full flex items-center gap-3 p-2 rounded-xl transition-all text-left ${currentTrack.id === track.id ? "bg-accent/20" : "hover:bg-white/5"}`}
+                        >
+                          <img
+                            src={track.thumb}
+                            alt={track.title}
+                            className="w-10 h-10 object-cover rounded-md"
+                          />
+                          <div className="flex-1 overflow-hidden">
+                            <p
+                              className={`text-xs font-bold truncate ${currentTrack.id === track.id ? "text-accent" : "text-white"}`}
+                            >
+                              {track.title}
+                            </p>
+                            <p className="text-[10px] text-white/50 truncate font-mono uppercase">
+                              {track.artist}
+                            </p>
+                          </div>
+                          {currentTrack.id === track.id && isPlaying && (
+                            <div className="flex gap-[2px] items-end h-3 mr-1">
+                              {[...Array(3)].map((_, i) => (
+                                <motion.div
+                                  key={i}
+                                  className="w-[3px] bg-accent rounded-t-[1px]"
+                                  animate={{ height: ["20%", "100%", "40%", "80%", "20%"] }}
+                                  transition={{
+                                    repeat: Infinity,
+                                    duration: 0.4 + i * 0.15,
+                                    ease: "easeInOut",
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          )}
+                        </button>
+                      ))
+                    : // Default TRACKS
+                      TRACKS.map((track) => (
+                        <button
+                          key={track.id}
+                          onMouseEnter={playHover}
+                          onClick={() => handleSelectTrack(track)}
+                          className={`w-full flex items-center gap-3 p-2 rounded-xl transition-all text-left ${currentTrack.id === track.id ? "bg-accent/20" : "hover:bg-white/5"}`}
+                        >
+                          <img
+                            src={track.thumb}
+                            alt={track.title}
+                            className="w-10 h-10 object-cover rounded-md"
+                          />
+                          <div className="flex-1 overflow-hidden">
+                            <p
+                              className={`text-xs font-bold truncate ${currentTrack.id === track.id ? "text-accent" : "text-white"}`}
+                            >
+                              {track.title}
+                            </p>
+                            <p className="text-[10px] text-white/50 truncate font-mono uppercase">
+                              {track.artist}
+                            </p>
+                          </div>
+                          {currentTrack.id === track.id && isPlaying && (
+                            <div className="flex gap-[2px] items-end h-3 mr-1">
+                              {[...Array(3)].map((_, i) => (
+                                <motion.div
+                                  key={i}
+                                  className="w-[3px] bg-accent rounded-t-[1px]"
+                                  animate={{ height: ["20%", "100%", "40%", "80%", "20%"] }}
+                                  transition={{
+                                    repeat: Infinity,
+                                    duration: 0.4 + i * 0.15,
+                                    ease: "easeInOut",
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          )}
+                        </button>
                       ))}
-                    </div>
+
+                  {search.trim() && searchedTracks.length === 0 && (
+                    <p className="text-xs text-white/40 text-center py-4 font-mono">
+                      No tracks found
+                    </p>
                   )}
-                </button>
-              ))}
-              {filtered.length === 0 && (
-                <p className="text-xs text-white/40 text-center py-4 font-mono">No tracks found</p>
+                </>
               )}
             </div>
           </motion.div>

@@ -23,7 +23,6 @@ import { Universe } from "@/components/universe/Universe";
 import { UniverseTransition } from "@/components/UniverseTransition";
 import { KineticCursor } from "@/components/portfolio/KineticCursor";
 import { ScrollProgress } from "@/components/portfolio/ScrollProgress";
-import { PortalSwitcher } from "@/components/portfolio/PortalSwitcher";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -62,7 +61,6 @@ function Shell() {
         <Universe />
       )}
       <UniverseTransition />
-      <PortalSwitcher />
     </>
   );
 }
