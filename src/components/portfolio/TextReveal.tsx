@@ -24,7 +24,7 @@ export function WordReveal({
       viewport={{ once: true, margin: "-10%" }}
       onViewportEnter={() => sound && playReveal()}
       variants={{
-        visible: { transition: { staggerChildren: 0.04, delayChildren: delay } },
+        visible: { transition: { staggerChildren: 0.03, delayChildren: delay } },
       }}
     >
       {words.map((word, i) => (
@@ -32,12 +32,13 @@ export function WordReveal({
           <motion.span
             className="inline-block"
             variants={{
-              hidden: { y: "120%", opacity: 0, rotateZ: 5 },
+              hidden: { y: "110%", opacity: 0, rotateZ: 3, scale: 0.95 },
               visible: {
                 y: "0%",
                 opacity: 1,
                 rotateZ: 0,
-                transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+                scale: 1,
+                transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
               },
             }}
           >
@@ -60,10 +61,10 @@ export function RevealBox({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30, scale: 0.98 }}
+      initial={{ opacity: 0, y: 25, scale: 0.99 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }}
+      transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1], delay }}
       className={className}
     >
       {children}
@@ -85,7 +86,7 @@ export function ClipReveal({
       initial={{ clipPath: "polygon(0 0, 0 0, 0 100%, 0% 100%)", opacity: 0 }}
       whileInView={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", opacity: 1 }}
       viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay }}
+      transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay }}
       className={className}
     >
       {children}
@@ -105,10 +106,10 @@ export function BlurReveal({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, filter: "blur(12px)", scale: 1.02 }}
+      initial={{ opacity: 0, filter: "blur(16px)", scale: 1.03 }}
       whileInView={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
       viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay }}
+      transition={{ duration: 1.35, ease: [0.16, 1, 0.3, 1], delay }}
       className={className}
     >
       {children}
@@ -130,10 +131,10 @@ export function SlideReveal({
 }) {
   const initial =
     direction === "left"
-      ? { opacity: 0, x: -40 }
+      ? { opacity: 0, x: -50 }
       : direction === "right"
-        ? { opacity: 0, x: 40 }
-        : { opacity: 0, y: 40 };
+        ? { opacity: 0, x: 50 }
+        : { opacity: 0, y: 50 };
   const animate =
     direction === "left" || direction === "right"
       ? { opacity: 1, x: 0 }
@@ -143,7 +144,7 @@ export function SlideReveal({
       initial={initial}
       whileInView={animate}
       viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }}
+      transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1], delay }}
       className={className}
     >
       {children}
@@ -163,10 +164,10 @@ export function ScaleReveal({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8, rotateX: 15 }}
+      initial={{ opacity: 0, scale: 0.75, rotateX: 12 }}
       whileInView={{ opacity: 1, scale: 1, rotateX: 0 }}
       viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay }}
+      transition={{ duration: 1.15, ease: [0.16, 1, 0.3, 1], delay }}
       className={className}
       style={{ perspective: 1000 }}
     >
@@ -180,7 +181,7 @@ export function CountUp({
   end,
   suffix = "",
   prefix = "",
-  duration = 1.5,
+  duration = 1.8,
   className = "",
 }: {
   end: number;
@@ -202,7 +203,7 @@ export function CountUp({
           const step = (now: number) => {
             const elapsed = (now - startTime) / 1000;
             const progress = Math.min(elapsed / duration, 1);
-            // Ease out expo
+            // Ease out cubic/expo
             const eased = 1 - Math.pow(1 - progress, 4);
             setCount(Math.floor(eased * end));
             if (progress < 1) requestAnimationFrame(step);
@@ -260,7 +261,7 @@ export function GlitchReveal({
               );
               if (iteration >= text.length) clearInterval(intervalId);
               iteration += 0.5;
-            }, 40);
+            }, 30);
           }, delay * 1000);
         }
       },
