@@ -24,6 +24,7 @@ import { UniverseTransition } from "@/components/UniverseTransition";
 import { KineticCursor } from "@/components/portfolio/KineticCursor";
 import { ScrollProgress } from "@/components/portfolio/ScrollProgress";
 import { InteractiveLabPlayground } from "@/components/portfolio/InteractiveLabPlayground";
+import { NeuralTimeline } from "@/components/portfolio/NeuralTimeline";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -44,6 +45,7 @@ function Shell() {
           <Nav />
           <Hero />
           <About />
+          <NeuralTimeline />
           <WhatIDo />
           <SkillsMarquee />
           <SkillsDetail />

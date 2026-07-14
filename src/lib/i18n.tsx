@@ -212,6 +212,18 @@ export const dict: Dict = {
   "fc.prompt.label": { uz: "TIZIMGA KIRITISH", en: "SYSTEM INPUT" },
   "fc.prompt.submit": { uz: "KOMPILYATSIYA QILISH", en: "INITIALIZE BUILD" },
   "fc.prompt.thinking": { uz: "NEYRON TARMOQ TAHLIL QILMOQDA", en: "NEURAL NETWORK ANALYZING" },
+
+  // Neural Timeline
+  "nt.tag": { uz: "// Neyron Vaqt Chizig'i", en: "// Neural Timeline" },
+  "nt.title_a": { uz: "5 Yillik", en: "Five-Year" },
+  "nt.title_b": { uz: "Zanjir", en: "Circuit" },
+  "nt.sub": {
+    uz: "16 yoshda, ammo 5 yillik amaliy tajriba bilan — har bir yosh zanjirga yangi texnologik signal yoqadi. Yoshni tanlang.",
+    en: "16 years old, five years of hands-on signal — every age fires a new technology into the circuit. Pick a node.",
+  },
+  "nt.now": { uz: "HOZIR", en: "NOW" },
+  "nt.age": { uz: "YOSH", en: "YRS" },
+  "nt.hint": { uz: "Tugmani bosing yoki ← → bilan boshqaring", en: "Tap a node or steer with ← →" },
 };
 
 interface Ctx {
