@@ -13,6 +13,11 @@ export function TechnicalOverlay() {
     hexBlocks: Array(6).fill("0000"),
   });
 
+  // Real-time ticking metric diagnostics
+  const [cpuFreq, setCpuFreq] = useState(5.42);
+  const [ramUsage, setRamUsage] = useState(11.45);
+  const [orbitAngle, setOrbitAngle] = useState(140.23);
+
   useEffect(() => {
     const handleMove = (e: MouseEvent) => {
       setCoords({ x: e.clientX, y: e.clientY });
@@ -27,7 +32,21 @@ export function TechnicalOverlay() {
     });
 
     window.addEventListener("mousemove", handleMove);
-    return () => window.removeEventListener("mousemove", handleMove);
+
+    // Ticking performance metrics
+    const interval = setInterval(() => {
+      setCpuFreq((prev) => +(prev + (Math.random() * 0.1 - 0.05)).toFixed(2));
+      setRamUsage((prev) => {
+        const next = prev + (Math.random() * 0.04 - 0.02);
+        return +Math.max(10.0, Math.min(14.8, next)).toFixed(2);
+      });
+      setOrbitAngle((prev) => +(prev + 0.02).toFixed(2));
+    }, 800);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMove);
+      clearInterval(interval);
+    };
   }, []);
 
   return (
@@ -73,6 +92,30 @@ export function TechnicalOverlay() {
         <div className="flex gap-2 text-white/20">
           <span className="opacity-60">VER:</span>
           <span>6.0.0-RELEASE</span>
+        </div>
+      </div>
+
+      {/* Real-time Status Command Terminal (Top-Right) */}
+      <div className="absolute top-12 right-24 font-mono text-[9px] text-[#00ff22]/60 flex flex-col gap-1.5 p-3.5 bg-black/40 border border-[#00ff22]/10 rounded shadow-md pointer-events-none select-none max-w-[200px]">
+        <div className="flex items-center gap-2 border-b border-[#00ff22]/15 pb-1">
+          <span className="size-1.5 bg-[#00ff22] rounded-full animate-ping" />
+          <span className="font-bold tracking-widest text-[#00ff22] uppercase">SYS_MON_ACTIVE</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="opacity-50">CPU_CLK:</span>
+          <span>{cpuFreq.toFixed(2)} GHz</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="opacity-50">RAM_BUF:</span>
+          <span>{ramUsage.toFixed(2)} / 16.0 GB</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="opacity-50">OLM_ORB:</span>
+          <span>{orbitAngle.toFixed(2)}° N</span>
+        </div>
+        <div className="flex justify-between border-t border-[#00ff22]/15 pt-1 text-[8px] text-white/30">
+          <span>LATENCY: 12ms</span>
+          <span>UP: 99.98%</span>
         </div>
       </div>
 

@@ -3,11 +3,56 @@ import { useLang } from "@/lib/i18n";
 import { LiquidButton } from "./LiquidButton";
 import { Blob } from "./Blob";
 import { motion } from "framer-motion";
+import { useEffect, useState, useRef } from "react";
 
 export function UniverseHero() {
   const { t } = useLang();
+
+  // Dynamic interactive cursor ripples for light mode Universe Hero!
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [hovered, setHovered] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleMove = (e: MouseEvent) => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      setMousePos({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      });
+    };
+
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener("mousemove", handleMove);
+    }
+    return () => {
+      if (container) {
+        container.removeEventListener("mousemove", handleMove);
+      }
+    };
+  }, []);
+
   return (
-    <section className="relative min-h-[100svh] w-full overflow-hidden pt-24 md:pt-32">
+    <section
+      ref={containerRef}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="relative min-h-[100svh] w-full overflow-hidden pt-24 md:pt-32"
+    >
+      {/* Dynamic interactive cursor-following glow ripple in Universe mode */}
+      {hovered && (
+        <motion.div
+          animate={{
+            x: mousePos.x - 150,
+            y: mousePos.y - 150,
+          }}
+          transition={{ type: "spring", stiffness: 100, damping: 25, mass: 0.8 }}
+          className="absolute w-[300px] h-[300px] rounded-full bg-[#DFFF00]/12 blur-3xl pointer-events-none z-0"
+        />
+      )}
+
       {/* Center blob image */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9, filter: "blur(20px)" }}
