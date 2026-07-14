@@ -1,8 +1,21 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, prefer-const */
 import { useEffect, useRef, useState } from "react";
 import { useLang } from "@/lib/i18n";
 import { useSound } from "@/hooks/useSound";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Square, Music, Volume2, VolumeX, Sparkles, ChevronRight, RefreshCw, Layers } from "lucide-react";
+import {
+  Play,
+  Square,
+  Music,
+  Volume2,
+  VolumeX,
+  Sparkles,
+  ChevronRight,
+  RefreshCw,
+  Layers,
+  Sliders,
+  Activity,
+} from "lucide-react";
 
 interface Preset {
   id: number;
@@ -11,40 +24,217 @@ interface Preset {
 }
 
 const PRESETS: Preset[] = [
-  { id: 1, name: { uz: "Suyuqlik Oqimi (Flow Field)", en: "Fluid Flow Field" }, desc: { uz: "Matematik oqim maydonida suzuvchi rasm va zarrachalar.", en: "Floating vector particles swirling through sinusoidal fields." } },
-  { id: 2, name: { uz: "Elastik Blueprint Tarmoq (Elastic Grid)", en: "Elastic Blueprint Grid" }, desc: { uz: "Sichqonchadan qochadigan va tortiladigan kordinata kataklari.", en: "Coordinate grid crosses warping dynamically based on cursor mass." } },
-  { id: 3, name: { uz: "Portlovchi Tipografiya (Shatter)", en: "Shattered Typography" }, desc: { uz: "Matnni bo'laklarga sochib yuboradigan va qayta yig'adigan fizik kuchlar.", en: "Explodes text into physics debris which then satisfies gravity." } },
-  { id: 4, name: { uz: "Gravitatsion Girdob (Vortex)", en: "Gravitational Vortex" }, desc: { uz: "Markaziy qora tuynuk atrofida aylanuvchi yulduzlar tizimi.", en: "Concentric rings of space stars spiraling into a dynamic center." } },
-  { id: 5, name: { uz: "Magnit Tugunlar (Magnetic Network)", en: "Magnetic Node Network" }, desc: { uz: "Bir-biri bilan chiziqlar orqali bog'lanuvchi erkin elektronlar.", en: "Translucent nodes floating and bonding with lines based on proximity." } },
-  { id: 6, name: { uz: "Raqamli Matrix Yomg'iri (Matrix)", en: "Digital Matrix Rain" }, desc: { uz: "Kaskadli yashil neon raqamlar va kod oqimi.", en: "Cascading streams of green binary code dripping down columns." } },
-  { id: 7, name: { uz: "Kvant Chigalligi (Quantum Entanglement)", en: "Quantum Entanglement" }, desc: { uz: "Kursor bosilganda vibratsiya beruvchi kvant iplari.", en: "Spawned orbit nodes linked with interactive vibrating physical strings." } },
-  { id: 8, name: { uz: "Fraktal Daraxt (Fractal Tree)", en: "Generative Fractal Tree" }, desc: { uz: "Shamol ta'sirida tebranuvchi va barg to'kuvchi matematik daraxt.", en: "Recursive branching tree swaying dynamically in sinusoidal winds." } },
-  { id: 9, name: { uz: "Suyuq Shisha Pufaklar (Liquid Metaballs)", en: "Liquid Glass Bubbles" }, desc: { uz: "Bir-biri bilan qo'shilib ketadigan elastik suyuq sharchalar.", en: "Elastic floating bubbles merging together on contact with glass gradients." } },
-  { id: 10, name: { uz: "Simmetrik Kaleydoskop (Kaleidoscope)", en: "Symmetric Kaleidoscope" }, desc: { uz: "Sichqoncha bilan simmetrik neon naqshlar chizish laboratoriyasi.", en: "Interactive drawing board mirroring strokes in 8 radial axes." } },
-  { id: 11, name: { uz: "Live Ovoz To'lqini (Soundwave Ripples)", en: "Soundwave Spectrum Ripples" }, desc: { uz: "Musiqa to'lqinlari va kursor bosilishiga javob beruvchi konsentrik tebranishlar.", en: "Audio-reactive spectrum circles rippling with synthesized sounds." } },
-  { id: 12, name: { uz: "3D Kinetic Globus (3D Globe)", en: "3D Kinetic Globe" }, desc: { uz: "Sichqoncha bilan aylantiriladigan 3D nuqtali matrisa.", en: "Projected 3D wireframe globe rotating in vector computer space." } },
-  { id: 13, name: { uz: "Konvey Hayot O'yini (Game of Life)", en: "Cellular Game of Life" }, desc: { uz: "Hujayralar evolutsiyasi algoritmi. Chizish va kuzatish mumkin.", en: "Classic cellular automata grid evolving and allowing custom draws." } },
-  { id: 14, name: { uz: "Xromatik Aberratsiya (Aberration Lens)", en: "Chromatic Aberration Lens" }, desc: { uz: "Kursor atrofidagi rang qatlamlarini bo'lib yuboradigan optik linza.", en: "Interactive mouse lens splitting red, green and blue channels underneath." } },
-  { id: 15, name: { uz: "Garmonik Mayatniklar (Pendulums)", en: "Harmonic Pendulums" }, desc: { uz: "Sinusoidal oqim hosil qiluvchi aylanma mayatniklar zanjiri.", en: "Row of hanging swinging spheres tracing beautiful sine contours." } },
-  { id: 16, name: { uz: "Lorenz Xaos Atraktori (Lorenz Chaos)", en: "Chaos Lorenz Attractor" }, desc: { uz: "Matematik xaos tenglamasining uch o'lchamli cheksiz chizig'i.", en: "Mesmerizing infinite light ribbon tracing a 3D chaos equation." } },
-  { id: 17, name: { uz: "Elastik Fizik Arqon (Spring Rope)", en: "Spring Physics Rope" }, desc: { uz: "Sichqoncha bilan ushlab silkitiladigan elastik prujinali zanjir.", en: "Dangling rope made of spring nodes that can be whipped with momentum." } },
-  { id: 18, name: { uz: "Voronoy Mozaikasi (Voronoi Cells)", en: "Voronoi Mosaic Cells" }, desc: { uz: "Erkin nuqtalar orqali shakllanuvchi interaktiv geometrik kataklar.", en: "Splitting Voronoi cellular partitions updating with mouse vectors." } },
-  { id: 19, name: { uz: "Cheksiz Tunnel (Hyperspace Warp)", en: "Hyperspace Warp Tunnel" }, desc: { uz: "Koinot tunnelidan o'ta yuqori tezlikda uchish simulyatsiyasi.", en: "Racing through a infinite tunnel of stars, speed increases on drag." } },
-  { id: 20, name: { uz: "L-Tizim G'unchasi (L-System Bloom)", en: "L-System Organic Bloom" }, desc: { uz: "Matematik formulalar yordamida o'suvchi spiralsimon geometriya.", en: "Procedural recursive growth tracing fractal spirals that swell." } },
-  { id: 21, name: { uz: "Izometrik Bloklar (Isometric Voxel Grid)", en: "Isometric Voxel Grid" }, desc: { uz: "Kursor masofasiga qarab ko'tariladigan va tushadigan 3D bloklar.", en: "Isometric grid terrain rising and falling like waves under the mouse." } },
+  {
+    id: 1,
+    name: { uz: "Suyuqlik Oqimi (Flow Field)", en: "Fluid Flow Field" },
+    desc: {
+      uz: "Matematik oqim maydonida suzuvchi rasm va zarrachalar.",
+      en: "Floating vector particles swirling through sinusoidal fields.",
+    },
+  },
+  {
+    id: 2,
+    name: { uz: "Elastik Blueprint Tarmoq (Elastic Grid)", en: "Elastic Blueprint Grid" },
+    desc: {
+      uz: "Sichqonchadan qochadigan va tortiladigan kordinata kataklari.",
+      en: "Coordinate grid crosses warping dynamically based on cursor mass.",
+    },
+  },
+  {
+    id: 3,
+    name: { uz: "Portlovchi Tipografiya (Shatter)", en: "Shattered Typography" },
+    desc: {
+      uz: "Matnni bo'laklarga sochib yuboradigan va qayta yig'adigan fizik kuchlar.",
+      en: "Explodes text into physics debris which then satisfies gravity.",
+    },
+  },
+  {
+    id: 4,
+    name: { uz: "Gravitatsion Girdob (Vortex)", en: "Gravitational Vortex" },
+    desc: {
+      uz: "Markaziy qora tuynuk atrofida aylanuvchi yulduzlar tizimi.",
+      en: "Concentric rings of space stars spiraling into a dynamic center.",
+    },
+  },
+  {
+    id: 5,
+    name: { uz: "Magnit Tugunlar (Magnetic Network)", en: "Magnetic Node Network" },
+    desc: {
+      uz: "Bir-biri bilan chiziqlar orqali bog'lanuvchi erkin elektronlar.",
+      en: "Translucent nodes floating and bonding with lines based on proximity.",
+    },
+  },
+  {
+    id: 6,
+    name: { uz: "Raqamli Matrix Yomg'iri (Matrix)", en: "Digital Matrix Rain" },
+    desc: {
+      uz: "Kaskadli yashil neon raqamlar va kod oqimi.",
+      en: "Cascading streams of green binary code dripping down columns.",
+    },
+  },
+  {
+    id: 7,
+    name: { uz: "Kvant Chigalligi (Quantum Entanglement)", en: "Quantum Entanglement" },
+    desc: {
+      uz: "Kursor bosilganda vibratsiya beruvchi kvant iplari.",
+      en: "Spawned orbit nodes linked with interactive vibrating physical strings.",
+    },
+  },
+  {
+    id: 8,
+    name: { uz: "Fraktal Daraxt (Fractal Tree)", en: "Generative Fractal Tree" },
+    desc: {
+      uz: "Shamol ta'sirida tebranuvchi va barg to'kuvchi matematik daraxt.",
+      en: "Recursive branching tree swaying dynamically in sinusoidal winds.",
+    },
+  },
+  {
+    id: 9,
+    name: { uz: "Suyuq Shisha Pufaklar (Liquid Metaballs)", en: "Liquid Glass Bubbles" },
+    desc: {
+      uz: "Bir-biri bilan qo'shilib ketadigan elastik suyuq sharchalar.",
+      en: "Elastic floating bubbles merging together on contact with glass gradients.",
+    },
+  },
+  {
+    id: 10,
+    name: { uz: "Live Ovoz To'lqini (Soundwave Ripples)", en: "Soundwave Spectrum Ripples" },
+    desc: {
+      uz: "Musiqa to'lqinlari va kursor bosilishiga javob beruvchi konsentrik tebranishlar.",
+      en: "Audio-reactive spectrum circles rippling with synthesized sounds.",
+    },
+  },
+  {
+    id: 11,
+    name: { uz: "Simmetrik Kaleydoskop (Kaleidoscope)", en: "Symmetric Kaleidoscope" },
+    desc: {
+      uz: "Sichqoncha bilan simmetrik neon naqshlar chizish laboratoriyasi.",
+      en: "Interactive drawing board mirroring strokes in 8 radial axes.",
+    },
+  },
+  {
+    id: 12,
+    name: { uz: "3D Kinetic Globus (3D Globe)", en: "3D Kinetic Globe" },
+    desc: {
+      uz: "Sichqoncha bilan aylantiriladigan 3D nuqtali matrisa.",
+      en: "Projected 3D wireframe globe rotating in vector computer space.",
+    },
+  },
+  {
+    id: 13,
+    name: { uz: "Konvey Hayot O'yini (Game of Life)", en: "Cellular Game of Life" },
+    desc: {
+      uz: "Hujayralar evolutsiyasi algoritmi. Chizish va kuzatish mumkin.",
+      en: "Classic cellular automata grid evolving and allowing custom draws.",
+    },
+  },
+  {
+    id: 14,
+    name: { uz: "Xromatik Aberratsiya (Aberration Lens)", en: "Chromatic Aberration Lens" },
+    desc: {
+      uz: "Kursor atrofidagi rang qatlamlarini bo'lib yuboradigan optik linza.",
+      en: "Interactive mouse lens splitting red, green and blue channels underneath.",
+    },
+  },
+  {
+    id: 15,
+    name: { uz: "Garmonik Mayatniklar (Pendulums)", en: "Harmonic Pendulums" },
+    desc: {
+      uz: "Sinusoidal oqim hosil qiluvchi aylanma mayatniklar zanjiri.",
+      en: "Row of hanging swinging spheres tracing beautiful sine contours.",
+    },
+  },
+  {
+    id: 16,
+    name: { uz: "Lorenz Xaos Atraktori (Lorenz Chaos)", en: "Chaos Lorenz Attractor" },
+    desc: {
+      uz: "Matematik xaos tenglamasining uch o'lchamli cheksiz chizig'i.",
+      en: "Mesmerizing infinite light ribbon tracing a 3D chaos equation.",
+    },
+  },
+  {
+    id: 17,
+    name: { uz: "Elastik Fizik Arqon (Spring Rope)", en: "Spring Physics Rope" },
+    desc: {
+      uz: "Sichqoncha bilan ushlab silkitiladigan elastik prujinali zanjir.",
+      en: "Dangling rope made of spring nodes that can be whipped with momentum.",
+    },
+  },
+  {
+    id: 18,
+    name: { uz: "Voronoy Mozaikasi (Voronoi Cells)", en: "Voronoi Mosaic Cells" },
+    desc: {
+      uz: "Erkin nuqtalar orqali shakllanuvchi interaktiv geometrik kataklar.",
+      en: "Splitting Voronoi cellular partitions updating with mouse vectors.",
+    },
+  },
+  {
+    id: 19,
+    name: { uz: "Cheksiz Tunnel (Hyperspace Warp)", en: "Hyperspace Warp Tunnel" },
+    desc: {
+      uz: "Koinot tunnelidan o'ta yuqori tezlikda uchish simulyatsiyasi.",
+      en: "Racing through a infinite tunnel of stars, speed increases on drag.",
+    },
+  },
+  {
+    id: 20,
+    name: { uz: "L-Tizim G'unchasi (L-System Bloom)", en: "L-System Organic Bloom" },
+    desc: {
+      uz: "Matematik formulalar yordamida o'suvchi spiralsimon geometriya.",
+      en: "Procedural recursive growth tracing fractal spirals that swell.",
+    },
+  },
+  {
+    id: 21,
+    name: { uz: "Izometrik Bloklar (Isometric Voxel Grid)", en: "Isometric Voxel Grid" },
+    desc: {
+      uz: "Kursor masofasiga qarab ko'tariladigan va tushadigan 3D bloklar.",
+      en: "Isometric grid terrain rising and falling like waves under the mouse.",
+    },
+  },
 ];
 
 export function InteractiveLabPlayground() {
   const { lang } = useLang();
-  const { playHover, playClick, playSynthesis, startGenerativeAmbient, stopGenerativeAmbient, isAmbientActive, isMuted, toggleMute } = useSound();
+  const {
+    playHover,
+    playClick,
+    playSynthesis,
+    startGenerativeAmbient,
+    stopGenerativeAmbient,
+    isAmbientActive,
+    isMuted,
+    toggleMute,
+  } = useSound();
 
   const [activePreset, setActivePreset] = useState<Preset>(PRESETS[0]);
-  const [activeSoundTab, setActiveSoundTab] = useState<"piano" | "scifi" | "arcade" | "ux">("piano");
+  const [activeSoundTab, setActiveSoundTab] = useState<"piano" | "scifi" | "arcade" | "ux">(
+    "piano",
+  );
   const [ambientLoopPlaying, setAmbientLoopPlaying] = useState(false);
   const [canvasEnergy, setCanvasEnergy] = useState(0);
 
+  // ADSR Sound Synthesis Console state
+  const [attack, setAttack] = useState(0.2);
+  const [decay, setDecay] = useState(0.35);
+  const [sustain, setSustain] = useState(0.6);
+  const [release, setRelease] = useState(0.45);
+  const [lfoRate, setLfoRate] = useState(6.0);
+  const [lfoDepth, setLfoDepth] = useState(40);
+  const [waveShape, setWaveShape] = useState<"sine" | "triangle" | "square" | "sawtooth">(
+    "sawtooth",
+  );
+
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const mouseRef = useRef({ x: -1000, y: -1000, px: -1000, py: -1000, isDown: false, vx: 0, vy: 0 });
+  const mouseRef = useRef({
+    x: -1000,
+    y: -1000,
+    px: -1000,
+    py: -1000,
+    isDown: false,
+    vx: 0,
+    vy: 0,
+  });
   const presetStateRef = useRef<any>({});
   const animationFrameRef = useRef<number | null>(null);
 
@@ -104,6 +294,27 @@ export function InteractiveLabPlayground() {
     }
   };
 
+  // Dynamic ADSR graphic path calculations
+  const getAdsrPath = () => {
+    const startX = 10;
+    const startY = 85;
+
+    // Scale Attack, Decay, Sustain, Release into beautiful pixel coordinate points
+    const attX = startX + attack * 60;
+    const attY = 15; // Peak level (inverse coordinates)
+
+    const decX = attX + decay * 60;
+    const decY = startY - sustain * 70; // Sustain level
+
+    const susX = decX + 50; // Horizontal line for sustain duration
+    const susY = decY;
+
+    const relX = susX + release * 60;
+    const relY = startY; // Back to zero level
+
+    return `M ${startX} ${startY} L ${attX} ${attY} L ${decX} ${decY} L ${susX} ${susY} L ${relX} ${relY}`;
+  };
+
   // Canvas loop
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -128,7 +339,8 @@ export function InteractiveLabPlayground() {
     const preset = activePreset.id;
 
     // --- PRESET INITIALIZATION LOGIC ---
-    if (preset === 1) { // Flow Field
+    if (preset === 1) {
+      // Flow Field
       const particles: any[] = [];
       for (let i = 0; i < 200; i++) {
         particles.push({
@@ -137,11 +349,12 @@ export function InteractiveLabPlayground() {
           vx: 0,
           vy: 0,
           speed: 1 + Math.random() * 2,
-          color: `hsl(${15 + Math.random() * 30}, 100%, 55%)`
+          color: `hsl(${15 + Math.random() * 30}, 100%, 55%)`,
         });
       }
       presetStateRef.current = { particles };
-    } else if (preset === 2) { // Elastic grid
+    } else if (preset === 2) {
+      // Elastic grid
       const gridPoints: any[] = [];
       const spacing = 30;
       for (let x = spacing; x < canvas.width; x += spacing) {
@@ -150,7 +363,8 @@ export function InteractiveLabPlayground() {
         }
       }
       presetStateRef.current = { gridPoints };
-    } else if (preset === 3) { // Shatter Typography
+    } else if (preset === 3) {
+      // Shatter Typography
       const particles: any[] = [];
       const text = lang === "uz" ? "KINETIK LAB" : "CYBER LAB";
       ctx.font = "bold 50px monospace";
@@ -166,17 +380,20 @@ export function InteractiveLabPlayground() {
           const alphaIdx = (y * canvas.width + x) * 4 + 3;
           if (data[alphaIdx] > 128) {
             particles.push({
-              ox: x, oy: y,
+              ox: x,
+              oy: y,
               x: x + (Math.random() * 40 - 20),
               y: y + (Math.random() * 40 - 20),
-              vx: 0, vy: 0,
-              size: 2 + Math.random() * 3
+              vx: 0,
+              vy: 0,
+              size: 2 + Math.random() * 3,
             });
           }
         }
       }
       presetStateRef.current = { particles };
-    } else if (preset === 4) { // Vortex
+    } else if (preset === 4) {
+      // Vortex
       const particles: any[] = [];
       for (let i = 0; i < 300; i++) {
         particles.push({
@@ -184,11 +401,12 @@ export function InteractiveLabPlayground() {
           distance: 50 + Math.random() * 250,
           speed: 0.005 + Math.random() * 0.015,
           size: 1 + Math.random() * 2,
-          color: `hsl(${350 + Math.random() * 30}, 100%, 60%)`
+          color: `hsl(${350 + Math.random() * 30}, 100%, 60%)`,
         });
       }
       presetStateRef.current = { particles, cx: canvas.width / 2, cy: canvas.height / 2 };
-    } else if (preset === 5) { // Magnetic Network
+    } else if (preset === 5) {
+      // Magnetic Network
       const nodes: any[] = [];
       for (let i = 0; i < 75; i++) {
         nodes.push({
@@ -196,22 +414,26 @@ export function InteractiveLabPlayground() {
           y: Math.random() * canvas.height,
           vx: (Math.random() * 2 - 1) * 0.5,
           vy: (Math.random() * 2 - 1) * 0.5,
-          radius: 2 + Math.random() * 2
+          radius: 2 + Math.random() * 2,
         });
       }
       presetStateRef.current = { nodes };
-    } else if (preset === 6) { // Matrix
+    } else if (preset === 6) {
+      // Matrix
       const cols = Math.floor(canvas.width / 15);
       const drops: number[] = [];
       for (let i = 0; i < cols; i++) {
         drops[i] = Math.random() * -30;
       }
       presetStateRef.current = { drops };
-    } else if (preset === 7) { // Quantum Entanglement
+    } else if (preset === 7) {
+      // Quantum Entanglement
       presetStateRef.current = { nodes: [], strings: [] };
-    } else if (preset === 8) { // Fractal Tree
+    } else if (preset === 8) {
+      // Fractal Tree
       presetStateRef.current = { windAngle: 0, leaves: [] };
-    } else if (preset === 9) { // Metaballs
+    } else if (preset === 9) {
+      // Metaballs
       const balls: any[] = [];
       for (let i = 0; i < 15; i++) {
         balls.push({
@@ -219,15 +441,18 @@ export function InteractiveLabPlayground() {
           y: Math.random() * canvas.height,
           vx: (Math.random() * 2 - 1) * 1.5,
           vy: (Math.random() * 2 - 1) * 1.5,
-          radius: 30 + Math.random() * 40
+          radius: 30 + Math.random() * 40,
         });
       }
       presetStateRef.current = { balls };
-    } else if (preset === 10) { // Kaleidoscope
+    } else if (preset === 11) {
+      // Kaleidoscope
       presetStateRef.current = { points: [] };
-    } else if (preset === 11) { // Soundwave Spectrum
+    } else if (preset === 10) {
+      // Soundwave Spectrum
       presetStateRef.current = { ringScale: 1.0 };
-    } else if (preset === 12) { // 3D Globe
+    } else if (preset === 12) {
+      // 3D Globe
       const globePoints: any[] = [];
       const total = 180;
       for (let i = 0; i < total; i++) {
@@ -237,15 +462,18 @@ export function InteractiveLabPlayground() {
         globePoints.push({
           x: r * Math.sin(theta) * Math.cos(phi),
           y: r * Math.sin(theta) * Math.sin(phi),
-          z: r * Math.cos(theta)
+          z: r * Math.cos(theta),
         });
       }
       presetStateRef.current = { globePoints, rx: 0, ry: 0 };
-    } else if (preset === 13) { // Game of life
+    } else if (preset === 13) {
+      // Game of life
       const size = 12;
       const rows = Math.ceil(canvas.height / size);
       const cols = Math.ceil(canvas.width / size);
-      let grid = Array(cols).fill(0).map(() => Array(rows).fill(0));
+      const grid = Array(cols)
+        .fill(0)
+        .map(() => Array(rows).fill(0));
       // randomize some initial cells
       for (let x = 0; x < cols; x++) {
         for (let y = 0; y < rows; y++) {
@@ -253,57 +481,77 @@ export function InteractiveLabPlayground() {
         }
       }
       presetStateRef.current = { grid, rows, cols, cellSize: size, tickCount: 0 };
-    } else if (preset === 14) { // Chromatic Lens
+    } else if (preset === 14) {
+      // Chromatic Lens
       presetStateRef.current = { lensRadius: 100 };
-    } else if (preset === 15) { // Pendulums
+    } else if (preset === 15) {
+      // Pendulums
       const count = 12;
       const pendulums: any[] = [];
       for (let i = 0; i < count; i++) {
         pendulums.push({
           length: 120 + i * 15,
           angle: 0.5,
-          speed: 0.015 + (count - i) * 0.002
+          speed: 0.015 + (count - i) * 0.002,
         });
       }
       presetStateRef.current = { pendulums };
-    } else if (preset === 16) { // Lorenz Attractor
+    } else if (preset === 16) {
+      // Lorenz Attractor
       presetStateRef.current = {
-        x: 0.1, y: 0.0, z: 0.0,
-        s: 10.0, r: 28.0, b: 8.0 / 3.0,
-        points: []
+        x: 0.1,
+        y: 0.0,
+        z: 0.0,
+        s: 10.0,
+        r: 28.0,
+        b: 8.0 / 3.0,
+        points: [],
       };
-    } else if (preset === 17) { // Spring rope
+    } else if (preset === 17) {
+      // Spring rope
       const nodes: any[] = [];
       const total = 16;
       for (let i = 0; i < total; i++) {
-        nodes.push({ x: canvas.width / 2, y: 30 + i * 18, ox: canvas.width / 2, oy: 30 + i * 18, vx: 0, vy: 0 });
+        nodes.push({
+          x: canvas.width / 2,
+          y: 30 + i * 18,
+          ox: canvas.width / 2,
+          oy: 30 + i * 18,
+          vx: 0,
+          vy: 0,
+        });
       }
       presetStateRef.current = { nodes };
-    } else if (preset === 18) { // Voronoi
+    } else if (preset === 18) {
+      // Voronoi
       const seeds: any[] = [];
       for (let i = 0; i < 15; i++) {
         seeds.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
           vx: (Math.random() * 2 - 1) * 0.8,
-          vy: (Math.random() * 2 - 1) * 0.8
+          vy: (Math.random() * 2 - 1) * 0.8,
         });
       }
       presetStateRef.current = { seeds };
-    } else if (preset === 19) { // Hyperspace tunnel
+    } else if (preset === 19) {
+      // Hyperspace tunnel
       const stars: any[] = [];
       for (let i = 0; i < 150; i++) {
         stars.push({
           x: Math.random() * canvas.width - canvas.width / 2,
           y: Math.random() * canvas.height - canvas.height / 2,
           z: Math.random() * canvas.width,
-          ox: 0, oy: 0
+          ox: 0,
+          oy: 0,
         });
       }
       presetStateRef.current = { stars };
-    } else if (preset === 20) { // L-System Organic Bloom
+    } else if (preset === 20) {
+      // L-System Organic Bloom
       presetStateRef.current = { angleOffset: 0, branches: [] };
-    } else if (preset === 21) { // Isometric voxel grid
+    } else if (preset === 21) {
+      // Isometric voxel grid
       presetStateRef.current = { time: 0 };
     }
 
@@ -314,7 +562,7 @@ export function InteractiveLabPlayground() {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Interpolate canvasEnergy decay
-      setCanvasEnergy(prev => Math.max(0, prev - 0.025));
+      setCanvasEnergy((prev) => Math.max(0, prev - 0.025));
       const energy = canvasEnergy;
 
       // Draw subtle energy grid border
@@ -326,7 +574,8 @@ export function InteractiveLabPlayground() {
 
       const state = presetStateRef.current;
 
-      if (preset === 1) { // Flow Field
+      if (preset === 1) {
+        // Flow Field
         const { particles } = state;
         particles.forEach((p: any) => {
           // Flow vector math
@@ -363,7 +612,8 @@ export function InteractiveLabPlayground() {
           ctx.arc(p.x, p.y, 1.5 + energy * 4, 0, Math.PI * 2);
           ctx.fill();
         });
-      } else if (preset === 2) { // Elastic Blueprint Grid
+      } else if (preset === 2) {
+        // Elastic Blueprint Grid
         const { gridPoints } = state;
         gridPoints.forEach((p: any) => {
           const dx = mouse.x - p.ox;
@@ -399,7 +649,8 @@ export function InteractiveLabPlayground() {
           ctx.lineTo(p.x, p.y + 4);
           ctx.stroke();
         });
-      } else if (preset === 3) { // Shattered typography
+      } else if (preset === 3) {
+        // Shattered typography
         const { particles } = state;
         particles.forEach((p: any) => {
           const dx = mouse.x - p.x;
@@ -426,9 +677,10 @@ export function InteractiveLabPlayground() {
           p.y += p.vy;
 
           ctx.fillStyle = `rgba(255, 255, 255, ${0.4 + energy * 0.6})`;
-          ctx.fillRect(p.x - p.size/2, p.y - p.size/2, p.size, p.size);
+          ctx.fillRect(p.x - p.size / 2, p.y - p.size / 2, p.size, p.size);
         });
-      } else if (preset === 4) { // Vortex
+      } else if (preset === 4) {
+        // Vortex
         const { particles } = state;
         if (mouse.x > 0 && mouse.y > 0) {
           state.cx += (mouse.x - state.cx) * 0.1;
@@ -448,7 +700,8 @@ export function InteractiveLabPlayground() {
           ctx.arc(x, y, p.size + energy * 2, 0, Math.PI * 2);
           ctx.fill();
         });
-      } else if (preset === 5) { // Magnetic network
+      } else if (preset === 5) {
+        // Magnetic network
         const { nodes } = state;
         nodes.forEach((n: any) => {
           n.x += n.vx * (1 + energy * 3);
@@ -489,7 +742,8 @@ export function InteractiveLabPlayground() {
             }
           }
         }
-      } else if (preset === 6) { // Matrix Rain
+      } else if (preset === 6) {
+        // Matrix Rain
         const { drops } = state;
         ctx.fillStyle = "rgba(0, 255, 100, 0.4)";
         ctx.font = "bold 13px monospace";
@@ -504,7 +758,8 @@ export function InteractiveLabPlayground() {
             drops[i] = 0;
           }
         }
-      } else if (preset === 7) { // Quantum Entanglement
+      } else if (preset === 7) {
+        // Quantum Entanglement
         const { nodes, strings } = state;
         // spawn nodes on mouse drag
         if (mouse.isDown && Math.random() < 0.3) {
@@ -516,7 +771,7 @@ export function InteractiveLabPlayground() {
             radius: 3 + Math.random() * 4,
             angle: Math.random() * Math.PI * 2,
             orbit: 30 + Math.random() * 50,
-            color: `hsl(${180 + Math.random() * 60}, 100%, 55%)`
+            color: `hsl(${180 + Math.random() * 60}, 100%, 55%)`,
           });
         }
 
@@ -554,7 +809,8 @@ export function InteractiveLabPlayground() {
         }
 
         if (nodes.length > 40) nodes.shift();
-      } else if (preset === 8) { // Fractal Tree
+      } else if (preset === 8) {
+        // Fractal Tree
         state.windAngle += 0.015;
         const wind = Math.sin(state.windAngle) * 0.1 * (1 + energy * 2);
 
@@ -572,7 +828,12 @@ export function InteractiveLabPlayground() {
 
           // Spurt glowing leaves
           if (depth < 4 && Math.random() < 0.02) {
-            state.leaves.push({ x: ex, y: ey, vx: (Math.random() - 0.5) * 2, vy: 1 + Math.random() });
+            state.leaves.push({
+              x: ex,
+              y: ey,
+              vx: (Math.random() - 0.5) * 2,
+              vy: 1 + Math.random(),
+            });
           }
 
           drawBranch(ex, ey, len * 0.78, angle - 0.4 + wind, depth - 1);
@@ -594,7 +855,8 @@ export function InteractiveLabPlayground() {
         });
 
         if (state.leaves.length > 60) state.leaves.shift();
-      } else if (preset === 9) { // Metaballs
+      } else if (preset === 9) {
+        // Metaballs
         const { balls } = state;
         balls.forEach((b: any) => {
           b.x += b.vx * (1 + energy * 2);
@@ -622,10 +884,15 @@ export function InteractiveLabPlayground() {
           ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
           ctx.fill();
         });
-      } else if (preset === 10) { // Kaleidoscope
+      } else if (preset === 11) {
+        // Kaleidoscope
         const { points } = state;
         if (mouse.x > 0 && mouse.isDown) {
-          points.push({ x: mouse.x - canvas.width / 2, y: mouse.y - canvas.height / 2, color: `hsl(${Date.now() / 20 % 360}, 100%, 60%)` });
+          points.push({
+            x: mouse.x - canvas.width / 2,
+            y: mouse.y - canvas.height / 2,
+            color: `hsl(${(Date.now() / 20) % 360}, 100%, 60%)`,
+          });
         }
 
         ctx.save();
@@ -643,7 +910,8 @@ export function InteractiveLabPlayground() {
         ctx.restore();
 
         if (points.length > 250) points.shift();
-      } else if (preset === 11) { // Soundwave Spectrum
+      } else if (preset === 10) {
+        // Soundwave Spectrum
         const ringCount = 5;
         const count = 60;
         const time = Date.now() * 0.0025;
@@ -665,7 +933,8 @@ export function InteractiveLabPlayground() {
           }
           ctx.stroke();
         }
-      } else if (preset === 12) { // 3D Globe
+      } else if (preset === 12) {
+        // 3D Globe
         const { globePoints } = state;
         state.rx += 0.005 + (mouse.x > 0 ? (mouse.x - canvas.width / 2) * 0.00005 : 0);
         state.ry += 0.004 + (mouse.y > 0 ? (mouse.y - canvas.height / 2) * 0.00005 : 0);
@@ -677,10 +946,10 @@ export function InteractiveLabPlayground() {
 
         globePoints.forEach((p: any) => {
           // 3D rotations
-          let y1 = p.y * cosX - p.z * sinX;
-          let z1 = p.z * cosX + p.y * sinX;
-          let x2 = p.x * cosY - z1 * sinY;
-          let z2 = z1 * cosY + p.x * sinY;
+          const y1 = p.y * cosX - p.z * sinX;
+          const z1 = p.z * cosX + p.y * sinX;
+          const x2 = p.x * cosY - z1 * sinY;
+          const z2 = z1 * cosY + p.x * sinY;
 
           // Projection
           const scale = 250 / (250 + z2);
@@ -692,7 +961,8 @@ export function InteractiveLabPlayground() {
           ctx.arc(px, py, 1.5 * scale * (1 + energy * 2), 0, Math.PI * 2);
           ctx.fill();
         });
-      } else if (preset === 13) { // Game of Life
+      } else if (preset === 13) {
+        // Game of Life
         const { grid, rows, cols, cellSize } = state;
         state.tickCount++;
 
@@ -718,7 +988,9 @@ export function InteractiveLabPlayground() {
         // update grid rules on interval ticks
         const updateRate = Math.max(2, 8 - Math.floor(energy * 6));
         if (state.tickCount % updateRate === 0) {
-          const nextGrid = Array(cols).fill(0).map(() => Array(rows).fill(0));
+          const nextGrid = Array(cols)
+            .fill(0)
+            .map(() => Array(rows).fill(0));
           for (let x = 0; x < cols; x++) {
             for (let y = 0; y < rows; y++) {
               let neighbors = 0;
@@ -740,7 +1012,8 @@ export function InteractiveLabPlayground() {
           }
           state.grid = nextGrid;
         }
-      } else if (preset === 14) { // Chromatic Lens
+      } else if (preset === 14) {
+        // Chromatic Lens
         const { lensRadius } = state;
         ctx.fillStyle = "rgba(255, 255, 255, 0.05)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -786,7 +1059,8 @@ export function InteractiveLabPlayground() {
           ctx.arc(mouse.x, mouse.y, lensRadius, 0, Math.PI * 2);
           ctx.stroke();
         }
-      } else if (preset === 15) { // Pendulums
+      } else if (preset === 15) {
+        // Pendulums
         const { pendulums } = state;
         const cx = canvas.width / 2;
         const cy = 20;
@@ -811,7 +1085,8 @@ export function InteractiveLabPlayground() {
           ctx.arc(px, py, 8 + energy * 6, 0, Math.PI * 2);
           ctx.fill();
         });
-      } else if (preset === 16) { // Lorenz Attractor
+      } else if (preset === 16) {
+        // Lorenz Attractor
         let { x, y, z, s, r, b, points } = state;
         const dt = 0.012 * (1 + energy * 3);
 
@@ -826,7 +1101,9 @@ export function InteractiveLabPlayground() {
           points.push({ x, y, z });
         }
 
-        state.x = x; state.y = y; state.z = z;
+        state.x = x;
+        state.y = y;
+        state.z = z;
 
         // draw points projecting to 2D
         ctx.strokeStyle = "rgba(255, 69, 0, 0.5)";
@@ -841,7 +1118,8 @@ export function InteractiveLabPlayground() {
         ctx.stroke();
 
         if (points.length > 400) points.splice(0, 4);
-      } else if (preset === 17) { // Spring rope
+      } else if (preset === 17) {
+        // Spring rope
         const { nodes } = state;
 
         // Pin first node to top anchor
@@ -894,7 +1172,8 @@ export function InteractiveLabPlayground() {
           ctx.arc(n.x, n.y, 4, 0, Math.PI * 2);
           ctx.fill();
         });
-      } else if (preset === 18) { // Voronoi Cell lines
+      } else if (preset === 18) {
+        // Voronoi Cell lines
         const { seeds } = state;
         seeds.forEach((s: any) => {
           s.x += s.vx * (1 + energy * 2);
@@ -918,7 +1197,7 @@ export function InteractiveLabPlayground() {
             seeds.forEach((s: any, idx: number) => {
               const dx = s.x - x;
               const dy = s.y - y;
-              const d = dx*dx + dy*dy;
+              const d = dx * dx + dy * dy;
               if (d < minDist) {
                 minDist = d;
                 minIdx = idx;
@@ -929,7 +1208,8 @@ export function InteractiveLabPlayground() {
             ctx.fillRect(x, y, step, step);
           }
         }
-      } else if (preset === 19) { // Hyperspace tunnel
+      } else if (preset === 19) {
+        // Hyperspace tunnel
         const { stars } = state;
         stars.forEach((s: any) => {
           s.z -= 4 * (1 + energy * 10);
@@ -950,7 +1230,8 @@ export function InteractiveLabPlayground() {
           ctx.arc(px, py, Math.max(0.2, size), 0, Math.PI * 2);
           ctx.fill();
         });
-      } else if (preset === 20) { // L-system organic spirals
+      } else if (preset === 20) {
+        // L-system organic spirals
         state.angleOffset += 0.005 * (1 + energy * 4);
         const segments = 120;
         let x = canvas.width / 2;
@@ -971,7 +1252,8 @@ export function InteractiveLabPlayground() {
           ctx.lineTo(x, y);
         }
         ctx.stroke();
-      } else if (preset === 21) { // Isometric Grid
+      } else if (preset === 21) {
+        // Isometric Grid
         state.time += 0.04 * (1 + energy * 4);
         const gridW = 16;
         const gridH = 16;
@@ -1029,26 +1311,31 @@ export function InteractiveLabPlayground() {
       <div className="absolute top-10 right-10 flex gap-1 font-mono text-[8px] text-accent/30 tracking-widest hidden md:flex uppercase">
         <span>CYBER_SYNTHESIS_MATRIX</span>
         <span>//</span>
-        <span>VIRTUAL_PLAYGROUND_V1</span>
+        <span>VIRTUAL_PLAYGROUND_V2</span>
       </div>
 
       <div className="mb-10 flex gap-2 items-center">
         <div className="h-[1px] w-8 bg-accent animate-pulse" />
-        <span className="text-[10px] uppercase tracking-widest text-accent">// SYNTHESIS PLAYGROUND & SATISFYING TOOLS</span>
+        <span className="text-[10px] uppercase tracking-widest text-accent">
+          // SYNTHESIS PLAYGROUND & SATISFYING TOOLS
+        </span>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-10 items-stretch">
-
         {/* Left: Interactive Canvas Port */}
         <div className="flex flex-col border border-white/10 bg-black/40 rounded-xl overflow-hidden relative group">
           {/* Top terminal banner */}
           <div className="px-4 py-3 border-b border-white/10 bg-white/3 flex items-center justify-between font-mono text-[9px] text-white/50">
             <div className="flex items-center gap-2">
               <span className="size-2 bg-accent rounded-full animate-ping" />
-              <span className="font-bold tracking-widest uppercase">{lang === "uz" ? "PORT_AKTIV" : "VIEWPORT_ACTIVE"}</span>
+              <span className="font-bold tracking-widest uppercase">
+                {lang === "uz" ? "PORT_AKTIV" : "VIEWPORT_ACTIVE"}
+              </span>
             </div>
             <div className="flex items-center gap-4 uppercase tracking-widest">
-              <span>Preset: 0{activePreset.id} // {activePreset.name[lang]}</span>
+              <span>
+                Preset: 0{activePreset.id} // {activePreset.name[lang]}
+              </span>
               {canvasEnergy > 0.05 && (
                 <span className="text-accent animate-pulse font-bold">
                   Energy: {Math.round(canvasEnergy * 100)}%
@@ -1073,7 +1360,9 @@ export function InteractiveLabPlayground() {
 
             {/* Instruction tooltip inside canvas */}
             <div className="absolute bottom-4 left-4 font-mono text-[9px] text-white/30 uppercase tracking-wider pointer-events-none">
-              {lang === "uz" ? "Klip yoki sudrab chizib ko'ring (Ovoz + Effektlar)" : "Click / drag to warp (Synthesis sound + ripple triggered)"}
+              {lang === "uz"
+                ? "Klip yoki sudrab chizib ko'ring (Ovoz + Effektlar)"
+                : "Click / drag to warp (Synthesis sound + ripple triggered)"}
             </div>
           </div>
 
@@ -1083,9 +1372,7 @@ export function InteractiveLabPlayground() {
               <span className="text-[9px] font-mono text-accent uppercase tracking-widest block mb-1">
                 // {lang === "uz" ? "Faol tajriba tavsifi" : "Active schematic description"}
               </span>
-              <p className="text-xs text-white/70">
-                {activePreset.desc[lang]}
-              </p>
+              <p className="text-xs text-white/70">{activePreset.desc[lang]}</p>
             </div>
             <button
               onClick={() => {
@@ -1102,16 +1389,17 @@ export function InteractiveLabPlayground() {
 
         {/* Right: Synthesis Controls & Preset Selectors */}
         <div className="flex flex-col gap-6">
-
           {/* 1. Preset Selector Hub */}
           <div className="border border-white/10 bg-black/40 rounded-xl p-5 flex flex-col">
             <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest mb-3 block flex items-center gap-1">
               <Layers className="size-3 text-accent" />
-              {lang === "uz" ? "21 x INTERAKTIV ANIMATSIYALAR" : "21 x SATISFYING VIRTUAL ANIMATIONS"}
+              {lang === "uz"
+                ? "21 x INTERAKTIV ANIMATSIYALAR"
+                : "21 x SATISFYING VIRTUAL ANIMATIONS"}
             </span>
 
             {/* Grid selector of 21 animation presets */}
-            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-3 gap-2 max-h-[175px] overflow-y-auto pr-1">
+            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-3 gap-2 max-h-[160px] overflow-y-auto pr-1">
               {PRESETS.map((preset) => (
                 <button
                   key={preset.id}
@@ -1133,7 +1421,221 @@ export function InteractiveLabPlayground() {
             </div>
           </div>
 
-          {/* 2. 52-Key Soundboard Matrix Keyboard */}
+          {/* 2. LIVE INTERACTIVE SOUND DESIGN STUDIO (ADSR & LFO GRAPHICS) */}
+          <div className="border border-white/10 bg-black/50 rounded-xl p-5 flex flex-col relative overflow-hidden">
+            <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-2">
+              <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest flex items-center gap-1">
+                <Sliders className="size-3 text-accent" />
+                {lang === "uz" ? "SYNTH OVOZ ARXITEKTURASI (ADSR)" : "LIVE ADSR SYNTH CONSOLE"}
+              </span>
+              <div className="flex items-center gap-1.5">
+                {["sine", "triangle", "square", "sawtooth"].map((shape) => (
+                  <button
+                    key={shape}
+                    onClick={() => {
+                      playClick();
+                      setWaveShape(shape as any);
+                    }}
+                    className={`px-1.5 py-0.5 border font-mono text-[8px] uppercase rounded-sm cursor-pointer ${
+                      waveShape === shape
+                        ? "border-accent text-accent bg-accent/5"
+                        : "border-white/5 text-white/40 hover:text-white"
+                    }`}
+                  >
+                    {shape.slice(0, 3)}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Live SVG Graph Visualizing Envelope */}
+            <div className="h-28 bg-[#09090b] border border-white/5 rounded-md mb-4 relative overflow-hidden flex items-center justify-center">
+              <svg className="w-full h-full" viewBox="0 0 280 100" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="adsr-grad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="rgba(255, 69, 0, 0.25)" />
+                    <stop offset="100%" stopColor="rgba(255, 69, 0, 0.0)" />
+                  </linearGradient>
+                </defs>
+                {/* Visual grid lines inside SVG */}
+                <line
+                  x1="10"
+                  y1="0"
+                  x2="10"
+                  y2="100"
+                  stroke="rgba(255,255,255,0.03)"
+                  strokeWidth="1"
+                />
+                <line
+                  x1="70"
+                  y1="0"
+                  x2="70"
+                  y2="100"
+                  stroke="rgba(255,255,255,0.03)"
+                  strokeWidth="1"
+                />
+                <line
+                  x1="130"
+                  y1="0"
+                  x2="130"
+                  y2="100"
+                  stroke="rgba(255,255,255,0.03)"
+                  strokeWidth="1"
+                />
+                <line
+                  x1="190"
+                  y1="0"
+                  x2="190"
+                  y2="100"
+                  stroke="rgba(255,255,255,0.03)"
+                  strokeWidth="1"
+                />
+                <line
+                  x1="250"
+                  y1="0"
+                  x2="250"
+                  y2="100"
+                  stroke="rgba(255,255,255,0.03)"
+                  strokeWidth="1"
+                />
+                <line
+                  x1="0"
+                  y1="50"
+                  x2="280"
+                  y2="50"
+                  stroke="rgba(255,255,255,0.03)"
+                  strokeWidth="1"
+                />
+
+                {/* Dynamic fill area */}
+                <path d={`${getAdsrPath()} L 270 85 Z`} fill="url(#adsr-grad)" />
+                {/* Primary dynamic SVG stroke line */}
+                <path
+                  d={getAdsrPath()}
+                  fill="none"
+                  stroke="#FF4500"
+                  strokeWidth="2.5"
+                  className="stroke-accent"
+                  style={{ filter: "drop-shadow(0px 0px 4px rgba(255, 69, 0, 0.5))" }}
+                />
+              </svg>
+              {/* Overlay labels */}
+              <div className="absolute top-2 left-2 flex items-center gap-1.5 font-mono text-[8px] text-white/30 uppercase tracking-widest">
+                <Activity className="size-3 text-accent animate-pulse" />
+                <span>
+                  Envelope: {attack.toFixed(2)}s A · {decay.toFixed(2)}s D ·{" "}
+                  {(sustain * 100).toFixed(0)}% S · {release.toFixed(2)}s R
+                </span>
+              </div>
+            </div>
+
+            {/* ADSR Slider Grid */}
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="space-y-1">
+                <div className="flex justify-between font-mono text-[8px] text-white/50">
+                  <span>ATTACK ({attack}s)</span>
+                  <span className="text-accent">A</span>
+                </div>
+                <input
+                  type="range"
+                  min="0.05"
+                  max="1.5"
+                  step="0.05"
+                  value={attack}
+                  onChange={(e) => setAttack(parseFloat(e.target.value))}
+                  className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <div className="flex justify-between font-mono text-[8px] text-white/50">
+                  <span>DECAY ({decay}s)</span>
+                  <span className="text-accent">D</span>
+                </div>
+                <input
+                  type="range"
+                  min="0.05"
+                  max="1.5"
+                  step="0.05"
+                  value={decay}
+                  onChange={(e) => setDecay(parseFloat(e.target.value))}
+                  className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <div className="flex justify-between font-mono text-[8px] text-white/50">
+                  <span>SUSTAIN ({Math.round(sustain * 100)}%)</span>
+                  <span className="text-accent">S</span>
+                </div>
+                <input
+                  type="range"
+                  min="0.0"
+                  max="1.0"
+                  step="0.05"
+                  value={sustain}
+                  onChange={(e) => setSustain(parseFloat(e.target.value))}
+                  className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <div className="flex justify-between font-mono text-[8px] text-white/50">
+                  <span>RELEASE ({release}s)</span>
+                  <span className="text-accent">R</span>
+                </div>
+                <input
+                  type="range"
+                  min="0.05"
+                  max="2.0"
+                  step="0.05"
+                  value={release}
+                  onChange={(e) => setRelease(parseFloat(e.target.value))}
+                  className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent"
+                />
+              </div>
+            </div>
+
+            {/* LFO Modulation Sub-panel */}
+            <div className="border border-white/5 bg-black/40 p-2.5 rounded-md flex items-center justify-between gap-4">
+              <div className="flex flex-col gap-0.5">
+                <span className="font-mono text-[8px] text-accent font-bold tracking-widest">
+                  LFO MODULATION ENGINE
+                </span>
+                <span className="font-mono text-[8px] text-white/30 uppercase">
+                  Depth: {lfoDepth}% @ {lfoRate.toFixed(1)}Hz
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex flex-col gap-1 items-end">
+                  <span className="font-mono text-[7px] text-white/40">RATE</span>
+                  <input
+                    type="range"
+                    min="1.0"
+                    max="15.0"
+                    step="0.5"
+                    value={lfoRate}
+                    onChange={(e) => setLfoRate(parseFloat(e.target.value))}
+                    className="w-16 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent"
+                  />
+                </div>
+                <div className="flex flex-col gap-1 items-end">
+                  <span className="font-mono text-[7px] text-white/40">DEPTH</span>
+                  <input
+                    type="range"
+                    min="10"
+                    max="100"
+                    step="5"
+                    value={lfoDepth}
+                    onChange={(e) => setLfoDepth(parseInt(e.target.value))}
+                    className="w-16 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 3. 52-Key Soundboard Matrix Keyboard */}
           <div className="border border-white/10 bg-black/40 rounded-xl p-5 flex flex-col relative overflow-hidden">
             {/* Background cyber wire */}
             <div className="absolute -bottom-10 -right-10 size-32 bg-accent/5 blur-2xl rounded-full pointer-events-none" />
@@ -1150,7 +1652,11 @@ export function InteractiveLabPlayground() {
                 }}
                 className="text-[9px] font-mono uppercase tracking-widest text-white/50 hover:text-accent flex items-center gap-1 cursor-pointer"
               >
-                {isMuted ? <VolumeX className="size-3 text-red-500" /> : <Volume2 className="size-3 text-green-500" />}
+                {isMuted ? (
+                  <VolumeX className="size-3 text-red-500" />
+                ) : (
+                  <Volume2 className="size-3 text-green-500" />
+                )}
                 {isMuted ? "MUTED" : "SOUND ON"}
               </button>
             </div>
@@ -1158,7 +1664,12 @@ export function InteractiveLabPlayground() {
             {/* Categorized sound board tabs */}
             <div className="flex gap-1.5 mb-4">
               {[
-                { id: "piano", label: lang === "uz" ? "PIANINO" : "SYNTH KEYS", keys: 24, offset: 0 },
+                {
+                  id: "piano",
+                  label: lang === "uz" ? "PIANINO" : "SYNTH KEYS",
+                  keys: 24,
+                  offset: 0,
+                },
                 { id: "scifi", label: "SCI-FI FX", keys: 10, offset: 24 },
                 { id: "arcade", label: "RETRO 8-BIT", keys: 10, offset: 34 },
                 { id: "ux", label: "UI / UX", keys: 8, offset: 44 },
@@ -1181,7 +1692,7 @@ export function InteractiveLabPlayground() {
             </div>
 
             {/* Soundboard trigger matrix */}
-            <div className="flex-1 min-h-[140px] flex items-center justify-center">
+            <div className="flex-1 min-h-[120px] flex items-center justify-center">
               <AnimatePresence mode="wait">
                 {activeSoundTab === "piano" && (
                   <motion.div
@@ -1214,8 +1725,16 @@ export function InteractiveLabPlayground() {
                     className="grid grid-cols-5 gap-2 w-full"
                   >
                     {[
-                      "laser", "warp", "shield", "alien", "impact",
-                      "radar", "disrupt", "anomaly", "phase", "flicker"
+                      "laser",
+                      "warp",
+                      "shield",
+                      "alien",
+                      "impact",
+                      "radar",
+                      "disrupt",
+                      "anomaly",
+                      "phase",
+                      "flicker",
                     ].map((name, i) => (
                       <button
                         key={name}
@@ -1239,8 +1758,16 @@ export function InteractiveLabPlayground() {
                     className="grid grid-cols-5 gap-2 w-full"
                   >
                     {[
-                      "coin", "jump", "powerup", "hit", "gameover",
-                      "lazer", "teleport", "heartbeat", "snare", "sparkle"
+                      "coin",
+                      "jump",
+                      "powerup",
+                      "hit",
+                      "gameover",
+                      "lazer",
+                      "teleport",
+                      "heartbeat",
+                      "snare",
+                      "sparkle",
                     ].map((name, i) => (
                       <button
                         key={name}
@@ -1263,31 +1790,32 @@ export function InteractiveLabPlayground() {
                     exit={{ opacity: 0, y: -5 }}
                     className="grid grid-cols-4 gap-2 w-full"
                   >
-                    {[
-                      "bubble", "woody", "metal", "paper",
-                      "success", "error", "scan", "ocean"
-                    ].map((name, i) => (
-                      <button
-                        key={name}
-                        onMouseEnter={playHover}
-                        onClick={() => handleTriggerSound(44 + i)}
-                        className="h-14 border border-white/5 hover:border-accent bg-white/2 hover:bg-accent/10 transition-all font-mono text-[8px] text-white/50 hover:text-accent flex flex-col items-center justify-center gap-1 cursor-pointer uppercase rounded-sm"
-                      >
-                        <span className="text-[12px]">✨</span>
-                        {name}
-                      </button>
-                    ))}
+                    {["bubble", "woody", "metal", "paper", "success", "error", "scan", "ocean"].map(
+                      (name, i) => (
+                        <button
+                          key={name}
+                          onMouseEnter={playHover}
+                          onClick={() => handleTriggerSound(44 + i)}
+                          className="h-14 border border-white/5 hover:border-accent bg-white/2 hover:bg-accent/10 transition-all font-mono text-[8px] text-white/50 hover:text-accent flex flex-col items-center justify-center gap-1 cursor-pointer uppercase rounded-sm"
+                        >
+                          <span className="text-[12px]">✨</span>
+                          {name}
+                        </button>
+                      ),
+                    )}
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
           </div>
 
-          {/* 3. Generative Ambient Music Synthesizer Control */}
+          {/* 4. Generative Ambient Music Synthesizer Control */}
           <div className="border border-white/10 bg-black/40 rounded-xl p-5 flex items-center justify-between relative overflow-hidden">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-accent/10 border border-accent/20 rounded-lg text-accent">
-                <Music className={`size-5 ${ambientLoopPlaying ? "animate-spin-slow text-accent" : "opacity-60"}`} />
+                <Music
+                  className={`size-5 ${ambientLoopPlaying ? "animate-spin-slow text-accent" : "opacity-60"}`}
+                />
               </div>
               <div>
                 <span className="text-[9px] font-mono text-accent uppercase tracking-widest block mb-1">
@@ -1297,7 +1825,13 @@ export function InteractiveLabPlayground() {
                   {lang === "uz" ? "Algoritmik Cyber-Sinfoniya" : "Generative Cyber-Symphony"}
                 </h4>
                 <p className="text-[10px] text-white/40 font-mono uppercase mt-0.5">
-                  {ambientLoopPlaying ? (lang === "uz" ? "Sintezlanmoqda (Web Audio API)" : "Active Realtime (Web Audio API)") : (lang === "uz" ? "To'xtatilgan" : "Loop off")}
+                  {ambientLoopPlaying
+                    ? lang === "uz"
+                      ? "Sintezlanmoqda (Web Audio API)"
+                      : "Active Realtime (Web Audio API)"
+                    : lang === "uz"
+                      ? "To'xtatilgan"
+                      : "Loop off"}
                 </p>
               </div>
             </div>
@@ -1323,7 +1857,6 @@ export function InteractiveLabPlayground() {
               )}
             </button>
           </div>
-
         </div>
       </div>
     </section>

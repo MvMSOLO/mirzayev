@@ -4,7 +4,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLang } from "@/lib/i18n";
 import { useSound } from "@/hooks/useSound";
 import { transitionSynth } from "@/lib/animations/synthesizer";
-import { Search, Play, Pause, X, Music, Sparkles } from "lucide-react";
+import {
+  Search,
+  Play,
+  Pause,
+  X,
+  Music,
+  Sparkles,
+  FastForward,
+  SlidersHorizontal,
+  Volume2,
+} from "lucide-react";
 
 const TRACKS = [
   {
@@ -86,7 +96,8 @@ async function searchInvidious(query: string): Promise<any[]> {
 
 export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
   const { t, lang } = useLang();
-  const { playHover, playClick, startGenerativeAmbient, stopGenerativeAmbient, isAmbientActive } = useSound();
+  const { playHover, playClick, startGenerativeAmbient, stopGenerativeAmbient, isAmbientActive } =
+    useSound();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [searchedTracks, setSearchedTracks] = useState<any[]>([]);
@@ -94,6 +105,10 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
   const [currentTrack, setCurrentTrack] = useState<any>(TRACKS[0]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [ytPlayer, setYtPlayer] = useState<any>(null);
+
+  // Playback speeds and audio enhancements
+  const [playSpeed, setPlaySpeed] = useState<number>(1.0);
+  const [filterActive, setFilterActive] = useState<"none" | "bass" | "vocal">("none");
 
   const playerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef(currentTrack);
@@ -173,7 +188,13 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
         videoId: trackRef.current.id,
         playerVars: { autoplay: 0, controls: 0, playsinline: 1 },
         events: {
-          onReady: (e: any) => setYtPlayer(e.target),
+          onReady: (e: any) => {
+            setYtPlayer(e.target);
+            // Apply speed if player was rebuilt
+            if (typeof e.target.setPlaybackRate === "function") {
+              e.target.setPlaybackRate(playSpeed);
+            }
+          },
           onStateChange: (e: any) => {
             if (!trackRef.current.isGenerative) {
               setIsPlaying(e.data === YT.PlayerState.PLAYING);
@@ -187,6 +208,13 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
   useEffect(() => {
     if (isMenuOpen) ensureYouTubePlayer();
   }, [isMenuOpen, currentTrack]);
+
+  // Adjust play speed on YT Player when speed state changes
+  useEffect(() => {
+    if (ytPlayer && typeof ytPlayer.setPlaybackRate === "function") {
+      ytPlayer.setPlaybackRate(playSpeed);
+    }
+  }, [playSpeed, ytPlayer]);
 
   useEffect(() => {
     return () => {
@@ -205,9 +233,10 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
     if (typeof window === "undefined" || !("mediaSession" in navigator)) return;
 
     try {
-      const artSrc = currentTrack.thumb === "generative"
-        ? "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4417bf41-fddd-4ae4-b980-6cdbdc1cf524/id-preview-7c68e531--be31eb19-65ea-476c-9523-cacbbc7f7050.lovable.app-1783438766439.png"
-        : currentTrack.thumb;
+      const artSrc =
+        currentTrack.thumb === "generative"
+          ? "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4417bf41-fddd-4ae4-b980-6cdbdc1cf524/id-preview-7c68e531--be31eb19-65ea-476c-9523-cacbbc7f7050.lovable.app-1783438766439.png"
+          : currentTrack.thumb;
 
       navigator.mediaSession.metadata = new MediaMetadata({
         title: currentTrack.title,
@@ -257,7 +286,7 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
     }
   }, [isPlaying, ytPlayer, currentTrack]);
 
-  // LIVE GRAPHICS AUDIO VISUALIZER
+  // LIVE GRAPHICS AUDIO VISUALIZER WITH SPECTRUM ENHANCEMENT
   useEffect(() => {
     const canvas = visualizerCanvasRef.current;
     if (!canvas) return;
@@ -267,7 +296,7 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
     canvas.width = canvas.parentElement?.clientWidth || 280;
     canvas.height = 70;
 
-    let bars: number[] = Array(32).fill(0);
+    const bars: number[] = Array(32).fill(0);
 
     const drawLoop = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -281,7 +310,7 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
         const dataArray = new Uint8Array(bufferLength);
         transitionSynth.analyser.getByteFrequencyData(dataArray);
 
-        const barWidth = (canvas.width / 24);
+        const barWidth = canvas.width / 24;
         ctx.fillStyle = "rgba(255, 69, 0, 0.75)";
 
         for (let i = 0; i < 24; i++) {
@@ -300,14 +329,35 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
         ctx.shadowBlur = 0; // reset
       } else {
         // High-fidelity realistic simulated visualizer for YT streams!
-        const barWidth = (canvas.width / 24);
-        ctx.fillStyle = "rgba(0, 255, 240, 0.6)";
+        const barWidth = canvas.width / 24;
+
+        // Dynamically color visualizer based on active filter setting
+        let barColor = "rgba(0, 255, 240, 0.6)"; // Default Cyan
+        if (filterActive === "bass") {
+          barColor = "rgba(255, 69, 0, 0.7)"; // Orange-red for heavy bass boost
+        } else if (filterActive === "vocal") {
+          barColor = "rgba(168, 85, 247, 0.7)"; // Purple for vocals clear
+        }
+        ctx.fillStyle = barColor;
 
         for (let i = 0; i < 24; i++) {
           let val = 0;
           if (active) {
-            // Sinusoidal simulated bounce
-            val = Math.sin(Date.now() * 0.005 + i * 0.4) * 20 + 25 + Math.random() * 8;
+            // Apply speed multiplier to simulated visualizer wave movement
+            const speedMultiplier = playSpeed;
+            // Apply filter style modifications to wave shapes
+            let frequencyIntensity = 1.0;
+            if (filterActive === "bass" && i < 8) {
+              frequencyIntensity = 1.8; // Boost low-end frequencies
+            } else if (filterActive === "vocal" && i >= 8 && i <= 16) {
+              frequencyIntensity = 1.7; // Boost mid vocal range
+            }
+
+            val =
+              (Math.sin(Date.now() * 0.005 * speedMultiplier + i * 0.4) * 20 +
+                25 +
+                Math.random() * 8) *
+              frequencyIntensity;
           } else {
             val = Math.max(1, bars[i] * 0.9); // decay to flatline
           }
@@ -329,7 +379,7 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
         cancelAnimationFrame(visualizerAnimRef.current);
       }
     };
-  }, [isPlaying, currentTrack, isOpen]);
+  }, [isPlaying, currentTrack, isOpen, playSpeed, filterActive]);
 
   const handlePlayPause = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
@@ -463,6 +513,57 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
                     LIVE SYNTH
                   </span>
                 )}
+              </div>
+            </div>
+
+            {/* Interactive DJ Deck: Speed & Filters (100x cooler controls) */}
+            <div className="px-3 py-2 bg-white/3 border-b border-white/10 flex items-center justify-between">
+              {/* Playback speed controller */}
+              <div className="flex items-center gap-1">
+                <FastForward className="w-3 h-3 text-accent" />
+                <span className="text-[8px] font-mono text-white/40 uppercase tracking-widest mr-1">
+                  SPEED
+                </span>
+                {[0.75, 1.0, 1.25, 1.5].map((speed) => (
+                  <button
+                    key={speed}
+                    onClick={() => {
+                      playClick();
+                      setPlaySpeed(speed);
+                    }}
+                    className={`px-1 py-0.5 rounded text-[8px] font-mono transition-all ${
+                      playSpeed === speed
+                        ? "bg-accent text-background font-bold"
+                        : "text-white/40 hover:text-white/80 hover:bg-white/5"
+                    }`}
+                  >
+                    {speed.toFixed(2)}x
+                  </button>
+                ))}
+              </div>
+
+              {/* Advanced sound filters */}
+              <div className="flex items-center gap-1 border-l border-white/10 pl-2">
+                <SlidersHorizontal className="w-3 h-3 text-cyan-400" />
+                <span className="text-[8px] font-mono text-white/40 uppercase tracking-widest mr-1">
+                  EQ
+                </span>
+                {["none", "bass", "vocal"].map((filter) => (
+                  <button
+                    key={filter}
+                    onClick={() => {
+                      playClick();
+                      setFilterActive(filter as any);
+                    }}
+                    className={`px-1 py-0.5 rounded text-[8px] font-mono transition-all uppercase ${
+                      filterActive === filter
+                        ? "bg-cyan-500 text-background font-bold"
+                        : "text-white/40 hover:text-white/80 hover:bg-white/5"
+                    }`}
+                  >
+                    {filter === "none" ? "FLAT" : filter}
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -605,7 +706,9 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
         }}
         onMouseEnter={playHover}
         className={`group relative flex items-center gap-3 bg-black/80 backdrop-blur-md border p-2 pr-4 rounded-full transition-colors cursor-pointer shadow-xl overflow-hidden ${
-          currentTrack.isGenerative ? "border-accent/30 hover:border-accent" : "border-white/20 hover:border-cyan-500/50"
+          currentTrack.isGenerative
+            ? "border-accent/30 hover:border-accent"
+            : "border-white/20 hover:border-cyan-500/50"
         }`}
       >
         <div className="relative w-8 h-8 rounded-full overflow-hidden shrink-0 flex items-center justify-center bg-white/10">
