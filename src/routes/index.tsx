@@ -23,6 +23,7 @@ import { Universe } from "@/components/universe/Universe";
 import { UniverseTransition } from "@/components/UniverseTransition";
 import { KineticCursor } from "@/components/portfolio/KineticCursor";
 import { ScrollProgress } from "@/components/portfolio/ScrollProgress";
+import { InteractiveLabPlayground } from "@/components/portfolio/InteractiveLabPlayground";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -51,6 +52,7 @@ function Shell() {
           <Work />
           <ProjectShowroom />
           <FutureCompiler />
+          <InteractiveLabPlayground />
           <Philosophy />
           <LabLog />
           <Updates />

@@ -40,6 +40,7 @@ export function Nav() {
   const navItems = [
     { label: t("nav.about"), href: "#about" },
     { label: t("nav.work"), href: "#work" },
+    { label: "CYBER PLAYGROUND", href: "#cyber-lab" },
     { label: t("nav.services"), href: "#services" },
     { label: t("nav.lab"), href: "#lab" },
     { label: t("nav.contact"), href: "#contact" },

@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
+import { transitionSynth } from "@/lib/animations/synthesizer";
 
 export function useSound() {
-  const [isMuted, setIsMuted] = useState(true); // Default muted as per instructions
-  const [audioCtx, setAudioCtx] = useState<AudioContext | null>(null);
+  const [isMuted, setIsMuted] = useState(true);
 
   useEffect(() => {
     try {
@@ -21,163 +21,91 @@ export function useSound() {
       try {
         localStorage.setItem("sound_muted", String(next));
       } catch (e) {}
+      // Sync to the synthesizer's context initialization
+      if (!next) {
+        transitionSynth.initCtx();
+      }
       return next;
     });
   }, []);
 
-  const getCtx = useCallback(() => {
-    if (audioCtx) return audioCtx;
-    const Ctx = window.AudioContext || (window as any).webkitAudioContext;
-    if (Ctx) {
-      const ctx = new Ctx();
-      setAudioCtx(ctx);
-      return ctx;
-    }
-    return null;
-  }, [audioCtx]);
-
   const playHover = useCallback(() => {
     if (isMuted) return;
-    const ctx = getCtx();
-    if (!ctx) return;
-
-    if (ctx.state === "suspended") ctx.resume();
-
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(400, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.1);
-
-    gain.gain.setValueAtTime(0, ctx.currentTime);
-    gain.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.1);
-  }, [isMuted, getCtx]);
+    transitionSynth.playSynthesis(44); // bubble pop as a satisfying hover
+  }, [isMuted]);
 
   const playClick = useCallback(() => {
     if (isMuted) return;
-    const ctx = getCtx();
-    if (!ctx) return;
-
-    if (ctx.state === "suspended") ctx.resume();
-
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = "triangle";
-    osc.frequency.setValueAtTime(150, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(50, ctx.currentTime + 0.15);
-
-    gain.gain.setValueAtTime(0, ctx.currentTime);
-    gain.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.15);
-  }, [isMuted, getCtx]);
+    transitionSynth.playSynthesis(45); // woody tock as a satisfying click
+  }, [isMuted]);
 
   const playReveal = useCallback(() => {
     if (isMuted) return;
-    const ctx = getCtx();
-    if (!ctx) return;
+    transitionSynth.playSynthesis(26); // shield-charge sweep
+  }, [isMuted]);
 
-    if (ctx.state === "suspended") ctx.resume();
+  const playOpen = useCallback(() => {
+    if (isMuted) return;
+    transitionSynth.playSynthesis(36); // powerup arpeggio
+  }, [isMuted]);
 
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
+  const playClose = useCallback(() => {
+    if (isMuted) return;
+    transitionSynth.playSynthesis(38); // descending notes
+  }, [isMuted]);
 
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(200, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.3);
-
-    gain.gain.setValueAtTime(0, ctx.currentTime);
-    gain.gain.linearRampToValueAtTime(0.02, ctx.currentTime + 0.1);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.3);
-  }, [isMuted, getCtx]);
-
-  const playTone = useCallback(
-    (
-      freqStart: number,
-      freqEnd: number,
-      duration: number,
-      type: OscillatorType,
-      gainPeak: number,
-    ) => {
-      if (isMuted) return;
-      const ctx = getCtx();
-      if (!ctx) return;
-      if (ctx.state === "suspended") ctx.resume();
-
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.type = type;
-      osc.frequency.setValueAtTime(freqStart, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(Math.max(freqEnd, 1), ctx.currentTime + duration);
-
-      gain.gain.setValueAtTime(0, ctx.currentTime);
-      gain.gain.linearRampToValueAtTime(gainPeak, ctx.currentTime + Math.min(0.02, duration / 4));
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + duration);
-    },
-    [isMuted, getCtx],
-  );
-
-  /** Generic named sound trigger used by richer UI (FutureCompiler console, etc). */
   const play = useCallback(
     (name: "boot" | "scan" | "type" | "success" | "error" | "submit") => {
+      if (isMuted) return;
       switch (name) {
         case "boot":
-          return playTone(120, 480, 0.35, "sawtooth", 0.04);
+          transitionSynth.playSynthesis(34); // coin-chime
+          break;
         case "scan":
-          return playTone(600, 900, 0.12, "sine", 0.03);
+          transitionSynth.playSynthesis(50); // scanner-beam
+          break;
         case "type":
-          return playTone(300, 340, 0.03, "square", 0.02);
+          transitionSynth.playSynthesis(45); // woody-tock
+          break;
         case "success":
-          return playTone(400, 1200, 0.3, "sine", 0.05);
+          transitionSynth.playSynthesis(48); // success-bell
+          break;
         case "error":
-          return playTone(180, 60, 0.25, "sawtooth", 0.06);
+          transitionSynth.playSynthesis(49); // error-buzz
+          break;
         case "submit":
-          return playTone(200, 700, 0.18, "triangle", 0.05);
+          transitionSynth.playSynthesis(28); // sub-impact
+          break;
         default:
-          return playClick();
+          playClick();
       }
     },
-    [playTone, playClick],
+    [isMuted, playClick],
   );
 
   const getMuted = useCallback(() => isMuted, [isMuted]);
 
-  const playOpen = useCallback(() => {
-    playTone(300, 400, 0.1, "sine", 0.05);
-    setTimeout(() => playTone(400, 500, 0.2, "sine", 0.05), 100);
-  }, [playTone]);
+  // NEW EXTENDED API: Trigger 52 unique synthesizer sound effects
+  const playSynthesis = useCallback(
+    (index: number) => {
+      if (isMuted) return;
+      transitionSynth.playSynthesis(index);
+    },
+    [isMuted],
+  );
 
-  const playClose = useCallback(() => {
-    playTone(400, 300, 0.1, "sine", 0.05);
-    setTimeout(() => playTone(300, 200, 0.2, "sine", 0.05), 100);
-  }, [playTone]);
+  // NEW EXTENDED API: Generative Ambient Loops
+  const startGenerativeAmbient = useCallback(() => {
+    transitionSynth.startGenerativeAmbient();
+  }, []);
+
+  const stopGenerativeAmbient = useCallback(() => {
+    transitionSynth.stopGenerativeAmbient();
+  }, []);
+
+  const isAmbientActive = useCallback(() => {
+    return transitionSynth.isAmbientActive();
+  }, []);
 
   return {
     isMuted,
@@ -189,6 +117,10 @@ export function useSound() {
     playClose,
     play,
     getMuted,
+    playSynthesis,
+    startGenerativeAmbient,
+    stopGenerativeAmbient,
+    isAmbientActive,
   };
 }
 

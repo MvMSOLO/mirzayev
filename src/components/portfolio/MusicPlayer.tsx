@@ -2,10 +2,18 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLang } from "@/lib/i18n";
-import { useSoundEffects } from "@/hooks/useSoundEffects";
-import { Search, Play, Pause, X, Music } from "lucide-react";
+import { useSound } from "@/hooks/useSound";
+import { transitionSynth } from "@/lib/animations/synthesizer";
+import { Search, Play, Pause, X, Music, Sparkles } from "lucide-react";
 
 const TRACKS = [
+  {
+    id: "generative_ambient",
+    title: "Cyber Space Ambient",
+    artist: "Algoritmik Synth",
+    thumb: "generative", // Special keyword to render interactive animated cover
+    isGenerative: true,
+  },
   {
     id: "V1Pl8CzNzCw",
     title: "Lovely",
@@ -77,13 +85,13 @@ async function searchInvidious(query: string): Promise<any[]> {
 }
 
 export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
-  const { t } = useLang();
-  const { playHover, playClick } = useSoundEffects();
+  const { t, lang } = useLang();
+  const { playHover, playClick, startGenerativeAmbient, stopGenerativeAmbient, isAmbientActive } = useSound();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [searchedTracks, setSearchedTracks] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [currentTrack, setCurrentTrack] = useState(TRACKS[0]);
+  const [currentTrack, setCurrentTrack] = useState<any>(TRACKS[0]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [ytPlayer, setYtPlayer] = useState<any>(null);
 
@@ -91,6 +99,8 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
   const trackRef = useRef(currentTrack);
   const ytInitialized = useRef(false);
   const ytInstanceRef = useRef<any>(null);
+  const visualizerCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const visualizerAnimRef = useRef<number | null>(null);
 
   // Close the expanded panel when the main menu closes
   useEffect(() => {
@@ -128,11 +138,9 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
     return () => clearTimeout(delayDebounce);
   }, [search]);
 
-  // Lazily create the (invisible) YouTube player only once the user has
-  // actually opened the menu — avoids loading the iframe API / spinning up a
-  // player instance for every visitor who never touches the music feature.
+  // Lazy create YouTube player
   const ensureYouTubePlayer = () => {
-    if (ytInitialized.current || typeof window === "undefined") return;
+    if (ytInitialized.current || typeof window === "undefined" || currentTrack.isGenerative) return;
     ytInitialized.current = true;
 
     const loadYT = () => {
@@ -167,7 +175,9 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
         events: {
           onReady: (e: any) => setYtPlayer(e.target),
           onStateChange: (e: any) => {
-            setIsPlaying(e.data === YT.PlayerState.PLAYING);
+            if (!trackRef.current.isGenerative) {
+              setIsPlaying(e.data === YT.PlayerState.PLAYING);
+            }
           },
         },
       });
@@ -176,33 +186,36 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
 
   useEffect(() => {
     if (isMenuOpen) ensureYouTubePlayer();
-  }, [isMenuOpen]);
+  }, [isMenuOpen, currentTrack]);
 
   useEffect(() => {
     return () => {
       if (ytInstanceRef.current?.destroy) {
         ytInstanceRef.current.destroy();
       }
+      if (visualizerAnimRef.current) {
+        cancelAnimationFrame(visualizerAnimRef.current);
+      }
+      stopGenerativeAmbient();
     };
   }, []);
 
-  // Web Media Session API to register active background playback in Chrome and support system/keyboard media keys
+  // Web Media Session API to register active background playback in Chrome
   useEffect(() => {
     if (typeof window === "undefined" || !("mediaSession" in navigator)) return;
 
     try {
+      const artSrc = currentTrack.thumb === "generative"
+        ? "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4417bf41-fddd-4ae4-b980-6cdbdc1cf524/id-preview-7c68e531--be31eb19-65ea-476c-9523-cacbbc7f7050.lovable.app-1783438766439.png"
+        : currentTrack.thumb;
+
       navigator.mediaSession.metadata = new MediaMetadata({
         title: currentTrack.title,
         artist: currentTrack.artist,
         artwork: [
           {
-            src: currentTrack.thumb,
+            src: artSrc,
             sizes: "120x90",
-            type: "image/jpeg",
-          },
-          {
-            src: currentTrack.thumb.replace("mqdefault", "hqdefault"),
-            sizes: "480x360",
             type: "image/jpeg",
           },
         ],
@@ -219,7 +232,10 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
       navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
 
       navigator.mediaSession.setActionHandler("play", () => {
-        if (ytPlayer && typeof ytPlayer.playVideo === "function") {
+        if (currentTrack.isGenerative) {
+          startGenerativeAmbient();
+          setIsPlaying(true);
+        } else if (ytPlayer && typeof ytPlayer.playVideo === "function") {
           ytPlayer.playVideo();
         } else {
           setIsPlaying(true);
@@ -227,16 +243,11 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
       });
 
       navigator.mediaSession.setActionHandler("pause", () => {
-        if (ytPlayer && typeof ytPlayer.pauseVideo === "function") {
-          ytPlayer.pauseVideo();
-        } else {
+        if (currentTrack.isGenerative) {
+          stopGenerativeAmbient();
           setIsPlaying(false);
-        }
-      });
-
-      navigator.mediaSession.setActionHandler("stop", () => {
-        if (ytPlayer && typeof ytPlayer.stopVideo === "function") {
-          ytPlayer.stopVideo();
+        } else if (ytPlayer && typeof ytPlayer.pauseVideo === "function") {
+          ytPlayer.pauseVideo();
         } else {
           setIsPlaying(false);
         }
@@ -244,11 +255,97 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
     } catch (e) {
       console.warn("Failed to set MediaSession action handlers:", e);
     }
-  }, [isPlaying, ytPlayer]);
+  }, [isPlaying, ytPlayer, currentTrack]);
+
+  // LIVE GRAPHICS AUDIO VISUALIZER
+  useEffect(() => {
+    const canvas = visualizerCanvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    canvas.width = canvas.parentElement?.clientWidth || 280;
+    canvas.height = 70;
+
+    let bars: number[] = Array(32).fill(0);
+
+    const drawLoop = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const isGen = currentTrack.isGenerative;
+      const active = isPlaying;
+
+      if (isGen && active && transitionSynth.analyser) {
+        // High-fidelity accurate spectrum visualization from live Web Audio API!
+        const bufferLength = transitionSynth.analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        transitionSynth.analyser.getByteFrequencyData(dataArray);
+
+        const barWidth = (canvas.width / 24);
+        ctx.fillStyle = "rgba(255, 69, 0, 0.75)";
+
+        for (let i = 0; i < 24; i++) {
+          // get average frequency values
+          const val = dataArray[i * 2] / 255;
+          bars[i] += (val * 55 - bars[i]) * 0.25;
+
+          const x = i * barWidth;
+          const y = canvas.height - bars[i];
+          ctx.fillRect(x, y, barWidth - 2, bars[i]);
+
+          // glowing edge reflection
+          ctx.shadowColor = "rgba(255, 69, 0, 0.5)";
+          ctx.shadowBlur = 4;
+        }
+        ctx.shadowBlur = 0; // reset
+      } else {
+        // High-fidelity realistic simulated visualizer for YT streams!
+        const barWidth = (canvas.width / 24);
+        ctx.fillStyle = "rgba(0, 255, 240, 0.6)";
+
+        for (let i = 0; i < 24; i++) {
+          let val = 0;
+          if (active) {
+            // Sinusoidal simulated bounce
+            val = Math.sin(Date.now() * 0.005 + i * 0.4) * 20 + 25 + Math.random() * 8;
+          } else {
+            val = Math.max(1, bars[i] * 0.9); // decay to flatline
+          }
+          bars[i] += (val - bars[i]) * 0.2;
+
+          const x = i * barWidth;
+          const y = canvas.height - bars[i];
+          ctx.fillRect(x, y, barWidth - 2, bars[i]);
+        }
+      }
+
+      visualizerAnimRef.current = requestAnimationFrame(drawLoop);
+    };
+
+    visualizerAnimRef.current = requestAnimationFrame(drawLoop);
+
+    return () => {
+      if (visualizerAnimRef.current) {
+        cancelAnimationFrame(visualizerAnimRef.current);
+      }
+    };
+  }, [isPlaying, currentTrack, isOpen]);
 
   const handlePlayPause = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     playClick();
+
+    if (currentTrack.isGenerative) {
+      if (isPlaying) {
+        stopGenerativeAmbient();
+        setIsPlaying(false);
+      } else {
+        startGenerativeAmbient();
+        setIsPlaying(true);
+      }
+      return;
+    }
+
     if (!ytPlayer) return;
     if (isPlaying) {
       ytPlayer.pauseVideo();
@@ -260,9 +357,32 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
   const handleSelectTrack = (track: any) => {
     playClick();
     setCurrentTrack(track);
-    if (ytPlayer && typeof ytPlayer.loadVideoById === "function") {
-      ytPlayer.loadVideoById(track.id);
+
+    if (track.isGenerative) {
+      // Pause YouTube player
+      if (ytPlayer && typeof ytPlayer.pauseVideo === "function") {
+        ytPlayer.pauseVideo();
+      }
+      startGenerativeAmbient();
       setIsPlaying(true);
+    } else {
+      // Stop generative ambient loop
+      stopGenerativeAmbient();
+      setIsPlaying(false);
+
+      if (ytPlayer && typeof ytPlayer.loadVideoById === "function") {
+        ytPlayer.loadVideoById(track.id);
+        setIsPlaying(true);
+      } else {
+        // fallback in case player is lazily loading
+        ensureYouTubePlayer();
+        setTimeout(() => {
+          if (ytInstanceRef.current && typeof ytInstanceRef.current.loadVideoById === "function") {
+            ytInstanceRef.current.loadVideoById(track.id);
+            setIsPlaying(true);
+          }
+        }, 1200);
+      }
     }
   };
 
@@ -307,7 +427,7 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
           : "translate-y-10 opacity-0 pointer-events-none"
       }`}
     >
-      {/* Hidden YT Player - positioned offscreen and made microscopic to prevent Chrome/browser background audio suspension */}
+      {/* Hidden YT Player */}
       <div
         ref={playerRef}
         className="absolute pointer-events-none"
@@ -328,9 +448,25 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="mb-4 w-72 bg-black/90 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl"
+            className="mb-4 w-72 bg-black/95 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl"
           >
-            {/* Header / Search */}
+            {/* Live visualizer header inside card */}
+            <div className="relative h-[70px] bg-white/2 border-b border-white/5 flex flex-col justify-end p-2 overflow-hidden">
+              <canvas ref={visualizerCanvasRef} className="absolute inset-0 w-full h-full" />
+              <div className="relative z-10 flex items-center justify-between pointer-events-none">
+                <span className="text-[8px] font-mono tracking-widest text-white/40 uppercase">
+                  {isPlaying ? t("music.playing") : t("music.paused")}
+                </span>
+                {currentTrack.isGenerative && (
+                  <span className="text-[8px] font-mono text-accent uppercase font-bold flex items-center gap-1">
+                    <Sparkles className="size-2 animate-spin-slow" />
+                    LIVE SYNTH
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Search Input */}
             <div className="p-3 border-b border-white/10 flex items-center gap-2">
               <Search className="w-4 h-4 text-white/50" />
               <input
@@ -387,22 +523,6 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
                               {track.artist}
                             </p>
                           </div>
-                          {currentTrack.id === track.id && isPlaying && (
-                            <div className="flex gap-[2px] items-end h-3 mr-1">
-                              {[...Array(3)].map((_, i) => (
-                                <motion.div
-                                  key={i}
-                                  className="w-[3px] bg-accent rounded-t-[1px]"
-                                  animate={{ height: ["20%", "100%", "40%", "80%", "20%"] }}
-                                  transition={{
-                                    repeat: Infinity,
-                                    duration: 0.4 + i * 0.15,
-                                    ease: "easeInOut",
-                                  }}
-                                />
-                              ))}
-                            </div>
-                          )}
                         </button>
                       ))
                     : // Default TRACKS
@@ -413,11 +533,17 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
                           onClick={() => handleSelectTrack(track)}
                           className={`w-full flex items-center gap-3 p-2 rounded-xl transition-all text-left ${currentTrack.id === track.id ? "bg-accent/20" : "hover:bg-white/5"}`}
                         >
-                          <img
-                            src={track.thumb}
-                            alt={track.title}
-                            className="w-10 h-10 object-cover rounded-md"
-                          />
+                          {track.thumb === "generative" ? (
+                            <div className="w-10 h-10 bg-accent/15 border border-accent/20 flex items-center justify-center rounded-md font-bold text-accent text-xs">
+                              {isPlaying && currentTrack.id === track.id ? "⚡" : "🎹"}
+                            </div>
+                          ) : (
+                            <img
+                              src={track.thumb}
+                              alt={track.title}
+                              className="w-10 h-10 object-cover rounded-md"
+                            />
+                          )}
                           <div className="flex-1 overflow-hidden">
                             <p
                               className={`text-xs font-bold truncate ${currentTrack.id === track.id ? "text-accent" : "text-white"}`}
@@ -433,7 +559,7 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
                               {[...Array(3)].map((_, i) => (
                                 <motion.div
                                   key={i}
-                                  className="w-[3px] bg-accent rounded-t-[1px]"
+                                  className={`w-[3px] rounded-t-[1px] ${track.isGenerative ? "bg-accent" : "bg-cyan-400"}`}
                                   animate={{ height: ["20%", "100%", "40%", "80%", "20%"] }}
                                   transition={{
                                     repeat: Infinity,
@@ -478,14 +604,22 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
           }
         }}
         onMouseEnter={playHover}
-        className="group relative flex items-center gap-3 bg-black/80 backdrop-blur-md border border-white/20 p-2 pr-4 rounded-full hover:border-accent/50 transition-colors cursor-pointer shadow-xl overflow-hidden"
+        className={`group relative flex items-center gap-3 bg-black/80 backdrop-blur-md border p-2 pr-4 rounded-full transition-colors cursor-pointer shadow-xl overflow-hidden ${
+          currentTrack.isGenerative ? "border-accent/30 hover:border-accent" : "border-white/20 hover:border-cyan-500/50"
+        }`}
       >
         <div className="relative w-8 h-8 rounded-full overflow-hidden shrink-0 flex items-center justify-center bg-white/10">
-          <img
-            src={currentTrack.thumb}
-            alt={currentTrack.title}
-            className={`absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ${isPlaying ? "scale-110" : "scale-100"}`}
-          />
+          {currentTrack.thumb === "generative" ? (
+            <div className="absolute inset-0 bg-accent/20 flex items-center justify-center font-bold text-accent text-sm">
+              {isPlaying ? "⚡" : "🎹"}
+            </div>
+          ) : (
+            <img
+              src={currentTrack.thumb}
+              alt={currentTrack.title}
+              className={`absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ${isPlaying ? "scale-110" : "scale-100"}`}
+            />
+          )}
           <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-colors flex items-center justify-center">
             <button
               type="button"
@@ -518,7 +652,7 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
           {[...Array(4)].map((_, i) => (
             <motion.div
               key={i}
-              className={`w-[2px] rounded-t-[1px] ${isPlaying ? "bg-accent" : "bg-white/20"}`}
+              className={`w-[2px] rounded-t-[1px] ${isPlaying ? (currentTrack.isGenerative ? "bg-accent" : "bg-cyan-400") : "bg-white/20"}`}
               animate={{ height: isPlaying ? ["20%", "100%", "40%", "80%", "20%"] : "20%" }}
               transition={{ repeat: Infinity, duration: 0.5 + i * 0.1, ease: "easeInOut" }}
             />
