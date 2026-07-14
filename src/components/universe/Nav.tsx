@@ -17,7 +17,7 @@ export function UniverseNav() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-[60] flex justify-between items-start p-6 md:p-10 pointer-events-none">
+      <nav className="fixed top-0 left-0 right-0 z-[60] flex justify-between items-start p-6 md:p-10 pointer-events-none transition-all duration-300">
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}

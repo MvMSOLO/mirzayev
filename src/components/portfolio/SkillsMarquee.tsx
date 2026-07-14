@@ -24,8 +24,11 @@ export function SkillsMarquee() {
   return (
     <section
       aria-label="Tech stack"
-      className="bg-accent py-4 overflow-hidden border-y-4 border-background"
+      className="bg-accent py-5 overflow-hidden border-y-4 border-background relative"
     >
+      {/* Edge masks for premium fade effect */}
+      <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-accent to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-accent to-transparent z-10 pointer-events-none" />
       <div className="whitespace-nowrap flex">
         <div className="flex animate-marquee-fast shrink-0">
           {[0, 1].map((k) => (

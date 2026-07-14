@@ -35,7 +35,7 @@ export function UniverseFooter() {
   };
 
   return (
-    <footer id="uni-contact" className="px-6 md:px-[8vw] py-[15vh] border-t border-[#111]/10">
+    <footer id="uni-contact" className="px-6 md:px-[8vw] py-[15vh] border-t border-[#111]/15 bg-[#F5F2EC]">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-start">
         <motion.div
           initial={{ opacity: 0, x: -20 }}

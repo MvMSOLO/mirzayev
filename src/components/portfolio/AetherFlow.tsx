@@ -12,11 +12,14 @@ export function AetherFlow() {
   return (
     <section
       aria-label="Aether flow"
-      className="py-16 border-y border-border overflow-hidden space-y-4 bg-[#0a090c] relative"
+      className="py-20 border-y border-border overflow-hidden space-y-5 bg-[#070609] relative"
     >
       {/* Top and bottom gradient fade */}
-      <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-[#0a090c] to-transparent z-10 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-[#0a090c] to-transparent z-10 pointer-events-none" />
+      <div className="absolute top-0 left-0 right-0 h-12 bg-gradient-to-b from-[#070609] to-transparent z-10 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[#070609] to-transparent z-10 pointer-events-none" />
+      {/* Left/right edge masks */}
+      <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#070609] to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#070609] to-transparent z-10 pointer-events-none" />
 
       {/* Scanning line */}
       <motion.div

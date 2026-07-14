@@ -43,9 +43,10 @@ export function Contact() {
   };
 
   return (
-    <footer id="contact" className="px-5 md:px-20 lg:px-32 pt-16 pb-12 md:pt-24 md:pb-16 relative overflow-hidden">
+    <footer id="contact" className="px-5 md:px-20 lg:px-32 pt-16 pb-12 md:pt-24 md:pb-16 relative overflow-hidden border-t border-border">
       {/* Glow */}
-      <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-accent/6 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent pointer-events-none" />
 
       {/* Background marquee */}
       <div className="absolute -bottom-16 left-0 whitespace-nowrap flex pointer-events-none select-none">

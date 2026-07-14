@@ -46,7 +46,7 @@ export function WhatIDo() {
   return (
     <section
       id="services"
-      className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-b border-border relative overflow-hidden"
+      className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-b border-border relative overflow-hidden bg-[radial-gradient(ellipse_at_0%_50%,rgba(255,69,0,0.04)_0%,transparent_60%)]"
     >
       {/* Background grid accent */}
       <div className="absolute inset-0 pointer-events-none opacity-30">
@@ -71,7 +71,7 @@ export function WhatIDo() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-10%" }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border [perspective:1000px]"
+        className="grid grid-cols-1 md:grid-cols-3 gap-px bg-white/[0.06] [perspective:1000px] shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
       >
         {items.map((k, i) => (
           <motion.div
@@ -81,7 +81,7 @@ export function WhatIDo() {
               z: 20,
               transition: { duration: 0.2 },
             }}
-            className="group relative bg-background p-6 flex flex-col justify-between overflow-hidden cursor-default min-h-[160px]"
+            className="group relative bg-[#0c0b0f] border-white/[0.04] p-6 flex flex-col justify-between overflow-hidden cursor-default min-h-[180px]"
             onMouseEnter={playHover}
           >
             {/* Hover Background Expansion */}

@@ -159,7 +159,7 @@ export function Philosophy() {
   return (
     <section
       id="philosophy"
-      className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-b border-border relative overflow-hidden"
+      className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-b border-border relative overflow-hidden bg-[radial-gradient(ellipse_at_0%_0%,rgba(255,69,0,0.04)_0%,transparent_55%)]"
     >
       {/* Visual blueprint overlay decoration */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,69,0,0.03),transparent_50%)] pointer-events-none" />

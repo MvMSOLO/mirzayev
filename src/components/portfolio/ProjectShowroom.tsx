@@ -1,3 +1,4 @@
+// ProjectShowroom — premium glass card showcase
 import { useState } from "react";
 import { useLang } from "@/lib/i18n";
 import { motion, AnimatePresence } from "framer-motion";
@@ -163,7 +164,7 @@ export function ProjectShowroom() {
   };
 
   return (
-    <section id="project-showroom" className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-t border-border bg-background relative overflow-hidden">
+    <section id="project-showroom" className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-t border-border bg-[radial-gradient(ellipse_at_100%_100%,rgba(255,69,0,0.05)_0%,transparent_55%)] relative overflow-hidden">
       {/* Visual blueprint overlay */}
       <div className="absolute inset-0 bg-grid-dots opacity-[0.05] pointer-events-none" />
 
@@ -189,7 +190,7 @@ export function ProjectShowroom() {
         </div>
 
         {/* Diagnostic Technical Meters */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 self-end bg-secondary/25 border border-white/5 p-4 rounded-sm">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 self-end bg-white/[0.02] border border-white/[0.07] backdrop-blur-sm p-4 rounded-sm shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
           {[
             { label: "PERFORMANCE", val: activeProj.metrics.perf, icon: <Flame className="w-4 h-4 text-orange-500" /> },
             { label: "CLEAN CODE", val: activeProj.metrics.code, icon: <ShieldCheck className="w-4 h-4 text-green-500" /> },
@@ -240,7 +241,7 @@ export function ProjectShowroom() {
         {/* Responsive Virtual Device Box */}
         <div className="space-y-4">
           {/* Device switcher toolbar */}
-          <div className="flex items-center justify-between px-4 py-2 border border-white/10 bg-[#0e0d11]/80 backdrop-blur rounded-sm">
+          <div className="flex items-center justify-between px-4 py-2 border border-white/[0.08] bg-[#0b0a0e]/90 backdrop-blur-xl rounded-sm shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
             <span className="font-mono text-[9px] uppercase text-white/40 tracking-wider">
               VIEWPORT_SIMULATION: {viewport.toUpperCase()}
             </span>

@@ -89,7 +89,7 @@ export function ToolkitGrid() {
               boxShadow: "0 0 30px rgba(255,69,0,0.4)",
               transition: { duration: 0.2 },
             }}
-            className="aspect-square bg-background flex flex-col items-center justify-center relative group hover:bg-accent transition-colors duration-300 cursor-default"
+            className="aspect-square bg-white/[0.015] border border-white/[0.05] flex flex-col items-center justify-center relative group hover:bg-accent hover:border-accent transition-all duration-300 cursor-default shadow-[0_2px_8px_rgba(0,0,0,0.3)]"
             onMouseEnter={playHover}
           >
             {/* Icon */}

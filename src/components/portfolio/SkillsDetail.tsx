@@ -88,7 +88,7 @@ export function SkillsDetail() {
   ];
 
   return (
-    <section id="skills" className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-b border-border relative overflow-hidden bg-background">
+    <section id="skills" className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-b border-border relative overflow-hidden bg-[radial-gradient(ellipse_at_50%_100%,rgba(255,69,0,0.04)_0%,transparent_60%)]">
       {/* Interactive holographic scanlines background */}
       <div className="absolute inset-0 bg-grid-dots opacity-[0.03] pointer-events-none" />
       <div className="absolute top-1/4 left-0 w-32 h-px bg-accent/20 hidden lg:block" />
@@ -115,7 +115,7 @@ export function SkillsDetail() {
         </div>
 
         {/* Global diagnostic core */}
-        <div className="border border-white/10 bg-secondary/30 p-5 rounded-sm relative font-mono text-[10px] uppercase tracking-wider text-white/40 space-y-3">
+        <div className="border border-white/[0.08] bg-white/[0.02] backdrop-blur-sm p-5 rounded-sm relative font-mono text-[10px] uppercase tracking-wider text-white/40 space-y-3 shadow-[0_4px_24px_rgba(0,0,0,0.4)]">
           <div className="absolute top-0 right-0 px-2 py-0.5 bg-accent/10 border-b border-l border-white/10 text-accent font-bold text-[8px]">
             SYS_HEALTH: OK
           </div>
@@ -182,7 +182,7 @@ export function SkillsDetail() {
       </div>
 
       {/* Interactive Core Showcase */}
-      <div className="border border-border bg-[#0e0d11]/80 backdrop-blur p-6 md:p-8 relative min-h-[400px]">
+      <div className="border border-white/[0.07] bg-[#0b0a0e]/90 backdrop-blur-xl p-6 md:p-8 relative min-h-[400px] shadow-[0_8px_40px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.04)]">
         {/* Animated corner aesthetics */}
         <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-accent" />
         <div className="absolute top-0 right-0 w-4 h-4 border-t border-r border-accent" />
@@ -285,9 +285,10 @@ export function SkillsDetail() {
                     </div>
 
                     {/* Progress Bar */}
-                    <div className="h-1 bg-white/5 relative overflow-hidden mb-2">
+                    <div className="h-1.5 bg-white/[0.06] rounded-full relative overflow-hidden mb-2">
                       <motion.div
-                        className="absolute inset-y-0 left-0 bg-accent"
+                        className="absolute inset-y-0 left-0 rounded-full"
+                        style={{ background: "linear-gradient(90deg, #ff4500, #ff7700)", boxShadow: "0 0 8px rgba(255,69,0,0.5)" }}
                         initial={{ width: 0 }}
                         animate={{ width: `${it.level}%` }}
                         transition={{ duration: 0.9, ease: "easeOut", delay: 0.1 + idx * 0.05 }}

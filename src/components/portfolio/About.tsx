@@ -72,7 +72,7 @@ export function About() {
       <div className="grid md:grid-cols-2 gap-12 items-start relative">
         {/* Portrait */}
         <RevealBox>
-          <div className="relative w-56 md:w-80 aspect-[3/4] bg-neutral-900 border border-white/10 overflow-hidden animate-float shadow-[0_0_50px_rgba(255,69,0,0.05)] group">
+          <div className="relative w-56 md:w-80 aspect-[3/4] bg-neutral-900 border border-white/10 overflow-hidden animate-float shadow-[0_0_80px_rgba(255,69,0,0.12),0_30px_60px_rgba(0,0,0,0.7)] group">
             <img
               src={portrait}
               alt="Avazbek Mirzayev portrait"
@@ -167,7 +167,7 @@ export function About() {
               {ecosystemNodes.map((node) => (
                 <div
                   key={node.id}
-                  className="p-4 border border-border bg-background/50 hover:border-accent/40 hover:bg-accent/2 transition-all duration-300 relative group overflow-hidden"
+                  className="p-4 border border-white/[0.07] bg-white/[0.02] backdrop-blur-sm hover:border-accent/40 hover:bg-accent/[0.03] transition-all duration-300 relative group overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.3)]"
                 >
                   <div className="flex justify-between items-start mb-2">
                     <span className="text-[10px] font-mono text-accent/60 group-hover:text-accent font-bold">
@@ -208,14 +208,14 @@ export function About() {
           <RevealBox
             key={s.k}
             delay={0.2 * i}
-            className="border border-border p-4 group hover:border-accent transition-colors relative overflow-hidden cursor-default"
+            className="border border-white/[0.08] p-5 group hover:border-accent/60 transition-all duration-400 relative overflow-hidden cursor-default bg-white/[0.015] backdrop-blur-sm shadow-[0_4px_24px_rgba(0,0,0,0.35)]"
           >
             {/* Hover fill */}
             <div className="absolute inset-0 bg-accent/5 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-out" />
             {/* Corner accent */}
             <div className="absolute top-0 right-0 w-0 h-0 border-l-[16px] border-l-transparent border-t-[16px] border-t-accent/20 group-hover:border-t-accent/50 transition-colors" />
 
-            <p className="font-display text-4xl md:text-5xl leading-none text-accent relative z-10">
+            <p className="font-display text-5xl md:text-6xl leading-none text-accent relative z-10" style={{ textShadow: "0 0 30px rgba(255,69,0,0.3)" }}>
               {s.raw ? (
                 s.raw
               ) : (

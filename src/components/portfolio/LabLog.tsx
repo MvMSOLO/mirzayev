@@ -37,7 +37,7 @@ export function LabLog() {
   };
 
   return (
-    <section id="lab" className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-t border-border relative overflow-hidden">
+    <section id="lab" className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-t border-border relative overflow-hidden bg-[radial-gradient(ellipse_at_100%_50%,rgba(255,69,0,0.03)_0%,transparent_60%)]">
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-accent/20 via-transparent to-transparent pointer-events-none" />
 
@@ -84,7 +84,7 @@ export function LabLog() {
               key={e.v}
               variants={itemVariants}
               whileHover={{ x: 12, backgroundColor: "rgba(255, 69, 0, 0.05)" }}
-              className="grid grid-cols-[80px_1fr_auto] gap-4 py-3 border-b border-border items-center group transition-all px-2 cursor-default relative overflow-hidden"
+              className="grid grid-cols-[80px_1fr_auto] gap-4 py-3 border-b border-white/[0.06] items-center group transition-all px-2 cursor-default relative overflow-hidden hover:bg-white/[0.015]"
             >
               {/* Hover line */}
               <div className="absolute left-0 top-0 bottom-0 w-0 bg-accent group-hover:w-[2px] transition-all duration-300" />

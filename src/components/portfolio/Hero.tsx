@@ -100,7 +100,7 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative pt-32 pb-24 overflow-hidden border-b border-border min-h-[92vh] flex flex-col justify-center"
+      className="relative pt-32 pb-24 overflow-hidden border-b border-border min-h-[92vh] flex flex-col justify-center bg-[radial-gradient(ellipse_at_70%_20%,rgba(255,69,0,0.04)_0%,transparent_60%)]"
     >
       <ParticleField className="opacity-80" />
       <HeroRails />
@@ -185,7 +185,7 @@ export function Hero() {
             {/* Chip */}
             <motion.div
               variants={itemVariants}
-              className="inline-block bg-accent px-2 py-1 mb-2 relative group cursor-default"
+              className="inline-block bg-accent px-3 py-1.5 mb-2 relative group cursor-default shadow-[0_0_20px_rgba(255,69,0,0.4),0_0_60px_rgba(255,69,0,0.15)]"
               onMouseEnter={playHover}
             >
               <div className="absolute -top-1 -left-1 w-2 h-2 border-t border-l border-white/40" />
@@ -213,8 +213,18 @@ export function Hero() {
                 </span>
               </span>{" "}
               <br />
-              <span className="text-accent relative group inline-block">
+              <span
+                className="relative group inline-block"
+                style={{
+                  background: "linear-gradient(155deg, #ff8a4c 0%, #ff4500 50%, #e02800 100%)",
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
                 <WordReveal text={t("hero.last")} delay={0.2} />
+                {/* Subtle glow behind gradient text */}
+                <span className="absolute inset-0 blur-2xl opacity-30 pointer-events-none" style={{ background: "linear-gradient(155deg, #ff8a4c, #ff4500)", WebkitTextFillColor: "initial" }} />
               </span>
             </h1>
 
@@ -246,7 +256,7 @@ export function Hero() {
           {/* RIGHT COLUMN: Quantum Cyber Console Widget */}
           <motion.div
             variants={itemVariants}
-            className="w-full relative bg-black/80 backdrop-blur-xl border border-accent/20 rounded-xl p-6 shadow-glow-orange overflow-hidden"
+            className="w-full relative bg-black/60 backdrop-blur-xl border border-accent/25 rounded-2xl p-6 shadow-glow-orange overflow-hidden ring-1 ring-white/[0.04]"
           >
             {/* Tech scanner bar inside the widget */}
             <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-accent/30 to-transparent shadow-[0_0_12px_#ff4500] animate-[scan-y_4s_linear_infinite]" />

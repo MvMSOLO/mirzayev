@@ -9,7 +9,14 @@ import { Volume2, VolumeX } from "lucide-react";
 export function Nav() {
   const { lang, setLang, t } = useLang();
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { playHover, playClick, playOpen, playClose, isMuted, toggleMute } = useSoundEffects();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 48);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const handleToggle = () => {
     if (isOpen) {
@@ -49,7 +56,7 @@ export function Nav() {
   return (
     <>
       {/* Top Bar */}
-      <nav className="fixed top-0 w-full z-50 mix-blend-difference px-5 md:px-12 lg:px-32 py-6 flex justify-between items-center pointer-events-none">
+      <nav className={`fixed top-0 w-full z-50 px-5 md:px-12 lg:px-32 flex justify-between items-center pointer-events-none transition-all duration-500 ${scrolled ? "py-4 bg-background/80 backdrop-blur-xl border-b border-border/40 shadow-[0_4px_30px_rgba(0,0,0,0.4)]" : "py-6 mix-blend-difference"}`}>
         <motion.a
           href="#top"
           className="text-xs font-bold tracking-tighter text-white pointer-events-auto"

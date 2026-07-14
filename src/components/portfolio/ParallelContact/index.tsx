@@ -98,7 +98,7 @@ export function ParallelContact() {
   };
 
   return (
-    <section id="contact-parallel" className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-t border-border">
+    <section id="contact-parallel" className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-t border-border bg-[radial-gradient(ellipse_at_50%_0%,rgba(255,69,0,0.04)_0%,transparent_60%)]">
       <div className="mb-10 flex gap-2 items-center">
         <div className="h-[1px] w-8 bg-accent" />
         <span className="text-[10px] uppercase tracking-widest text-accent">
@@ -118,7 +118,7 @@ export function ParallelContact() {
           <button
             key={p.id}
             onClick={() => openPortal(p)}
-            className="group relative aspect-[3/4] border border-border overflow-hidden bg-secondary/30 p-6 flex flex-col justify-between hover:border-accent transition-all"
+            className="group relative aspect-[3/4] border border-white/[0.08] overflow-hidden bg-white/[0.015] backdrop-blur-sm p-6 flex flex-col justify-between hover:border-accent/60 transition-all shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
             style={{ ["--acc" as string]: p.accent }}
           >
             <div className="flex justify-between items-start">

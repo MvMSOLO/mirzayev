@@ -33,7 +33,7 @@ export function Work() {
   return (
     <section
       id="work"
-      className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-b border-border relative overflow-hidden"
+      className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-b border-border relative overflow-hidden bg-[radial-gradient(ellipse_at_100%_0%,rgba(255,69,0,0.05)_0%,transparent_55%)]"
     >
       {/* Decorative */}
       <div className="absolute top-0 right-0 p-4 font-mono text-[8px] text-white/10 hidden lg:block">
@@ -73,7 +73,7 @@ export function Work() {
           href="https://github.com/MvMSOLO"
           target="_blank"
           rel="noopener noreferrer"
-          className="col-span-6 md:col-span-4 md:row-span-2 group relative border border-border bg-neutral-900/30 aspect-[4/5] md:aspect-auto overflow-hidden shadow-2xl block"
+          className="col-span-6 md:col-span-4 md:row-span-2 group relative border border-white/[0.08] bg-neutral-900/40 aspect-[4/5] md:aspect-auto overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.7),0_0_0_1px_rgba(255,255,255,0.04)] block"
           onMouseEnter={playHover}
         >
           {/* Technical corners */}
@@ -123,7 +123,7 @@ export function Work() {
           href="https://www.youtube.com/@mvmsolo"
           target="_blank"
           rel="noopener noreferrer"
-          className="col-span-6 md:col-span-2 group relative border border-border bg-neutral-900/30 overflow-hidden block"
+          className="col-span-6 md:col-span-2 group relative border border-white/[0.07] bg-neutral-900/40 overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)] block"
           onMouseEnter={playHover}
         >
           <img
@@ -152,7 +152,7 @@ export function Work() {
           href="https://github.com/MvMSOLO"
           target="_blank"
           rel="noopener noreferrer"
-          className="col-span-6 md:col-span-4 group relative border border-border bg-neutral-900/30 h-64 overflow-hidden block"
+          className="col-span-6 md:col-span-4 group relative border border-white/[0.07] bg-neutral-900/40 h-64 overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)] block"
           onMouseEnter={playHover}
         >
           <img

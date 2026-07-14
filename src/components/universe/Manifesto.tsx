@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 export function UniverseManifesto() {
   const { t } = useLang();
   return (
-    <section className="px-6 md:px-[12vw] py-[20vh] relative overflow-hidden bg-[#111]">
+    <section className="px-6 md:px-[12vw] py-[20vh] relative overflow-hidden bg-[#0e0e0e]">
       <div className="relative z-10">
         <motion.div
           initial={{ opacity: 0, x: -10 }}
