@@ -174,7 +174,7 @@ export function SkillsDetail() {
                 className="absolute inset-y-0 left-0 bg-accent"
                 initial={{ width: 0 }}
                 animate={{ width: activeGroup === i ? `${g.percentage}%` : "15%" }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+                transition={{ duration: 0.42, ease: "easeOut" }}
               />
             </div>
           </button>
@@ -220,7 +220,7 @@ export function SkillsDetail() {
                   strokeDasharray="283"
                   initial={{ strokeDashoffset: 283 }}
                   animate={{ strokeDashoffset: 283 - (283 * groups[activeGroup].percentage) / 100 }}
-                  transition={{ duration: 1.2, ease: "easeOut" }}
+                  transition={{ duration: 0.55, ease: "easeOut" }}
                   strokeLinecap="round"
                 />
               </svg>
@@ -263,7 +263,7 @@ export function SkillsDetail() {
                     initial={{ opacity: 0, x: -15 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 15 }}
-                    transition={{ duration: 0.4, delay: idx * 0.05 }}
+                    transition={{ duration: 0.26, delay: idx * 0.028 }}
                     onMouseEnter={() => {
                       playHover();
                       setHoveredSkill(it.name);
@@ -291,7 +291,7 @@ export function SkillsDetail() {
                         style={{ background: "linear-gradient(90deg, #ff4500, #ff7700)", boxShadow: "0 0 8px rgba(255,69,0,0.5)" }}
                         initial={{ width: 0 }}
                         animate={{ width: `${it.level}%` }}
-                        transition={{ duration: 0.9, ease: "easeOut", delay: 0.1 + idx * 0.05 }}
+                        transition={{ duration: 0.45, ease: "easeOut", delay: 0.04 + idx * 0.028 }}
                       />
                     </div>
 

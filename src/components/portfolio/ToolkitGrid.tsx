@@ -38,18 +38,18 @@ export function ToolkitGrid() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.03 },
+      transition: { staggerChildren: 0.016 },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.7, rotate: -8, y: 10 },
+    hidden: { opacity: 0, scale: 0.65, rotate: -6, y: 8 },
     visible: {
       opacity: 1,
       scale: 1,
       rotate: 0,
       y: 0,
-      transition: { type: "spring", stiffness: 260, damping: 18 },
+      transition: { type: "spring", stiffness: 440, damping: 24 },
     },
   };
 
@@ -82,12 +82,12 @@ export function ToolkitGrid() {
             key={tool.name}
             variants={itemVariants}
             whileHover={{
-              scale: 1.08,
+              scale: 1.1,
               zIndex: 10,
-              rotateY: 12,
-              rotateX: -8,
-              boxShadow: "0 0 30px rgba(255,69,0,0.4)",
-              transition: { duration: 0.2 },
+              rotateY: 14,
+              rotateX: -9,
+              boxShadow: "0 0 36px rgba(255,69,0,0.5)",
+              transition: { duration: 0.11, ease: [0.16, 1, 0.3, 1] },
             }}
             className="aspect-square bg-white/[0.015] border border-white/[0.05] flex flex-col items-center justify-center relative group hover:bg-accent hover:border-accent transition-all duration-300 cursor-default shadow-[0_2px_8px_rgba(0,0,0,0.3)]"
             onMouseEnter={playHover}
@@ -122,7 +122,7 @@ export function ToolkitGrid() {
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ delay: 0.5 }}
+        transition={{ delay: 0.18 }}
         className="mt-6 flex items-center justify-between text-[10px] font-mono text-white/20 uppercase tracking-widest"
       >
         <span>{lang === "uz" ? "Texnologiyalar steki" : "Technology stack"}</span>

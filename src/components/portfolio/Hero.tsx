@@ -67,19 +67,20 @@ export function Hero() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.3,
+        staggerChildren: 0.07,
+        delayChildren: 0.08,
       },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 16, filter: "blur(6px)" },
     visible: {
       opacity: 1,
       y: 0,
+      filter: "blur(0px)",
       transition: {
-        duration: 0.8,
+        duration: 0.48,
         ease: [0.16, 1, 0.3, 1],
       },
     },
@@ -136,8 +137,8 @@ export function Hero() {
 
       {/* Floating decorative elements */}
       <motion.div
-        animate={{ y: [-8, 8, -8], opacity: [0.3, 0.6, 0.3] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        animate={{ y: [-6, 6, -6], opacity: [0.3, 0.6, 0.3] }}
+        transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
         className="absolute top-1/4 right-12 hidden lg:flex flex-col items-center gap-1 text-[8px] font-mono text-accent/30 uppercase tracking-widest pointer-events-none"
       >
         <span>SYS</span>
@@ -146,8 +147,8 @@ export function Hero() {
       </motion.div>
 
       <motion.div
-        animate={{ y: [6, -6, 6], opacity: [0.2, 0.5, 0.2] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        animate={{ y: [5, -5, 5], opacity: [0.2, 0.5, 0.2] }}
+        transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
         className="absolute bottom-1/3 right-24 hidden lg:block text-[8px] font-mono text-white/20 uppercase tracking-widest pointer-events-none"
       >
         <div className="flex items-center gap-2">
@@ -160,14 +161,14 @@ export function Hero() {
       <motion.div
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 1.5, duration: 0.5 }}
+        transition={{ delay: 0.5, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         className="absolute top-32 right-8 md:right-16 lg:right-32 pointer-events-none"
       >
         <div className="relative w-16 h-16">
           <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-accent/40" />
           <motion.div
-            animate={{ scale: [1, 1.5, 1], opacity: [0.4, 0, 0.4] }}
-            transition={{ duration: 2, repeat: Infinity }}
+            animate={{ scale: [1, 1.6, 1], opacity: [0.5, 0, 0.5] }}
+            transition={{ duration: 1.6, repeat: Infinity }}
             className="absolute top-1 right-1 w-2 h-2 bg-accent/30 rounded-full"
           />
         </div>
@@ -245,7 +246,7 @@ export function Hero() {
               <div className="relative h-8 w-px bg-white/20 overflow-hidden">
                 <motion.div
                   animate={{ y: ["-100%", "200%"] }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                  transition={{ duration: 0.9, repeat: Infinity, ease: "easeInOut" }}
                   className="absolute inset-x-0 h-4 bg-gradient-to-b from-transparent via-accent to-transparent"
                 />
               </div>

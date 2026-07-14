@@ -117,9 +117,9 @@ export function Nav() {
                   animate={{ scaleY: 1 }}
                   exit={{
                     scaleY: 0,
-                    transition: { delay: (4 - i) * 0.05, duration: 0.6, ease: [0.76, 0, 0.24, 1] },
+                    transition: { delay: (4 - i) * 0.03, duration: 0.36, ease: [0.76, 0, 0.24, 1] },
                   }}
-                  transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1], delay: i * 0.07 }}
+                  transition={{ duration: 0.42, ease: [0.76, 0, 0.24, 1], delay: i * 0.04 }}
                   className="flex-1 bg-[#0a0a0a] origin-top border-r border-white/5 last:border-r-0"
                 />
               ))}
@@ -129,7 +129,7 @@ export function Nav() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.4, delay: 0.3 }}
+              transition={{ duration: 0.25, delay: 0.16 }}
               className="absolute inset-0 text-white flex flex-col justify-center px-6 md:px-[10vw]"
             >
               {/* Ambient Background Glow */}
@@ -152,10 +152,10 @@ export function Nav() {
                 </ul>
 
                 <motion.div
-                  initial={{ opacity: 0, x: 20 }}
+                  initial={{ opacity: 0, x: 16 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ delay: 0.5, duration: 0.8 }}
+                  exit={{ opacity: 0, x: 16 }}
+                  transition={{ delay: 0.22, duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
                   className="flex flex-col gap-8 max-w-sm"
                 >
                   <div>
@@ -250,7 +250,7 @@ function MenuButton({
             y: isOpen ? 5 : 0,
             backgroundColor: isOpen ? "var(--color-accent, #ea580c)" : "#ffffff",
           }}
-          transition={{ duration: 0.4, ease: "backOut" }}
+          transition={{ duration: 0.26, ease: "backOut" }}
           className="block h-[2px] w-full bg-white origin-center"
         />
         <motion.span
@@ -259,7 +259,7 @@ function MenuButton({
             y: isOpen ? -5 : 0,
             backgroundColor: isOpen ? "var(--color-accent, #ea580c)" : "#ffffff",
           }}
-          transition={{ duration: 0.4, ease: "backOut" }}
+          transition={{ duration: 0.26, ease: "backOut" }}
           className="block h-[2px] w-full bg-white origin-center"
         />
       </div>
@@ -288,9 +288,9 @@ function MagneticNavItem({
         animate={{ y: 0, rotateZ: 0, opacity: 1 }}
         exit={{ y: "-110%", rotateZ: -8, opacity: 0 }}
         transition={{
-          duration: 0.9,
+          duration: 0.48,
           ease: [0.16, 1, 0.3, 1],
-          delay: 0.15 + idx * 0.06,
+          delay: 0.08 + idx * 0.038,
         }}
         href={item.href}
         onClick={onClick}
@@ -309,10 +309,10 @@ function MagneticNavItem({
               key={charIdx}
               className="inline-block"
               whileHover={{
-                y: -12,
-                scale: 1.12,
+                y: -14,
+                scale: 1.14,
                 color: "var(--color-accent, #ea580c)",
-                transition: { type: "spring", stiffness: 400, damping: 8 }
+                transition: { type: "spring", stiffness: 600, damping: 10 }
               }}
               style={{ display: char === " " ? "inline-block" : "inline-block", minWidth: char === " " ? "0.25em" : "auto" }}
             >

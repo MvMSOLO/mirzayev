@@ -28,17 +28,17 @@ export function Contact() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.08 },
+      transition: { staggerChildren: 0.042 },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, x: -20, filter: "blur(4px)" },
+    hidden: { opacity: 0, x: -14, filter: "blur(4px)" },
     visible: {
       opacity: 1,
       x: 0,
       filter: "blur(0px)",
-      transition: { duration: 0.5, ease: "easeOut" },
+      transition: { duration: 0.32, ease: [0.16, 1, 0.3, 1] },
     },
   };
 
@@ -102,18 +102,18 @@ export function Contact() {
                     className="flex justify-between py-4 group items-center relative overflow-hidden"
                     onMouseEnter={playHover}
                   >
-                    <div className="absolute inset-0 bg-accent/5 scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
+                    <div className="absolute inset-0 bg-accent/5 scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-150" />
                     {/* Left accent bar */}
-                    <div className="absolute left-0 top-0 bottom-0 w-0 bg-accent group-hover:w-[2px] transition-all duration-300" />
-                    <span className="text-sm uppercase font-bold group-hover:text-accent transition-colors relative z-10 group-hover:translate-x-3 duration-300">
+                    <div className="absolute left-0 top-0 bottom-0 w-0 bg-accent group-hover:w-[2px] transition-all duration-150" />
+                    <span className="text-sm uppercase font-bold group-hover:text-accent transition-colors relative z-10 group-hover:translate-x-3 duration-150">
                       {s.k}
                     </span>
-                    <span className="text-sm text-white/50 group-hover:text-accent transition-colors flex items-center gap-2 relative z-10 group-hover:-translate-x-2 duration-300">
+                    <span className="text-sm text-white/50 group-hover:text-accent transition-colors flex items-center gap-2 relative z-10 group-hover:-translate-x-2 duration-150">
                       {s.v}
                       <motion.span
                         className="opacity-0 group-hover:opacity-100 transition-opacity"
                         animate={{ x: [0, 2, 0] }}
-                        transition={{ duration: 1, repeat: Infinity }}
+                        transition={{ duration: 0.65, repeat: Infinity }}
                       >
                         ↗
                       </motion.span>
@@ -144,9 +144,9 @@ export function Contact() {
                     className="flex justify-between py-4 group items-center relative overflow-hidden"
                     onMouseEnter={playHover}
                   >
-                    <div className="absolute inset-0 bg-accent/5 scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
-                    <div className="absolute left-0 top-0 bottom-0 w-0 bg-accent group-hover:w-[2px] transition-all duration-300" />
-                    <span className="text-sm uppercase font-bold group-hover:text-accent transition-colors relative z-10 group-hover:translate-x-3 duration-300">
+                    <div className="absolute inset-0 bg-accent/5 scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-150" />
+                    <div className="absolute left-0 top-0 bottom-0 w-0 bg-accent group-hover:w-[2px] transition-all duration-150" />
+                    <span className="text-sm uppercase font-bold group-hover:text-accent transition-colors relative z-10 group-hover:translate-x-3 duration-150">
                       {s.k}
                     </span>
                     <span className="text-sm text-white/50 group-hover:text-accent transition-colors flex items-center gap-2 truncate max-w-[60%] relative z-10 group-hover:-translate-x-2 duration-300">

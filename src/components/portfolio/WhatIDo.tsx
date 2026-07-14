@@ -28,18 +28,19 @@ export function WhatIDo() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.08 },
+      transition: { staggerChildren: 0.042 },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.9, rotateX: 15, y: 20 },
+    hidden: { opacity: 0, scale: 0.88, rotateX: 14, y: 18, filter: "blur(4px)" },
     visible: {
       opacity: 1,
       scale: 1,
       rotateX: 0,
       y: 0,
-      transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+      filter: "blur(0px)",
+      transition: { duration: 0.38, ease: [0.16, 1, 0.3, 1] },
     },
   };
 
@@ -79,16 +80,16 @@ export function WhatIDo() {
             variants={itemVariants}
             whileHover={{
               z: 20,
-              transition: { duration: 0.2 },
+              transition: { duration: 0.1 },
             }}
             className="group relative bg-[#0c0b0f] border-white/[0.04] p-6 flex flex-col justify-between overflow-hidden cursor-default min-h-[180px]"
             onMouseEnter={playHover}
           >
             {/* Hover Background Expansion */}
-            <div className="absolute inset-0 bg-accent scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] z-0" />
+            <div className="absolute inset-0 bg-accent scale-y-0 origin-bottom group-hover:scale-y-100 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] z-0" />
 
             {/* Scan line on hover */}
-            <div className="absolute inset-x-0 top-0 h-[1px] bg-white/20 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 z-10" />
+            <div className="absolute inset-x-0 top-0 h-[1px] bg-white/20 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 z-10" />
 
             {/* Number */}
             <div className="flex justify-between items-start relative z-10">

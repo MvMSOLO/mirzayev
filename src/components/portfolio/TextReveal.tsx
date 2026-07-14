@@ -2,6 +2,10 @@ import { motion } from "framer-motion";
 import { useSound } from "@/hooks/useSound";
 import { useEffect, useRef, useState } from "react";
 
+// Shared easing — fast exponential out (snappy but not stiff)
+const EXPO = [0.16, 1, 0.3, 1] as const;
+const SPRING = { type: "spring", stiffness: 480, damping: 34 } as const;
+
 export function WordReveal({
   text,
   className = "",
@@ -21,10 +25,10 @@ export function WordReveal({
       className={`inline-flex flex-wrap ${className}`}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-10%" }}
+      viewport={{ once: true, margin: "-8%" }}
       onViewportEnter={() => sound && playReveal()}
       variants={{
-        visible: { transition: { staggerChildren: 0.03, delayChildren: delay } },
+        visible: { transition: { staggerChildren: 0.014, delayChildren: delay } },
       }}
     >
       {words.map((word, i) => (
@@ -32,13 +36,13 @@ export function WordReveal({
           <motion.span
             className="inline-block"
             variants={{
-              hidden: { y: "110%", opacity: 0, rotateZ: 3, scale: 0.95 },
+              hidden: { y: "108%", opacity: 0, rotateZ: 2, scale: 0.97 },
               visible: {
                 y: "0%",
                 opacity: 1,
                 rotateZ: 0,
                 scale: 1,
-                transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
+                transition: { duration: 0.52, ease: EXPO },
               },
             }}
           >
@@ -61,10 +65,10 @@ export function RevealBox({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 25, scale: 0.99 }}
+      initial={{ opacity: 0, y: 18, scale: 0.995 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1], delay }}
+      viewport={{ once: true, margin: "-8%" }}
+      transition={{ duration: 0.52, ease: EXPO, delay }}
       className={className}
     >
       {children}
@@ -85,8 +89,8 @@ export function ClipReveal({
     <motion.div
       initial={{ clipPath: "polygon(0 0, 0 0, 0 100%, 0% 100%)", opacity: 0 }}
       whileInView={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", opacity: 1 }}
-      viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay }}
+      viewport={{ once: true, margin: "-8%" }}
+      transition={{ duration: 0.62, ease: EXPO, delay }}
       className={className}
     >
       {children}
@@ -106,10 +110,10 @@ export function BlurReveal({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, filter: "blur(16px)", scale: 1.03 }}
+      initial={{ opacity: 0, filter: "blur(12px)", scale: 1.02 }}
       whileInView={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
-      viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 1.35, ease: [0.16, 1, 0.3, 1], delay }}
+      viewport={{ once: true, margin: "-8%" }}
+      transition={{ duration: 0.6, ease: EXPO, delay }}
       className={className}
     >
       {children}
@@ -117,7 +121,7 @@ export function BlurReveal({
   );
 }
 
-/** Slide-from-left reveal */
+/** Slide-from-direction reveal */
 export function SlideReveal({
   children,
   className = "",
@@ -131,10 +135,10 @@ export function SlideReveal({
 }) {
   const initial =
     direction === "left"
-      ? { opacity: 0, x: -50 }
+      ? { opacity: 0, x: -36 }
       : direction === "right"
-        ? { opacity: 0, x: 50 }
-        : { opacity: 0, y: 50 };
+        ? { opacity: 0, x: 36 }
+        : { opacity: 0, y: 36 };
   const animate =
     direction === "left" || direction === "right"
       ? { opacity: 1, x: 0 }
@@ -143,8 +147,8 @@ export function SlideReveal({
     <motion.div
       initial={initial}
       whileInView={animate}
-      viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1], delay }}
+      viewport={{ once: true, margin: "-8%" }}
+      transition={{ duration: 0.52, ease: EXPO, delay }}
       className={className}
     >
       {children}
@@ -152,7 +156,7 @@ export function SlideReveal({
   );
 }
 
-/** Scale-in reveal */
+/** Scale-in with spring physics */
 export function ScaleReveal({
   children,
   className = "",
@@ -164,10 +168,10 @@ export function ScaleReveal({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.75, rotateX: 12 }}
+      initial={{ opacity: 0, scale: 0.78, rotateX: 10 }}
       whileInView={{ opacity: 1, scale: 1, rotateX: 0 }}
-      viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 1.15, ease: [0.16, 1, 0.3, 1], delay }}
+      viewport={{ once: true, margin: "-8%" }}
+      transition={{ ...SPRING, opacity: { duration: 0.35 }, delay }}
       className={className}
       style={{ perspective: 1000 }}
     >
@@ -181,7 +185,7 @@ export function CountUp({
   end,
   suffix = "",
   prefix = "",
-  duration = 1.8,
+  duration = 1.1,
   className = "",
 }: {
   end: number;
@@ -203,7 +207,6 @@ export function CountUp({
           const step = (now: number) => {
             const elapsed = (now - startTime) / 1000;
             const progress = Math.min(elapsed / duration, 1);
-            // Ease out cubic/expo
             const eased = 1 - Math.pow(1 - progress, 4);
             setCount(Math.floor(eased * end));
             if (progress < 1) requestAnimationFrame(step);
@@ -227,7 +230,7 @@ export function CountUp({
   );
 }
 
-/** Character-by-character glitch reveal */
+/** Character-by-character glitch reveal — faster iteration */
 export function GlitchReveal({
   text,
   className = "",
@@ -260,8 +263,8 @@ export function GlitchReveal({
                 }),
               );
               if (iteration >= text.length) clearInterval(intervalId);
-              iteration += 0.5;
-            }, 30);
+              iteration += 0.7; // faster resolution
+            }, 22); // was 30ms
           }, delay * 1000);
         }
       },

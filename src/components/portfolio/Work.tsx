@@ -15,18 +15,18 @@ export function Work() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.12 },
+      transition: { staggerChildren: 0.07 },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.94, y: 30, filter: "blur(4px)" },
+    hidden: { opacity: 0, scale: 0.93, y: 22, filter: "blur(6px)" },
     visible: {
       opacity: 1,
       scale: 1,
       y: 0,
       filter: "blur(0px)",
-      transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
+      transition: { duration: 0.52, ease: [0.16, 1, 0.3, 1] },
     },
   };
 
@@ -66,9 +66,9 @@ export function Work() {
         <motion.a
           variants={itemVariants}
           whileHover={{
-            y: -8,
-            boxShadow: "0 30px 60px -12px rgba(255, 69, 0, 0.3)",
-            transition: { duration: 0.3 },
+            y: -10,
+            boxShadow: "0 32px 64px -12px rgba(255, 69, 0, 0.35)",
+            transition: { duration: 0.18, ease: [0.16, 1, 0.3, 1] },
           }}
           href="https://github.com/MvMSOLO"
           target="_blank"

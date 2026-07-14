@@ -48,7 +48,7 @@ export function UniverseHero() {
             x: mousePos.x - 150,
             y: mousePos.y - 150,
           }}
-          transition={{ type: "spring", stiffness: 100, damping: 25, mass: 0.8 }}
+          transition={{ type: "spring", stiffness: 280, damping: 28, mass: 0.6 }}
           className="absolute w-[300px] h-[300px] rounded-full bg-[#DFFF00]/12 blur-3xl pointer-events-none z-0"
         />
       )}
@@ -57,7 +57,7 @@ export function UniverseHero() {
       <motion.div
         initial={{ opacity: 0, scale: 0.9, filter: "blur(20px)" }}
         animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-        transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
         className="absolute inset-0 flex items-center justify-center pointer-events-none px-4"
       >
         <div className="relative w-full max-w-[880px] aspect-square">
@@ -75,7 +75,7 @@ export function UniverseHero() {
         <motion.h1
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.18 }}
           className="font-serif italic leading-[0.85] text-[#111]"
           style={{
             fontFamily: '"Instrument Serif", "Cormorant Garamond", serif',
@@ -90,7 +90,7 @@ export function UniverseHero() {
           <motion.span
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.7 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.28 }}
             className="font-serif italic leading-[0.85] text-[#111] -mt-[2vw] md:-mt-[4vw]"
             style={{
               fontFamily: '"Instrument Serif", "Cormorant Garamond", serif',
@@ -107,7 +107,7 @@ export function UniverseHero() {
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1.2, delay: 1 }}
+        transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: 0.38 }}
         className="absolute bottom-12 md:bottom-24 left-6 md:left-[8vw] max-w-[32ch] z-20"
       >
         <p
@@ -124,7 +124,7 @@ export function UniverseHero() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
+        transition={{ delay: 0.5, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         className="absolute bottom-12 right-6 md:right-[8vw] z-20 hidden md:block"
       >
         <div className="text-[10px] uppercase tracking-[0.4em] text-[#111]/40 font-mono rotate-90 origin-right translate-y-full">
