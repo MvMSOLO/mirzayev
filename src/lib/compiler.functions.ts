@@ -8,8 +8,8 @@ const Input = z.object({
 export const compileWebsite = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => Input.parse(input))
   .handler(async ({ data }) => {
-    const key = process.env.LOVABLE_API_KEY;
-    if (!key) throw new Error("Missing LOVABLE_API_KEY");
+    const key = process.env.OPENROUTER_API_KEY;
+    if (!key) throw new Error("Missing OPENROUTER_API_KEY");
 
     const system = `You are FUTURE COMPILER — a 2035-era AI that outputs ONLY vanilla HTML, CSS, and JavaScript. NO frameworks. NO libraries. NO external CDN references. Return STRICT JSON exactly matching this shape:
 {"title":"short site title","html":"<!doctype html> ...","css":"...","js":"..."}
@@ -20,14 +20,14 @@ Rules:
 - Keep total output under 8000 characters.
 - No comments explaining anything. Just code.`;
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${key}`,
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: "cohere/north-mini-code:free",
         messages: [
           { role: "system", content: system },
           { role: "user", content: data.prompt },
