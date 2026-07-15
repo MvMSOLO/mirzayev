@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, memo } from "react";
 import { useLang } from "@/lib/i18n";
 import { motion, AnimatePresence } from "framer-motion";
 import { RevealBox, WordReveal } from "./TextReveal";
 import { useSound } from "@/hooks/useSound";
 import { Play, RotateCcw, ShieldCheck, Terminal, Cpu, FileCode2, Globe, Heart, CheckCircle2, ChevronRight, Activity, Search } from "lucide-react";
 
-export function Philosophy() {
+export const Philosophy = memo(function Philosophy() {
   const { t, lang } = useLang();
   const { playHover, playClick, play } = useSound();
   const [activeStep, setActiveStep] = useState(0);
@@ -159,7 +159,7 @@ export function Philosophy() {
   return (
     <section
       id="philosophy"
-      className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-b border-border relative overflow-hidden bg-[radial-gradient(ellipse_at_0%_0%,rgba(255,69,0,0.04)_0%,transparent_55%)]"
+      className="px-5 md:px-20 lg:px-32 py-20 md:py-32 border-b border-white/[0.06] relative overflow-hidden bg-[radial-gradient(ellipse_at_0%_0%,rgba(255,69,0,0.045)_0%,transparent_55%)]"
     >
       {/* Visual blueprint overlay decoration */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,69,0,0.03),transparent_50%)] pointer-events-none" />
@@ -172,20 +172,20 @@ export function Philosophy() {
         <span>SYS_STATUS: ACTIVE</span>
       </div>
 
-      <RevealBox className="mb-8 flex gap-2 items-center">
-        <div className="h-[1px] w-8 bg-accent" />
-        <span className="text-[10px] uppercase tracking-widest text-accent font-mono">{t("phi.tag")}</span>
+      <RevealBox className="mb-12 flex gap-3 items-center">
+        <div className="h-px w-10 bg-accent" />
+        <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent">{t("phi.tag")}</span>
       </RevealBox>
 
       {/* Main Title */}
-      <div className="mb-14">
-        <h2 className="font-display text-5xl md:text-7xl uppercase tracking-tighter leading-[0.85]">
+      <div className="mb-16">
+        <h2 className="font-display text-5xl md:text-7xl uppercase tracking-tighter leading-[0.88]">
           <WordReveal text={t("phi.title_a")} sound /> <br />
           <span className="text-accent">
             <WordReveal text={t("phi.title_b")} delay={0.2} />
           </span>
         </h2>
-        <p className="text-xs md:text-sm text-white/40 mt-4 max-w-md uppercase tracking-wider font-mono">
+        <p className="font-mono text-[9px] text-white/30 mt-5 max-w-md uppercase tracking-[0.2em]">
           // INTERACTIVE SCHEMATIC LAB: {lang === "uz" ? "QURILISH BOSQICHLARI" : "STEP-BY-STEP RENDERER"}
         </p>
       </div>
@@ -208,8 +208,8 @@ export function Philosophy() {
                   onMouseEnter={() => playHover()}
                   className={`w-full text-left p-4 border transition-all duration-300 relative overflow-hidden flex items-center gap-4 group ${
                     isActive
-                      ? "bg-secondary/40 border-accent/40 shadow-[0_0_30px_rgba(255,69,0,0.04)]"
-                      : "bg-transparent border-white/5 hover:border-white/20 hover:bg-white/1"
+                      ? "bg-accent/[0.04] border-accent/40 shadow-[0_0_24px_rgba(255,69,0,0.04)]"
+                      : "bg-transparent border-white/[0.06] hover:border-white/15 hover:bg-white/[0.01]"
                   }`}
                 >
                   {/* Left accent bar on active */}
@@ -259,7 +259,7 @@ export function Philosophy() {
           </div>
 
           {/* Checklist & Desc for Active Step */}
-          <div className="border border-white/5 bg-black/40 p-5 relative overflow-hidden transition-all duration-500">
+          <div className="border border-white/[0.06] bg-black/50 p-5 relative overflow-hidden transition-all duration-500">
             {/* Shifting background laser line */}
             <div className="absolute top-0 left-0 w-24 h-[1px] bg-accent" />
             <div className="absolute top-0 left-0 w-[1px] h-12 bg-accent" />
@@ -657,4 +657,4 @@ export function Philosophy() {
       </div>
     </section>
   );
-}
+});

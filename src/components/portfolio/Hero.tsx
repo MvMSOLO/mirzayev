@@ -4,10 +4,10 @@ import { HeroRails } from "./HeroRails";
 import { motion, type Variants } from "framer-motion";
 import { WordReveal, RevealBox, BlurReveal } from "./TextReveal";
 import { useSound } from "@/hooks/useSound";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, memo } from "react";
 import { Cpu, Zap, Activity, Sliders, Play, Square, Terminal } from "lucide-react";
 
-export function Hero() {
+export const Hero = memo(function Hero() {
   const { t, lang } = useLang();
   const { playHover, playClick, playSynthesis } = useSound();
 
@@ -105,7 +105,7 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative pt-32 pb-24 overflow-hidden border-b border-border min-h-[92vh] flex flex-col justify-center bg-[radial-gradient(ellipse_at_70%_20%,rgba(255,69,0,0.04)_0%,transparent_60%)]"
+      className="relative pt-32 pb-24 overflow-hidden border-b border-white/[0.06] min-h-[92vh] flex flex-col justify-center bg-[radial-gradient(ellipse_at_70%_20%,rgba(255,69,0,0.05)_0%,transparent_60%)]"
     >
       <ParticleField className="opacity-80" />
       <HeroRails />
@@ -190,14 +190,14 @@ export function Hero() {
             {/* Chip */}
             <motion.div
               variants={itemVariants}
-              className="inline-block bg-accent px-3 py-1.5 mb-2 relative group cursor-default shadow-[0_0_20px_rgba(255,69,0,0.4),0_0_60px_rgba(255,69,0,0.15)]"
+              className="inline-block bg-accent px-4 py-2 mb-3 relative group cursor-default shadow-[0_0_24px_rgba(255,69,0,0.45),0_0_70px_rgba(255,69,0,0.12)]"
               onMouseEnter={playHover}
             >
               <div className="absolute -top-1 -left-1 w-2 h-2 border-t border-l border-white/40" />
               <div className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-white/40" />
               {/* Shimmer effect */}
               <div className="absolute inset-0 animate-shimmer opacity-50 pointer-events-none" />
-              <span className="text-[10px] font-bold uppercase tracking-widest relative z-10">
+              <span className="font-mono text-[9px] font-bold uppercase tracking-[0.22em] relative z-10">
                 {t("hero.chip")}
               </span>
             </motion.div>
@@ -430,4 +430,4 @@ export function Hero() {
       </motion.div>
     </section>
   );
-}
+});

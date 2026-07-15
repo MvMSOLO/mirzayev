@@ -3,6 +3,7 @@ import { useLang } from "@/lib/i18n";
 import { motion } from "framer-motion";
 import { WordReveal, RevealBox, CountUp, BlurReveal } from "./TextReveal";
 import { useSound } from "@/hooks/useSound";
+import { memo } from "react";
 
 const ecosystemNodes = [
   {
@@ -47,81 +48,91 @@ const ecosystemNodes = [
   },
 ];
 
-export function About() {
+export const About = memo(function About() {
   const { t, lang } = useLang();
   const { playHover } = useSound();
 
   return (
     <section
       id="about"
-      className="px-5 md:px-20 lg:px-32 py-16 md:py-24 relative border-b border-border overflow-hidden"
+      className="px-5 md:px-20 lg:px-32 py-20 md:py-32 relative border-b border-white/[0.06] overflow-hidden"
     >
-      {/* Decorative background glow */}
-      <div className="absolute -top-32 -right-32 w-96 h-96 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
+      {/* Background atmosphere */}
+      <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-accent/[0.04] rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[300px] h-[200px] bg-accent/[0.025] blur-[80px] pointer-events-none" />
 
-      {/* Section Decor */}
-      <div className="absolute top-8 left-8 font-mono text-[8px] text-white/10 hidden lg:block vertical-text uppercase tracking-widest h-32 border-l border-white/10 pl-2">
-        DATA_SCAN // BIO_METRICS // CORE_01
+      {/* Vertical side label */}
+      <div className="absolute top-12 left-4 font-mono text-[7px] text-white/[0.08] hidden lg:block vertical-text uppercase tracking-[0.3em] h-40 border-l border-white/[0.06] pl-2">
+        BIO_METRICS // SCAN_01
       </div>
 
-      <RevealBox className="mb-12 flex gap-2 items-center">
-        <div className="h-[1px] w-8 bg-accent" />
-        <span className="text-[10px] uppercase tracking-widest text-accent">{t("about.tag")}</span>
+      {/* Section tag */}
+      <RevealBox className="mb-14 flex gap-3 items-center">
+        <div className="h-px w-10 bg-accent" />
+        <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent">{t("about.tag")}</span>
       </RevealBox>
 
-      <div className="grid md:grid-cols-2 gap-12 items-start relative">
-        {/* Portrait */}
+      <div className="grid md:grid-cols-2 gap-16 items-start relative">
+        {/* Portrait column */}
         <RevealBox>
-          <div className="relative w-56 md:w-80 aspect-[3/4] bg-neutral-900 border border-white/10 overflow-hidden animate-float shadow-[0_0_80px_rgba(255,69,0,0.12),0_30px_60px_rgba(0,0,0,0.7)] group">
-            <img
-              src={portrait}
-              alt="Avazbek Mirzayev portrait"
-              width={800}
-              height={1000}
-              className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300 scale-105 group-hover:scale-100"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-gradient-to-tr from-accent/10 to-transparent pointer-events-none" />
+          <div className="relative inline-block">
+            {/* Portrait frame */}
+            <div className="relative w-52 md:w-72 aspect-[3/4] bg-neutral-900 border border-white/[0.08] overflow-hidden animate-float shadow-[0_0_80px_rgba(255,69,0,0.1),0_40px_80px_rgba(0,0,0,0.8)] group">
+              <img
+                src={portrait}
+                alt="Avazbek Mirzayev portrait"
+                width={800}
+                height={1000}
+                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100"
+                loading="lazy"
+              />
 
-            {/* Scanning effect */}
-            <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent shadow-[0_0_15px_#ff4500] animate-[scan-y_3s_linear_infinite] opacity-0 group-hover:opacity-100 transition-opacity" />
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-accent/8 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40 pointer-events-none" />
 
-            {/* Corner brackets on hover */}
-            <div className="absolute top-2 left-2 w-4 h-4 border-t border-l border-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="absolute top-2 right-2 w-4 h-4 border-t border-r border-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="absolute bottom-2 left-2 w-4 h-4 border-b border-l border-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r border-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              {/* Scan line on hover */}
+              <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-accent to-transparent shadow-[0_0_12px_#ff4500] animate-[scan-y_3s_linear_infinite] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-            <div className="absolute bottom-2 left-2 font-mono text-[8px] text-white/40 opacity-0 group-hover:opacity-100 transition-opacity">
-              STATUS: SCANNING_IDENT...
+              {/* Corner brackets */}
+              <div className="absolute top-2 left-2 w-5 h-5 border-t border-l border-accent/0 group-hover:border-accent/70 transition-all duration-500" />
+              <div className="absolute top-2 right-2 w-5 h-5 border-t border-r border-accent/0 group-hover:border-accent/70 transition-all duration-500" />
+              <div className="absolute bottom-2 left-2 w-5 h-5 border-b border-l border-accent/0 group-hover:border-accent/70 transition-all duration-500" />
+              <div className="absolute bottom-2 right-2 w-5 h-5 border-b border-r border-accent/0 group-hover:border-accent/70 transition-all duration-500" />
+
+              {/* Status label */}
+              <div className="absolute bottom-3 left-3 font-mono text-[7px] text-white/0 group-hover:text-white/50 transition-colors duration-500 uppercase tracking-widest">
+                IDENT_SCANNING...
+              </div>
+
+              {/* Inset glow border */}
+              <div className="absolute inset-0 shadow-[inset_0_0_0_1px_rgba(255,69,0,0)] group-hover:shadow-[inset_0_0_0_1px_rgba(255,69,0,0.2)] transition-all duration-700" />
             </div>
 
-            {/* Glowing border on hover */}
-            <div className="absolute inset-0 border border-accent/0 group-hover:border-accent/30 transition-all duration-500 shadow-[inset_0_0_20px_rgba(255,69,0,0)] group-hover:shadow-[inset_0_0_20px_rgba(255,69,0,0.1)]" />
-          </div>
+            {/* Age badge */}
+            <motion.div
+              initial={{ scale: 0, rotate: -20, opacity: 0 }}
+              whileInView={{ scale: 1, rotate: -4, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 400, damping: 20 }}
+              whileHover={{ rotate: 4, scale: 1.08 }}
+              className="absolute -bottom-5 -right-4 md:-right-8 bg-accent px-5 py-3 z-30 cursor-default shadow-[0_8px_30px_rgba(255,69,0,0.4)]"
+              onMouseEnter={playHover}
+            >
+              <span className="text-xs font-bold leading-none block uppercase text-background tracking-wider">
+                {t("about.badge")}
+              </span>
+            </motion.div>
 
-          {/* Badge */}
-          <motion.div
-            initial={{ scale: 0, rotate: -20 }}
-            whileInView={{ scale: 1, rotate: -3 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.15, type: "spring", stiffness: 420, damping: 22 }}
-            whileHover={{ rotate: 3, scale: 1.06 }}
-            className="absolute -bottom-4 -right-2 md:-right-6 bg-accent p-4 z-30 cursor-default"
-            onMouseEnter={playHover}
-          >
-            <span className="text-xs font-bold leading-none block uppercase text-background">
-              {t("about.badge")}
-            </span>
-          </motion.div>
-
-          <div className="absolute -top-3 -left-3 bg-background border border-white/20 px-2 py-1 text-[9px] uppercase tracking-widest">
-            Portrait_01
+            {/* Portrait label */}
+            <div className="absolute -top-3 -left-3 bg-background border border-white/15 px-2 py-1 text-[8px] uppercase tracking-widest font-mono text-white/40">
+              Portrait_01
+            </div>
           </div>
         </RevealBox>
 
         {/* Text content */}
-        <div className="space-y-6">
+        <div className="space-y-7">
           <h3 className="text-lg md:text-xl leading-snug font-display tracking-tight text-white/90">
             <WordReveal text={t("about.p1_pre")} sound />
             <span className="text-accent inline-block mx-1">
@@ -129,76 +140,77 @@ export function About() {
             </span>
             <WordReveal text={t("about.p1_post")} delay={0.4} />
           </h3>
-          <p className="text-sm text-white/60 leading-relaxed">
+
+          <p className="text-sm text-white/55 leading-[1.9]">
             <WordReveal text={t("about.p2")} delay={0.6} />
           </p>
 
-          {/* Tags */}
-          <RevealBox delay={0.8} className="flex flex-wrap gap-2 pt-4">
+          {/* Tech tags */}
+          <RevealBox delay={0.8} className="flex flex-wrap gap-2 pt-2">
             {["React/TS", "Next.js", "Python", "Node.js", "AI", "UI/UX"].map((tag) => (
               <motion.span
                 key={tag}
                 whileHover={{
-                  scale: 1.08,
-                  borderColor: "var(--accent)",
-                  color: "var(--accent)",
-                  boxShadow: "0 0 15px rgba(255,69,0,0.3)",
+                  scale: 1.06,
+                  borderColor: "rgba(255,69,0,0.6)",
+                  color: "#ff4500",
+                  boxShadow: "0 0 16px rgba(255,69,0,0.2)",
                 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-2 py-1 border border-border text-[10px] uppercase tracking-widest transition-colors cursor-default relative overflow-hidden group"
+                className="px-3 py-1.5 border border-white/[0.1] text-[9px] uppercase tracking-[0.18em] font-mono transition-colors cursor-default relative overflow-hidden group"
                 onMouseEnter={playHover}
               >
                 <span className="relative z-10">{tag}</span>
-                <span className="absolute inset-0 bg-accent/10 translate-y-full group-hover:translate-y-0 transition-transform duration-150" />
+                <span className="absolute inset-0 bg-accent/8 translate-y-full group-hover:translate-y-0 transition-transform duration-200" />
               </motion.span>
             ))}
           </RevealBox>
 
-          {/* Ecosystem Matrix Diagram */}
-          <div className="pt-6 border-t border-white/5">
-            <span className="text-[10px] uppercase text-accent/60 tracking-widest block mb-4 font-mono">
-              // ECOSYSTEM SCHEMATIC (VISUAL FLOW)
+          {/* Ecosystem schematic */}
+          <div className="pt-6 border-t border-white/[0.06]">
+            <span className="font-mono text-[9px] uppercase text-accent/50 tracking-[0.2em] block mb-5">
+              // ECOSYSTEM_SCHEMATIC
             </span>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 relative">
-              {/* Central laser cross lines for styling */}
-              <div className="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-accent/0 via-accent/20 to-accent/0 pointer-events-none hidden sm:block" />
-              <div className="absolute top-0 bottom-0 left-1/2 w-px bg-gradient-to-b from-accent/0 via-accent/20 to-accent/0 pointer-events-none hidden sm:block" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 relative">
+              {/* Cross lines */}
+              <div className="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-accent/0 via-accent/15 to-accent/0 pointer-events-none hidden sm:block" />
+              <div className="absolute top-0 bottom-0 left-1/2 w-px bg-gradient-to-b from-accent/0 via-accent/15 to-accent/0 pointer-events-none hidden sm:block" />
 
               {ecosystemNodes.map((node) => (
-                <div
+                <motion.div
                   key={node.id}
-                  className="p-4 border border-white/[0.07] bg-white/[0.02] backdrop-blur-sm hover:border-accent/40 hover:bg-accent/[0.03] transition-all duration-150 relative group overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.3)]"
+                  whileHover={{ borderColor: "rgba(255,69,0,0.3)", backgroundColor: "rgba(255,69,0,0.025)" }}
+                  transition={{ duration: 0.2 }}
+                  className="p-4 border border-white/[0.06] bg-white/[0.015] relative group overflow-hidden cursor-default"
                 >
-                  <div className="flex justify-between items-start mb-2">
-                    <span className="text-[10px] font-mono text-accent/60 group-hover:text-accent font-bold">
+                  {/* Top-left accent corner */}
+                  <div className="absolute top-0 left-0 w-3 h-px bg-accent/0 group-hover:bg-accent/60 transition-colors duration-300" />
+                  <div className="absolute top-0 left-0 h-3 w-px bg-accent/0 group-hover:bg-accent/60 transition-colors duration-300" />
+
+                  <div className="flex justify-between items-start mb-2.5">
+                    <span className="font-mono text-[9px] text-accent/50 group-hover:text-accent transition-colors font-bold">
                       [{node.num}]
                     </span>
-                    <span className="text-[8px] font-mono text-white/20 group-hover:text-white/40 transition-colors uppercase tracking-widest animate-pulse">
-                      flow_active
+                    <span className="font-mono text-[7px] text-white/15 group-hover:text-white/30 transition-colors uppercase tracking-widest">
+                      ACTIVE
                     </span>
                   </div>
-                  <h4 className="font-display text-sm uppercase tracking-wider text-white/90 group-hover:text-accent transition-colors">
+                  <h4 className="font-display text-sm uppercase tracking-wider text-white/85 group-hover:text-accent transition-colors duration-300 mb-1">
                     {node.title[lang]}
                   </h4>
-                  <p className="text-[10px] font-mono text-white/40 mb-2">
-                    {node.subtitle[lang]}
-                  </p>
-                  <p className="text-[11px] text-white/50 leading-relaxed group-hover:text-white/70 transition-colors">
+                  <p className="font-mono text-[9px] text-white/35 mb-2">{node.subtitle[lang]}</p>
+                  <p className="text-[11px] text-white/45 leading-relaxed group-hover:text-white/65 transition-colors duration-300">
                     {node.desc[lang]}
                   </p>
-
-                  {/* Glowing accent border top-left */}
-                  <div className="absolute top-0 left-0 w-2 h-[1px] bg-accent/0 group-hover:bg-accent transition-colors" />
-                  <div className="absolute top-0 left-0 h-2 w-[1px] bg-accent/0 group-hover:bg-accent transition-colors" />
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Stats with CountUp */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-16">
+      {/* Stats row */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-20">
         {[
           { k: t("about.age.k"), v: 16, suffix: "" },
           { k: t("about.projects.k"), v: 50, suffix: "+" },
@@ -207,30 +219,26 @@ export function About() {
         ].map((s, i) => (
           <RevealBox
             key={s.k}
-            delay={0.08 * i}
-            className="border border-white/[0.08] p-5 group hover:border-accent/60 transition-all duration-200 relative overflow-hidden cursor-default bg-white/[0.015] backdrop-blur-sm shadow-[0_4px_24px_rgba(0,0,0,0.35)]"
+            delay={0.07 * i}
+            className="border border-white/[0.07] p-6 group hover:border-accent/50 transition-all duration-300 relative overflow-hidden cursor-default bg-white/[0.01] backdrop-blur-sm"
           >
             {/* Hover fill */}
-            <div className="absolute inset-0 bg-accent/5 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-200 ease-out" />
+            <div className="absolute inset-0 bg-gradient-to-br from-accent/[0.06] to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]" />
             {/* Corner accent */}
-            <div className="absolute top-0 right-0 w-0 h-0 border-l-[16px] border-l-transparent border-t-[16px] border-t-accent/20 group-hover:border-t-accent/50 transition-colors" />
+            <div className="absolute top-0 right-0 w-0 h-0 border-l-[14px] border-l-transparent border-t-[14px] border-t-accent/15 group-hover:border-t-accent/40 transition-colors duration-300" />
 
-            <p className="font-display text-5xl md:text-6xl leading-none text-accent relative z-10" style={{ textShadow: "0 0 30px rgba(255,69,0,0.3)" }}>
-              {s.raw ? (
-                s.raw
-              ) : (
-                <CountUp end={s.v!} suffix={s.suffix} />
-              )}
+            <p
+              className="font-display text-5xl md:text-6xl leading-none text-accent relative z-10 mb-1"
+              style={{ textShadow: "0 0 40px rgba(255,69,0,0.25)" }}
+            >
+              {s.raw ? s.raw : <CountUp end={s.v!} suffix={s.suffix} />}
             </p>
-            <p className="text-[10px] uppercase tracking-widest text-white/40 mt-3 relative z-10 group-hover:text-white/80 transition-colors">
+            <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/35 relative z-10 group-hover:text-white/70 transition-colors duration-300">
               {s.k}
             </p>
-
-            {/* Glow on hover */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none shadow-[inset_0_0_20px_rgba(255,69,0,0.05)]" />
           </RevealBox>
         ))}
       </div>
     </section>
   );
-}
+});

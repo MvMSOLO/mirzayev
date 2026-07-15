@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import { useLang } from "@/lib/i18n";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
@@ -6,7 +6,7 @@ import { useMagnetic } from "@/hooks/useMagnetic";
 import { MusicPlayer } from "./MusicPlayer";
 import { Volume2, VolumeX } from "lucide-react";
 
-export function Nav() {
+export const Nav = memo(function Nav() {
   const { lang, setLang, t } = useLang();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -57,22 +57,26 @@ export function Nav() {
     <>
       {/* Top Bar */}
       <nav
-        className={`fixed top-0 w-full z-50 px-5 md:px-12 lg:px-32 flex justify-between items-center pointer-events-none transition-all duration-500 ${scrolled ? "py-4 bg-background/80 backdrop-blur-xl border-b border-border/40 shadow-[0_4px_30px_rgba(0,0,0,0.4)]" : "py-6 mix-blend-difference"}`}
+        className={`fixed top-0 w-full z-50 px-5 md:px-12 lg:px-32 flex justify-between items-center pointer-events-none transition-all duration-500 ${
+          scrolled
+            ? "py-3 bg-[#0d0c10]/90 backdrop-blur-2xl border-b border-white/[0.06] shadow-[0_1px_0_rgba(255,69,0,0.08),0_8px_40px_rgba(0,0,0,0.6)]"
+            : "py-6 mix-blend-difference"
+        }`}
       >
         <motion.a
           href="#top"
-          className="text-xs font-bold tracking-tighter text-white pointer-events-auto"
-          // Logo hover/tap deepened with a springy transition — the brand mark gets a bit more life.
-          whileHover={{ scale: 1.08, rotate: -2 }}
-          whileTap={{ scale: 0.92 }}
-          transition={{ type: "spring", stiffness: 400, damping: 12 }}
+          className="font-mono text-[11px] font-bold tracking-[0.2em] text-white pointer-events-auto uppercase"
+          whileHover={{ scale: 1.06, x: 2 }}
+          whileTap={{ scale: 0.93 }}
+          transition={{ type: "spring", stiffness: 420, damping: 14 }}
           onMouseEnter={playHover}
           onClick={playClick}
         >
           {t("nav.handle")}
         </motion.a>
 
-        <div className="flex gap-4 items-center pointer-events-auto">
+        <div className="flex gap-3 items-center pointer-events-auto">
+          {/* Language toggle */}
           <motion.button
             onClick={() => {
               playClick();
@@ -80,18 +84,24 @@ export function Nav() {
             }}
             onMouseEnter={playHover}
             aria-label="Toggle language"
-            className="flex items-center gap-1 border border-white/30 px-2 py-1 text-[10px] uppercase tracking-widest font-bold text-white hover:bg-accent hover:border-accent transition-colors cursor-pointer"
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.9 }}
+            className="relative flex items-center gap-0.5 border border-white/20 px-2.5 py-1.5 text-[9px] uppercase tracking-[0.2em] font-bold text-white hover:border-accent/60 transition-all duration-300 cursor-pointer overflow-hidden group"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.92 }}
             transition={{ type: "spring", stiffness: 420, damping: 14 }}
           >
-            <span className={lang === "uz" ? "text-accent" : "opacity-40"}>UZ</span>
-            <span className="opacity-30">/</span>
-            <span className={lang === "en" ? "text-accent" : "opacity-40"}>EN</span>
+            <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/8 transition-colors duration-300" />
+            <span className={`relative z-10 transition-colors duration-200 ${lang === "uz" ? "text-accent" : "opacity-35"}`}>UZ</span>
+            <span className="relative z-10 opacity-20 mx-0.5">/</span>
+            <span className={`relative z-10 transition-colors duration-200 ${lang === "en" ? "text-accent" : "opacity-35"}`}>EN</span>
           </motion.button>
-          <div className="flex gap-2 items-center text-white hidden sm:flex">
-            <div className="size-2 bg-accent animate-pulse" />
-            <span className="text-[10px] uppercase tracking-widest">{t("nav.status")}</span>
+
+          {/* Status pill */}
+          <div className="hidden sm:flex items-center gap-2 text-white">
+            <div className="relative">
+              <div className="size-1.5 bg-accent rounded-full" />
+              <div className="absolute inset-0 bg-accent rounded-full animate-ping opacity-60" />
+            </div>
+            <span className="text-[9px] uppercase tracking-[0.18em] opacity-60">{t("nav.status")}</span>
           </div>
 
           <MenuButton
@@ -113,7 +123,7 @@ export function Nav() {
             aria-label={t("nav.handle")}
             className="fixed inset-0 z-40"
           >
-            {/* Kinetic Strips Background */}
+            {/* Kinetic Strip Background */}
             <div className="absolute inset-0 flex">
               {[...Array(5)].map((_, i) => (
                 <motion.div
@@ -122,27 +132,34 @@ export function Nav() {
                   animate={{ scaleY: 1 }}
                   exit={{
                     scaleY: 0,
-                    transition: { delay: (4 - i) * 0.04, duration: 0.4, ease: [0.76, 0, 0.24, 1] },
+                    transition: { delay: (4 - i) * 0.04, duration: 0.38, ease: [0.76, 0, 0.24, 1] },
                   }}
-                  // Stagger widened (0.04→0.055) so the strip wipe cascades more visibly across the screen.
-                  transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1], delay: i * 0.055 }}
-                  className="flex-1 bg-[#0a0a0a] origin-top border-r border-white/5 last:border-r-0"
+                  transition={{ duration: 0.48, ease: [0.76, 0, 0.24, 1], delay: i * 0.055 }}
+                  className="flex-1 bg-[#09080d] origin-top"
                 />
               ))}
             </div>
+
+            {/* Accent grid overlay */}
+            <div className="absolute inset-0 bg-grid-blueprint opacity-[0.025] pointer-events-none" />
 
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.25, delay: 0.16 }}
+              transition={{ duration: 0.22, delay: 0.18 }}
               className="absolute inset-0 text-white flex flex-col justify-center px-6 md:px-[10vw]"
             >
-              {/* Ambient Background Glow */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
+              {/* Ambient glow */}
+              <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[40vw] h-[40vw] bg-accent/[0.04] blur-[100px] rounded-full pointer-events-none" />
+
+              {/* Top corner label */}
+              <div className="absolute top-6 left-6 md:left-[10vw] font-mono text-[9px] text-white/20 uppercase tracking-widest">
+                {t("nav.handle")} // NAV_MATRIX
+              </div>
 
               <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
-                <ul className="space-y-4 md:space-y-6">
+                <ul className="space-y-3 md:space-y-5">
                   {navItems.map((item, idx) => (
                     <MagneticNavItem
                       key={item.label}
@@ -158,49 +175,48 @@ export function Nav() {
                 </ul>
 
                 <motion.div
-                  initial={{ opacity: 0, x: 16 }}
+                  initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 16 }}
-                  transition={{ delay: 0.22, duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex flex-col gap-8 max-w-sm"
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ delay: 0.24, duration: 0.44, ease: [0.16, 1, 0.3, 1] }}
+                  className="flex flex-col gap-8 max-w-xs"
                 >
-                  <div>
-                    <h4 className="text-[10px] uppercase tracking-widest text-white/50 mb-4 font-mono">
-                      {t("nav.status")}
-                    </h4>
-                    <p className="text-sm text-white/80 leading-relaxed font-mono">
+                  {/* Status panel */}
+                  <div className="border border-white/[0.07] bg-white/[0.02] p-5">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="relative">
+                        <div className="w-1.5 h-1.5 bg-accent rounded-full" />
+                        <div className="absolute inset-0 bg-accent rounded-full animate-ping opacity-50" />
+                      </div>
+                      <span className="font-mono text-[9px] text-accent uppercase tracking-widest">
+                        {t("nav.status")}
+                      </span>
+                    </div>
+                    <p className="text-xs text-white/60 leading-relaxed font-mono">
                       Currently available for freelance projects & full-time roles starting 2026.
                     </p>
                   </div>
 
-                  <div className="flex gap-4">
-                    <a
-                      href="https://github.com/MvMSOLO"
-                      target="_blank"
-                      rel="noreferrer"
-                      onMouseEnter={playHover}
-                      className="text-xs uppercase tracking-widest hover:text-accent hover:-translate-y-0.5 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] inline-block"
-                    >
-                      Github
-                    </a>
-                    <a
-                      href="https://linkedin.com/in/avazbek-mirzayev"
-                      target="_blank"
-                      rel="noreferrer"
-                      onMouseEnter={playHover}
-                      className="text-xs uppercase tracking-widest hover:text-accent hover:-translate-y-0.5 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] inline-block"
-                    >
-                      LinkedIn
-                    </a>
-                    <a
-                      href="https://youtube.com/@mvmsolo"
-                      target="_blank"
-                      rel="noreferrer"
-                      onMouseEnter={playHover}
-                      className="text-xs uppercase tracking-widest hover:text-accent hover:-translate-y-0.5 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] inline-block"
-                    >
-                      YouTube
-                    </a>
+                  {/* Social links */}
+                  <div className="space-y-2">
+                    <span className="font-mono text-[9px] text-white/25 uppercase tracking-widest block mb-3">// Social</span>
+                    {[
+                      { label: "Github", href: "https://github.com/MvMSOLO" },
+                      { label: "LinkedIn", href: "https://linkedin.com/in/avazbek-mirzayev" },
+                      { label: "YouTube", href: "https://youtube.com/@mvmsolo" },
+                    ].map((link) => (
+                      <a
+                        key={link.label}
+                        href={link.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        onMouseEnter={playHover}
+                        className="flex items-center justify-between group text-[10px] uppercase tracking-widest text-white/40 hover:text-accent transition-all duration-200 py-1"
+                      >
+                        <span className="group-hover:translate-x-1 transition-transform duration-200">{link.label}</span>
+                        <span className="opacity-0 group-hover:opacity-100 transition-opacity">↗</span>
+                      </a>
+                    ))}
                   </div>
 
                   <button
@@ -209,7 +225,7 @@ export function Nav() {
                       toggleMute();
                     }}
                     onMouseEnter={playHover}
-                    className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-white/50 hover:text-accent transition-colors self-start cursor-pointer"
+                    className="flex items-center gap-2 text-[9px] uppercase tracking-widest text-white/35 hover:text-accent transition-colors self-start cursor-pointer"
                   >
                     {isMuted ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
                     {isMuted ? t("sound.off") : t("sound.on")}
@@ -224,9 +240,9 @@ export function Nav() {
       <MusicPlayer isMenuOpen={isOpen} />
     </>
   );
-}
+});
 
-function MenuButton({
+const MenuButton = memo(function MenuButton({
   isOpen,
   onClick,
   onHover,
@@ -247,39 +263,41 @@ function MenuButton({
       aria-expanded={isOpen}
       aria-controls={controls}
       aria-label="Toggle menu"
-      className="relative w-12 h-12 flex items-center justify-center rounded-full bg-white/5 border border-white/10 hover:border-accent transition-colors cursor-pointer pointer-events-auto"
+      className="relative w-10 h-10 flex items-center justify-center border border-white/15 hover:border-accent/60 transition-all duration-300 cursor-pointer pointer-events-auto group overflow-hidden"
     >
-      <div className="relative w-5 h-5 flex flex-col justify-center items-center gap-[4px]">
+      <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/8 transition-colors duration-300" />
+      <div className="relative w-4 h-4 flex flex-col justify-center items-center gap-[5px] z-10">
         <motion.span
           animate={{
             rotate: isOpen ? 45 : 0,
-            y: isOpen ? 5 : 0,
-            backgroundColor: isOpen ? "var(--color-accent, #ea580c)" : "#ffffff",
+            y: isOpen ? 6 : 0,
+            backgroundColor: isOpen ? "#ff4500" : "#ffffff",
+            width: isOpen ? "100%" : "100%",
           }}
-          transition={{ duration: 0.26, ease: "backOut" }}
-          className="block h-[2px] w-full bg-white origin-center"
+          transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+          className="block h-[1.5px] w-full bg-white origin-center"
         />
         <motion.span
           animate={{
             rotate: isOpen ? -45 : 0,
-            y: isOpen ? -5 : 0,
-            backgroundColor: isOpen ? "var(--color-accent, #ea580c)" : "#ffffff",
+            y: isOpen ? -6 : 0,
+            backgroundColor: isOpen ? "#ff4500" : "#ffffff",
           }}
-          transition={{ duration: 0.26, ease: "backOut" }}
-          className="block h-[2px] w-full bg-white origin-center"
+          transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+          className="block h-[1.5px] w-full bg-white origin-center"
         />
       </div>
     </button>
   );
-}
+});
 
-function MagneticNavItem({
+const MagneticNavItem = memo(function MagneticNavItem({
   item,
   idx,
   onClick,
   onHover,
 }: {
-  item: any;
+  item: { label: string; href: string };
   idx: number;
   onClick: () => void;
   onHover: () => void;
@@ -290,40 +308,34 @@ function MagneticNavItem({
     <li className="overflow-hidden p-2 -m-2">
       <motion.a
         ref={ref}
-        initial={{ y: "110%", rotateZ: 8, opacity: 0 }}
+        initial={{ y: "110%", rotateZ: 6, opacity: 0 }}
         animate={{ y: 0, rotateZ: 0, opacity: 1 }}
-        exit={{ y: "-110%", rotateZ: -8, opacity: 0 }}
+        exit={{ y: "-110%", rotateZ: -6, opacity: 0 }}
         transition={{
-          // Duration +25% and per-item delay +45% (0.038→0.055): menu items cascade in more visibly.
-          duration: 0.6,
+          duration: 0.58,
           ease: [0.16, 1, 0.3, 1],
           delay: 0.08 + idx * 0.055,
         }}
         href={item.href}
         onClick={onClick}
         onMouseEnter={onHover}
-        className="group flex items-center gap-6 text-5xl md:text-7xl lg:text-[7vw] font-bold uppercase tracking-tighter leading-none hover:text-accent transition-colors cursor-pointer"
-        style={{ fontFamily: "var(--font-display, inherit)" }}
+        className="group flex items-center gap-6 font-display text-5xl md:text-7xl lg:text-[7vw] font-bold uppercase tracking-tighter leading-none hover:text-accent transition-colors duration-200 cursor-pointer"
       >
-        <span className="text-sm font-mono tracking-widest text-white/30 group-hover:text-accent/50 transition-colors group-hover:translate-x-2 duration-300">
+        <span className="text-[10px] font-mono tracking-widest text-white/25 group-hover:text-accent/50 transition-all duration-300 group-hover:translate-x-1 shrink-0">
           0{idx + 1}
         </span>
-
-        {/* Dynamic letter splitting for bouncy spring wave hover effect */}
         <span className="relative overflow-hidden inline-flex">
           {item.label.split("").map((char: string, charIdx: number) => (
             <motion.span
               key={charIdx}
               className="inline-block"
               whileHover={{
-                // Slightly bigger throw (y -14→-18, scale 1.14→1.2) with lower damping for more wobble/bounce.
-                y: -18,
-                scale: 1.2,
-                color: "var(--color-accent, #ea580c)",
-                transition: { type: "spring", stiffness: 520, damping: 8 },
+                y: -16,
+                scale: 1.15,
+                color: "#ff4500",
+                transition: { type: "spring", stiffness: 500, damping: 10 },
               }}
               style={{
-                display: char === " " ? "inline-block" : "inline-block",
                 minWidth: char === " " ? "0.25em" : "auto",
               }}
             >
@@ -334,4 +346,4 @@ function MagneticNavItem({
       </motion.a>
     </li>
   );
-}
+});

@@ -1,6 +1,7 @@
 import { motion, type Variants } from "framer-motion";
 import { RevealBox, WordReveal, BlurReveal } from "./TextReveal";
 import { useLang } from "@/lib/i18n";
+import { memo } from "react";
 
 interface Update {
   version: string;
@@ -17,10 +18,7 @@ const updates: Update[] = [
     tag: "major",
     title: { uz: "V6 — Kinetik Laboratoriya", en: "V6 — Kinetic Laboratory" },
     items: [
-      {
-        uz: "500+ zamonaviy animatsiya qo'shildi",
-        en: "500+ modern animations added across all sections",
-      },
+      { uz: "500+ zamonaviy animatsiya qo'shildi", en: "500+ modern animations added across all sections" },
       { uz: "Studio AI IDE to'liq qayta qurildi", en: "Studio AI IDE completely rebuilt" },
       { uz: "Scroll satisfying Lenis bilan yangilandi", en: "Scroll experience upgraded with Lenis" },
       { uz: "Ovoz effektlari hamma joyga qo'shildi", en: "Sound effects integrated everywhere" },
@@ -33,10 +31,7 @@ const updates: Update[] = [
     tag: "feature",
     title: { uz: "Parallel Universe Contact", en: "Parallel Universe Contact" },
     items: [
-      {
-        uz: "Parallel Universe kontakt portallari",
-        en: "Parallel Universe contact portals added",
-      },
+      { uz: "Parallel Universe kontakt portallari", en: "Parallel Universe contact portals added" },
       { uz: "4 ta turli portal (Startap, Agentlik, Brend, Maxfiy)", en: "4 distinct portals (Startup, Agency, Brand, Secret)" },
       { uz: "Supabase integratsiyasi", en: "Supabase real-time integration" },
     ],
@@ -65,55 +60,56 @@ const updates: Update[] = [
   },
 ];
 
-const tagColors: Record<string, string> = {
-  major: "text-accent border-accent bg-accent/10",
-  feature: "text-green-400 border-green-400/40 bg-green-400/10",
-  minor: "text-blue-400 border-blue-400/40 bg-blue-400/10",
-  fix: "text-yellow-400 border-yellow-400/40 bg-yellow-400/10",
+const tagStyles: Record<string, string> = {
+  major: "text-accent border-accent/50 bg-accent/8",
+  feature: "text-emerald-400 border-emerald-400/35 bg-emerald-400/8",
+  minor: "text-blue-400 border-blue-400/35 bg-blue-400/8",
+  fix: "text-amber-400 border-amber-400/35 bg-amber-400/8",
 };
 
-export function Updates() {
+export const Updates = memo(function Updates() {
   const { lang } = useLang();
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.15 },
+      transition: { staggerChildren: 0.12 },
     },
   };
 
   const cardVariants: Variants = {
-    hidden: { opacity: 0, x: -30, filter: "blur(4px)" },
+    hidden: { opacity: 0, x: -28, filter: "blur(4px)" },
     visible: {
       opacity: 1,
       x: 0,
       filter: "blur(0px)",
-      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+      transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] },
     },
   };
 
   return (
     <section
       id="updates"
-      className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-t border-border relative overflow-hidden"
+      className="px-5 md:px-20 lg:px-32 py-20 md:py-32 border-t border-white/[0.06] relative overflow-hidden"
     >
-      {/* Background decoration */}
+      {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-accent/3 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/2 rounded-full blur-3xl" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/[0.03] rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent/[0.02] rounded-full blur-[80px]" />
       </div>
 
-      <div className="absolute top-8 right-8 font-mono text-[8px] text-white/10 hidden lg:block">
-        SYS_LOG // CHANGELOG.DB // V6.0.0
+      {/* Corner label */}
+      <div className="absolute top-6 right-6 font-mono text-[8px] text-white/[0.08] hidden lg:block uppercase tracking-widest">
+        SYS_LOG // CHANGELOG.DB
       </div>
 
-      <RevealBox className="mb-10 flex gap-2 items-center">
-        <div className="h-[1px] w-8 bg-accent" />
-        <span className="text-[10px] uppercase tracking-widest text-accent">// UPDATES</span>
+      <RevealBox className="mb-14 flex gap-3 items-center">
+        <div className="h-px w-10 bg-accent" />
+        <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent">// UPDATES</span>
       </RevealBox>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.8fr] gap-12 mb-16">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.9fr] gap-14 mb-16">
         <div>
           <h2 className="font-display text-5xl md:text-7xl uppercase leading-[0.85] tracking-tighter">
             <WordReveal text={lang === "uz" ? "Versiya" : "Build"} sound />
@@ -122,8 +118,8 @@ export function Updates() {
               <WordReveal text={lang === "uz" ? "jurnali." : "log."} delay={0.2} />
             </span>
           </h2>
-          <BlurReveal delay={0.4} className="mt-6">
-            <p className="text-sm text-white/50 max-w-[36ch] leading-relaxed">
+          <BlurReveal delay={0.4} className="mt-7">
+            <p className="text-sm text-white/45 max-w-[34ch] leading-[1.9]">
               {lang === "uz"
                 ? "Portfolio doimiy rivojlanib boradi. Har bir versiyada yangi imkoniyatlar, dizayn va texnologiyalar."
                 : "The portfolio evolves constantly. Every version brings new capabilities, design refinements, and technologies."}
@@ -136,48 +132,47 @@ export function Updates() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-5%" }}
-          className="space-y-4"
+          className="space-y-3"
         >
           {updates.map((update, i) => (
             <motion.div
               key={update.version}
               variants={cardVariants}
-              className="group relative border border-border bg-background/50 backdrop-blur p-5 hover:border-accent/50 transition-all duration-500 overflow-hidden cursor-default"
+              className="group relative border border-white/[0.07] bg-white/[0.01] backdrop-blur-sm p-6 hover:border-accent/40 transition-all duration-400 overflow-hidden cursor-default"
             >
-              {/* Hover background */}
-              <div className="absolute inset-0 bg-gradient-to-r from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-              {/* Top line decoration on hover */}
-              <div className="absolute top-0 left-0 h-[1px] w-0 bg-accent group-hover:w-full transition-all duration-700" />
+              {/* Hover gradient */}
+              <div className="absolute inset-0 bg-gradient-to-r from-accent/[0.04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
+              {/* Top line sweep */}
+              <div className="absolute top-0 left-0 h-px w-0 bg-accent group-hover:w-full transition-all duration-600" />
 
               <div className="relative z-10">
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <span className="font-mono text-accent text-sm font-bold">{update.version}</span>
                     <span
-                      className={`text-[9px] uppercase tracking-widest border px-2 py-0.5 font-mono ${tagColors[update.tag]}`}
+                      className={`font-mono text-[8px] uppercase tracking-[0.18em] border px-2 py-0.5 ${tagStyles[update.tag]}`}
                     >
                       {update.tag}
                     </span>
                   </div>
-                  <span className="text-[10px] text-white/30 font-mono">{update.date}</span>
+                  <span className="font-mono text-[9px] text-white/25 tabular-nums">{update.date}</span>
                 </div>
 
-                <h4 className="font-display text-xl uppercase tracking-tight mb-3 group-hover:text-accent transition-colors duration-300">
+                <h4 className="font-display text-xl uppercase tracking-tight mb-4 group-hover:text-accent transition-colors duration-300">
                   {update.title[lang]}
                 </h4>
 
-                <ul className="space-y-1.5">
+                <ul className="space-y-2">
                   {update.items.map((item, j) => (
                     <motion.li
                       key={j}
-                      initial={{ opacity: 0, x: -10 }}
+                      initial={{ opacity: 0, x: -8 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
-                      transition={{ delay: i * 0.1 + j * 0.05 }}
-                      className="text-[11px] text-white/50 flex items-center gap-2 group-hover:text-white/70 transition-colors"
+                      transition={{ delay: i * 0.08 + j * 0.04 }}
+                      className="flex items-center gap-2.5 font-mono text-[11px] text-white/40 group-hover:text-white/65 transition-colors duration-250"
                     >
-                      <span className="w-1 h-1 bg-accent/50 group-hover:bg-accent transition-colors flex-shrink-0" />
+                      <span className="w-1 h-1 bg-accent/40 group-hover:bg-accent flex-shrink-0 transition-colors duration-250" />
                       {item[lang]}
                     </motion.li>
                   ))}
@@ -188,33 +183,33 @@ export function Updates() {
         </motion.div>
       </div>
 
-      {/* Custom AM badge */}
+      {/* Author badge */}
       <RevealBox delay={0.3}>
-        <div className="border-t border-border pt-10 flex flex-wrap items-center justify-between gap-6">
+        <div className="border-t border-white/[0.07] pt-10 flex flex-wrap items-center justify-between gap-6">
           <div className="flex items-center gap-4">
             <div className="relative">
-              <div className="w-8 h-8 bg-accent flex items-center justify-center">
-                <span className="text-background font-bold text-xs">AM</span>
+              <div className="w-9 h-9 bg-accent flex items-center justify-center shadow-[0_0_20px_rgba(255,69,0,0.4)]">
+                <span className="text-background font-bold text-xs tracking-wider">AM</span>
               </div>
               <div className="absolute -inset-1 bg-accent/20 rounded animate-ping-lg" />
             </div>
             <div>
-              <p className="text-[10px] uppercase tracking-widest text-white/40 font-mono">
+              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/30">
                 {lang === "uz" ? "Muallif" : "Creator"}
               </p>
-              <p className="text-sm font-bold tracking-tight">
+              <p className="text-sm font-bold tracking-tight mt-0.5">
                 <span className="text-accent">Avazbek Mirzayev</span>
-                <span className="text-white/60"> · Portfolio Labs</span>
+                <span className="text-white/45"> · Portfolio Labs</span>
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-6 text-[10px] font-mono text-white/30 uppercase tracking-widest">
-            <span>Stack: React 19 · Vite · Tailwind v4</span>
+          <div className="flex items-center gap-5 font-mono text-[9px] text-white/22 uppercase tracking-[0.15em]">
+            <span>React 19 · Vite · Tailwind v4</span>
             <span className="hidden md:block">Bun · TanStack · Supabase</span>
           </div>
         </div>
       </RevealBox>
     </section>
   );
-}
+});

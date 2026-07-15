@@ -20,7 +20,9 @@ export function useSound() {
       const next = !prev;
       try {
         localStorage.setItem("sound_muted", String(next));
-      } catch (e) {}
+      } catch {
+        // storage may be unavailable (private mode, disabled storage)
+      }
       // Sync to the synthesizer's context initialization
       if (!next) {
         transitionSynth.initCtx();
@@ -55,7 +57,7 @@ export function useSound() {
   }, [isMuted]);
 
   const play = useCallback(
-    (name: "boot" | "scan" | "type" | "success" | "error" | "submit") => {
+    (name: "boot" | "scan" | "type" | "success" | "error" | "submit" | "click") => {
       if (isMuted) return;
       switch (name) {
         case "boot":
@@ -75,6 +77,9 @@ export function useSound() {
           break;
         case "submit":
           transitionSynth.playSynthesis(28); // sub-impact
+          break;
+        case "click":
+          transitionSynth.playSynthesis(45); // woody-tock
           break;
         default:
           playClick();

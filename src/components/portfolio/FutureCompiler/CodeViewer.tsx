@@ -12,6 +12,12 @@ interface Bundle {
   js: string;
 }
 
+const DEVICES = {
+  desktop: { width: "100%", label: "DESKTOP" },
+  tablet: { width: "768px", label: "TABLET" },
+  mobile: { width: "375px", label: "MOBILE" },
+} as const;
+
 export function CodeViewer({ bundle }: { bundle: Bundle }) {
   const { lang } = useLang();
   const { play } = useSound();
@@ -19,8 +25,17 @@ export function CodeViewer({ bundle }: { bundle: Bundle }) {
   const [copied, setCopied] = useState<string | null>(null);
   const [revealedLines, setRevealedLines] = useState(0);
   const [isRevealing, setIsRevealing] = useState(true);
+  const [device, setDevice] = useState<keyof typeof DEVICES>("desktop");
 
   const srcDoc = `<!doctype html><html><head><meta charset="utf-8"><title>${bundle.title}</title><style>${bundle.css}</style></head><body>${bundle.html}<script>${bundle.js}</script></body></html>`;
+
+  const openInNewTab = () => {
+    play("type");
+    const blob = new Blob([srcDoc], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank", "noopener,noreferrer");
+    setTimeout(() => URL.revokeObjectURL(url), 60_000);
+  };
 
   const code =
     tab === "html" ? bundle.html : tab === "css" ? bundle.css : tab === "js" ? bundle.js : "";
@@ -60,7 +75,9 @@ export function CodeViewer({ bundle }: { bundle: Bundle }) {
       setCopied(label);
       play("type");
       setTimeout(() => setCopied(null), 1500);
-    } catch {}
+    } catch {
+      // clipboard write can fail silently (permissions/insecure context)
+    }
   };
 
   const download = async () => {
@@ -114,6 +131,32 @@ export function CodeViewer({ bundle }: { bundle: Bundle }) {
           ))}
         </div>
         <div className="flex gap-2 pr-3 shrink-0 items-center">
+          {tab === "preview" && (
+            <div className="flex border border-accent/20 mr-1">
+              {(Object.keys(DEVICES) as Array<keyof typeof DEVICES>).map((d) => (
+                <button
+                  key={d}
+                  onClick={() => {
+                    setDevice(d);
+                    play("type");
+                  }}
+                  className={`px-2 py-1.5 text-[9px] uppercase tracking-widest font-mono transition-colors ${
+                    device === d ? "bg-accent text-background" : "text-accent/60 hover:text-accent"
+                  }`}
+                >
+                  {DEVICES[d].label}
+                </button>
+              ))}
+            </div>
+          )}
+          {tab === "preview" && (
+            <button
+              onClick={openInNewTab}
+              className="text-[10px] uppercase tracking-widest text-accent hover:text-white font-mono px-2 transition-colors"
+            >
+              ↗ {lang === "uz" ? "OCHISH" : "OPEN"}
+            </button>
+          )}
           {tab !== "preview" && isRevealing && (
             <span className="text-[10px] text-accent/50 font-mono uppercase tracking-widest px-2 animate-pulse">
               DECODING...
@@ -139,13 +182,18 @@ export function CodeViewer({ bundle }: { bundle: Bundle }) {
 
       {/* Body */}
       {tab === "preview" ? (
-        <div className="w-full h-[500px] relative bg-white">
-          <iframe
-            title="preview"
-            sandbox="allow-scripts"
-            srcDoc={srcDoc}
-            className="w-full h-full"
-          />
+        <div className="w-full h-[500px] relative bg-[#0a0a0a] flex items-center justify-center overflow-auto p-0">
+          <div
+            className="h-full bg-white transition-[width] duration-300 shadow-[0_0_40px_rgba(0,0,0,0.4)]"
+            style={{ width: DEVICES[device].width, maxWidth: "100%" }}
+          >
+            <iframe
+              title="preview"
+              sandbox="allow-scripts"
+              srcDoc={srcDoc}
+              className="w-full h-full"
+            />
+          </div>
         </div>
       ) : (
         <div className="max-h-[500px] overflow-auto bg-[#011627] relative">

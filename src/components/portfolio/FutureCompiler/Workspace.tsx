@@ -35,6 +35,9 @@ const SAMPLE_PROMPTS_UZ = [
   "neyron animatsiyalar bilan AI startap sahifasi",
 ];
 
+const STYLE_PRESETS_EN = ["Glassmorphic", "Brutalist", "Minimal", "Cyberpunk", "Editorial"];
+const STYLE_PRESETS_UZ = ["Shishasimon", "Brutalist", "Minimal", "Kiberpank", "Jurnalistik"];
+
 const TERMINAL_LINES_EN = [
   "◉ FUTURE COMPILER v2035 — ONLINE",
   "◉ Neural engine initialized",
@@ -54,6 +57,7 @@ export function Workspace() {
   const { lang, t } = useLang();
   const { play } = useSound();
   const [prompt, setPrompt] = useState("");
+  const [activeStyle, setActiveStyle] = useState<string | null>(null);
   const [stageIndex, setStageIndex] = useState(-1);
   const [bundle, setBundle] = useState<Bundle | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -80,7 +84,9 @@ export function Workspace() {
       }
     };
     addLine(0);
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [lang]);
 
   // Cursor blink
@@ -138,19 +144,22 @@ export function Workspace() {
     }
 
     try {
-      const result = await compileWebsite({ data: { prompt } });
+      const finalPrompt = activeStyle ? `${prompt}\n\nVisual style: ${activeStyle}.` : prompt;
+      const result = await compileWebsite({ data: { prompt: finalPrompt } });
       setBundle(result);
       setStageIndex(-1);
       play("success");
       addTerminalLine(
-        lang === "uz" ? "✓ Kompilyatsiya muvaffaqiyatli yakunlandi" : "✓ Compilation successful"
+        lang === "uz" ? "✓ Kompilyatsiya muvaffaqiyatli yakunlandi" : "✓ Compilation successful",
       );
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Compile failed");
       setStageIndex(-1);
       play("error");
       addTerminalLine(
-        lang === "uz" ? "✗ Xato yuz berdi" : `✗ Error: ${e instanceof Error ? e.message : "Compile failed"}`
+        lang === "uz"
+          ? "✗ Xato yuz berdi"
+          : `✗ Error: ${e instanceof Error ? e.message : "Compile failed"}`,
       );
     }
   };
@@ -165,6 +174,7 @@ export function Workspace() {
   };
 
   const samples = lang === "uz" ? SAMPLE_PROMPTS_UZ : SAMPLE_PROMPTS_EN;
+  const stylePresets = lang === "uz" ? STYLE_PRESETS_UZ : STYLE_PRESETS_EN;
   const currentStage = stageIndex >= 0 ? STAGES[stageIndex] : null;
 
   return (
@@ -190,7 +200,9 @@ export function Workspace() {
           </div>
           <div className="flex items-center gap-1">
             <div className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse" />
-            <span className="text-[9px] font-mono text-accent/60 uppercase tracking-widest">LIVE</span>
+            <span className="text-[9px] font-mono text-accent/60 uppercase tracking-widest">
+              LIVE
+            </span>
           </div>
         </div>
 
@@ -228,11 +240,11 @@ export function Workspace() {
                 OUTLINE
               </div>
               <div className="space-y-1 text-[9px] font-mono text-white/20">
-                <div>  ▸ &lt;html&gt;</div>
-                <div>    ▸ &lt;head&gt;</div>
-                <div>    ▸ &lt;body&gt;</div>
-                <div>  ▸ styles</div>
-                <div>  ▸ scripts</div>
+                <div> ▸ &lt;html&gt;</div>
+                <div> ▸ &lt;head&gt;</div>
+                <div> ▸ &lt;body&gt;</div>
+                <div> ▸ styles</div>
+                <div> ▸ scripts</div>
               </div>
             </div>
 
@@ -318,13 +330,37 @@ export function Workspace() {
                 <span>{prompt.length} chars</span>
               </div>
               <div className="flex items-center gap-2 text-[9px] font-mono text-white/25">
-                {isFocused && (
-                  <span className="text-accent/60 animate-pulse">● EDITING</span>
-                )}
-                <span>Ln {lineCount}, Col {prompt.split("\n").pop()?.length ?? 0 + 1}</span>
+                {isFocused && <span className="text-accent/60 animate-pulse">● EDITING</span>}
+                <span>
+                  Ln {lineCount}, Col {prompt.split("\n").pop()?.length ?? 0 + 1}
+                </span>
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Style presets */}
+        <div className="flex items-center gap-2 px-4 py-2.5 border-t border-accent/10 bg-black/30 flex-wrap">
+          <span className="text-[9px] font-mono text-white/25 uppercase tracking-widest mr-1">
+            {lang === "uz" ? "Uslub:" : "Style:"}
+          </span>
+          {stylePresets.map((s) => (
+            <button
+              key={s}
+              onClick={() => {
+                setActiveStyle((prev) => (prev === s ? null : s));
+                play("type");
+              }}
+              disabled={isRunning}
+              className={`text-[9px] font-mono px-2.5 py-1 border uppercase tracking-widest transition-colors disabled:opacity-30 ${
+                activeStyle === s
+                  ? "border-accent bg-accent/20 text-accent"
+                  : "border-white/10 text-white/30 hover:border-accent/40 hover:text-accent/60"
+              }`}
+            >
+              {s}
+            </button>
+          ))}
         </div>
 
         {/* Bottom action bar */}
@@ -334,7 +370,10 @@ export function Workspace() {
             {samples.slice(0, 2).map((s) => (
               <button
                 key={s}
-                onClick={() => { setPrompt(s); play("type"); }}
+                onClick={() => {
+                  setPrompt(s);
+                  play("type");
+                }}
                 disabled={isRunning}
                 className="text-[9px] font-mono text-white/30 border border-white/10 px-2 py-1 hover:border-accent/40 hover:text-accent/60 transition-colors uppercase tracking-widest truncate max-w-[160px] disabled:opacity-30"
               >

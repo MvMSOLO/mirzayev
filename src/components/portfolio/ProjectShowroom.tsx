@@ -1,5 +1,5 @@
 // ProjectShowroom — premium glass card showcase
-import { useState } from "react";
+import { useState, memo } from "react";
 import { useLang } from "@/lib/i18n";
 import { motion, AnimatePresence } from "framer-motion";
 import { RevealBox, WordReveal } from "./TextReveal";
@@ -142,7 +142,7 @@ const showcaseProjects: ShowcaseProject[] = [
   },
 ];
 
-export function ProjectShowroom() {
+export const ProjectShowroom = memo(function ProjectShowroom() {
   const { lang } = useLang();
   const { playHover, playClick } = useSound();
   const [activeProjIdx, setActiveProjIdx] = useState(0);
@@ -164,13 +164,13 @@ export function ProjectShowroom() {
   };
 
   return (
-    <section id="project-showroom" className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-t border-border bg-[radial-gradient(ellipse_at_100%_100%,rgba(255,69,0,0.05)_0%,transparent_55%)] relative overflow-hidden">
+    <section id="project-showroom" className="px-5 md:px-20 lg:px-32 py-20 md:py-32 border-t border-white/[0.06] bg-[radial-gradient(ellipse_at_100%_100%,rgba(255,69,0,0.05)_0%,transparent_55%)] relative overflow-hidden">
       {/* Visual blueprint overlay */}
       <div className="absolute inset-0 bg-grid-dots opacity-[0.05] pointer-events-none" />
 
-      <RevealBox className="mb-10 flex gap-2 items-center">
-        <div className="h-[1px] w-8 bg-accent" />
-        <span className="text-[10px] uppercase tracking-widest text-accent font-mono">
+      <RevealBox className="mb-12 flex gap-3 items-center">
+        <div className="h-px w-10 bg-accent" />
+        <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent">
           // INTERACTIVE SHOWROOM · SIMULATION SANDBOX
         </span>
       </RevealBox>
@@ -190,7 +190,7 @@ export function ProjectShowroom() {
         </div>
 
         {/* Diagnostic Technical Meters */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 self-end bg-white/[0.02] border border-white/[0.07] backdrop-blur-sm p-4 rounded-sm shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 self-end bg-white/[0.015] border border-white/[0.06] backdrop-blur-sm p-5 shadow-[0_8px_40px_rgba(0,0,0,0.55)]">
           {[
             { label: "PERFORMANCE", val: activeProj.metrics.perf, icon: <Flame className="w-4 h-4 text-orange-500" /> },
             { label: "CLEAN CODE", val: activeProj.metrics.code, icon: <ShieldCheck className="w-4 h-4 text-green-500" /> },
@@ -226,10 +226,10 @@ export function ProjectShowroom() {
             key={p.id}
             onClick={() => handleProjChange(idx)}
             onMouseEnter={playHover}
-            className={`px-4 py-2 text-[10px] uppercase font-mono tracking-widest border transition-all whitespace-nowrap rounded-sm ${
+            className={`px-4 py-2 font-mono text-[9px] uppercase tracking-[0.18em] border transition-all duration-250 whitespace-nowrap ${
               activeProjIdx === idx
-                ? "border-accent bg-accent/10 text-accent font-bold"
-                : "border-border text-white/50 hover:border-white/20 hover:text-white"
+                ? "border-accent/50 bg-accent/8 text-accent font-bold"
+                : "border-white/[0.07] text-white/40 hover:border-white/15 hover:text-white/80"
             }`}
           >
             ◉ {p.name}
@@ -454,4 +454,4 @@ export function ProjectShowroom() {
       </div>
     </section>
   );
-}
+});
