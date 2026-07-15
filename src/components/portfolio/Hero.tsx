@@ -67,20 +67,24 @@ export function Hero() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.07,
-        delayChildren: 0.08,
+        // Stagger/lead-in widened (~40%/~90%) for a more cinematic, curtain-raise entrance.
+        staggerChildren: 0.1,
+        delayChildren: 0.15,
       },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 16, filter: "blur(6px)" },
+    // Offset +38% (16→22px), deeper blur (6→9px) and a slight scale-up add cinematic depth on load.
+    hidden: { opacity: 0, y: 22, scale: 0.97, filter: "blur(9px)" },
     visible: {
       opacity: 1,
       y: 0,
+      scale: 1,
       filter: "blur(0px)",
       transition: {
-        duration: 0.48,
+        // Duration +29% (0.48→0.62s): elements settle in with more weight, still well under 1s.
+        duration: 0.62,
         ease: [0.16, 1, 0.3, 1],
       },
     },
@@ -161,7 +165,7 @@ export function Hero() {
       <motion.div
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ delay: 0.5, duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
         className="absolute top-32 right-8 md:right-16 lg:right-32 pointer-events-none"
       >
         <div className="relative w-16 h-16">
@@ -225,7 +229,13 @@ export function Hero() {
               >
                 <WordReveal text={t("hero.last")} delay={0.2} />
                 {/* Subtle glow behind gradient text */}
-                <span className="absolute inset-0 blur-2xl opacity-30 pointer-events-none" style={{ background: "linear-gradient(155deg, #ff8a4c, #ff4500)", WebkitTextFillColor: "initial" }} />
+                <span
+                  className="absolute inset-0 blur-2xl opacity-30 pointer-events-none"
+                  style={{
+                    background: "linear-gradient(155deg, #ff8a4c, #ff4500)",
+                    WebkitTextFillColor: "initial",
+                  }}
+                />
               </span>
             </h1>
 
@@ -311,7 +321,15 @@ export function Hero() {
                 >
                   <svg viewBox="0 0 100 100" className="w-full h-full fill-current">
                     {/* Outer frame ring */}
-                    <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" strokeWidth="3" strokeDasharray="6 4" />
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="46"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeDasharray="6 4"
+                    />
                     {/* Fan hub */}
                     <circle cx="50" cy="50" r="12" />
                     {/* Blade 1 */}
@@ -383,7 +401,9 @@ export function Hero() {
             <div className="border border-white/5 bg-black/40 rounded-lg p-3 font-mono text-[9px] text-green-400/80 space-y-1 max-h-24 overflow-y-auto leading-relaxed select-none">
               <div className="flex items-center gap-1.5 border-b border-white/5 pb-1 mb-1.5">
                 <Terminal className="size-3 text-green-400/50" />
-                <span className="text-green-400/50 uppercase tracking-widest text-[8px]">HOLOGRAPHIC_PROCESS_STREAM</span>
+                <span className="text-green-400/50 uppercase tracking-widest text-[8px]">
+                  HOLOGRAPHIC_PROCESS_STREAM
+                </span>
               </div>
               {logs.map((log, i) => (
                 <div key={i} className="truncate">
@@ -395,16 +415,16 @@ export function Hero() {
         </div>
       </motion.div>
 
-      {/* Animated corner brackets that appear on load */}
+      {/* Animated corner brackets that appear on load — pushed slightly later/slower for cinematic pacing */}
       <motion.div
         initial={{ opacity: 0, scale: 1.2 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 2, duration: 1 }}
+        transition={{ delay: 2.2, duration: 1.2 }}
         className="absolute bottom-8 left-5 md:left-20 lg:left-32 pointer-events-none"
       >
         <motion.div
           animate={{ width: ["0%", "100%"] }}
-          transition={{ delay: 2.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ delay: 2.4, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           className="h-[1px] bg-accent/20 w-24"
         />
       </motion.div>

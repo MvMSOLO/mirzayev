@@ -23,11 +23,13 @@ export function useReveal<T extends HTMLElement = HTMLElement>(opts?: {
 
     const ctx = gsap.context(() => {
       gsap.from(targets, {
-        y: opts?.y ?? 40,
+        // Offset +30% (40→52px) and duration +25% (1→1.25s): reveal reads clearly without feeling slow.
+        y: opts?.y ?? 52,
         opacity: 0,
-        duration: 1,
+        duration: 1.25,
         ease: "expo.out",
-        stagger: opts?.stagger ?? 0.08,
+        // Stagger widened ~30% so multi-element cascades (lists/grids) are more visible.
+        stagger: opts?.stagger ?? 0.1,
         scrollTrigger: {
           trigger: ref.current!,
           start: "top 85%",

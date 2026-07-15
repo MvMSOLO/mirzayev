@@ -37,19 +37,21 @@ export function ToolkitGrid() {
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
+      // Stagger +50% (0.016→0.024s): with 24 tiles the cascade is now clearly visible tile-by-tile.
       opacity: 1,
-      transition: { staggerChildren: 0.016 },
+      transition: { staggerChildren: 0.024 },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.65, rotate: -6, y: 8 },
+    hidden: { opacity: 0, scale: 0.6, rotate: -8, y: 12 },
     visible: {
       opacity: 1,
       scale: 1,
       rotate: 0,
       y: 0,
-      transition: { type: "spring", stiffness: 440, damping: 24 },
+      // Lower damping (24→18) lets each tile overshoot slightly before settling — more spring personality.
+      transition: { type: "spring", stiffness: 440, damping: 18 },
     },
   };
 
@@ -65,7 +67,7 @@ export function ToolkitGrid() {
         </span>
       </RevealBox>
 
-      <h2 className="font-display text-5xl md:text-7xl uppercase leading-[0.85] tracking-tighter mb-12">
+      <h2 className="heading-hover font-display text-5xl md:text-7xl uppercase leading-[0.85] tracking-tighter mb-12 cursor-default">
         <WordReveal text={lang === "uz" ? "Ishlash arsenali" : "Working arsenal"} sound />
         <span className="text-accent">.</span>
       </h2>
@@ -82,18 +84,19 @@ export function ToolkitGrid() {
             key={tool.name}
             variants={itemVariants}
             whileHover={{
-              scale: 1.1,
+              scale: 1.14,
               zIndex: 10,
               rotateY: 14,
               rotateX: -9,
               boxShadow: "0 0 36px rgba(255,69,0,0.5)",
-              transition: { duration: 0.11, ease: [0.16, 1, 0.3, 1] },
+              // Bouncier easing + slightly longer duration so the pop-out reads as springy, not just fast.
+              transition: { duration: 0.24, ease: [0.34, 1.56, 0.64, 1] },
             }}
             className="aspect-square bg-white/[0.015] border border-white/[0.05] flex flex-col items-center justify-center relative group hover:bg-accent hover:border-accent transition-all duration-300 cursor-default shadow-[0_2px_8px_rgba(0,0,0,0.3)]"
             onMouseEnter={playHover}
           >
-            {/* Icon */}
-            <span className="text-lg text-white/20 group-hover:text-background/40 transition-colors mb-1 leading-none">
+            {/* Icon — added a scale pop on hover (transform-only) since it previously had none */}
+            <span className="text-lg text-white/20 group-hover:text-background/40 group-hover:scale-125 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] mb-1 leading-none">
               {tool.icon}
             </span>
 
@@ -112,7 +115,10 @@ export function ToolkitGrid() {
             <div className="absolute bottom-1 left-1 w-1.5 h-1.5 border-b border-l border-background/0 group-hover:border-background/40 transition-colors" />
 
             {/* Glow on hover */}
-            <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/100 transition-colors duration-300" style={{ zIndex: -1 }} />
+            <div
+              className="absolute inset-0 bg-accent/0 group-hover:bg-accent/100 transition-colors duration-300"
+              style={{ zIndex: -1 }}
+            />
           </motion.div>
         ))}
       </motion.div>
@@ -126,7 +132,9 @@ export function ToolkitGrid() {
         className="mt-6 flex items-center justify-between text-[10px] font-mono text-white/20 uppercase tracking-widest"
       >
         <span>{lang === "uz" ? "Texnologiyalar steki" : "Technology stack"}</span>
-        <span>{tools.length} {lang === "uz" ? "vosita" : "tools"}</span>
+        <span>
+          {tools.length} {lang === "uz" ? "vosita" : "tools"}
+        </span>
       </motion.div>
     </section>
   );

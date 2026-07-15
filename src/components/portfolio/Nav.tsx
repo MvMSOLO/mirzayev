@@ -56,12 +56,16 @@ export function Nav() {
   return (
     <>
       {/* Top Bar */}
-      <nav className={`fixed top-0 w-full z-50 px-5 md:px-12 lg:px-32 flex justify-between items-center pointer-events-none transition-all duration-500 ${scrolled ? "py-4 bg-background/80 backdrop-blur-xl border-b border-border/40 shadow-[0_4px_30px_rgba(0,0,0,0.4)]" : "py-6 mix-blend-difference"}`}>
+      <nav
+        className={`fixed top-0 w-full z-50 px-5 md:px-12 lg:px-32 flex justify-between items-center pointer-events-none transition-all duration-500 ${scrolled ? "py-4 bg-background/80 backdrop-blur-xl border-b border-border/40 shadow-[0_4px_30px_rgba(0,0,0,0.4)]" : "py-6 mix-blend-difference"}`}
+      >
         <motion.a
           href="#top"
           className="text-xs font-bold tracking-tighter text-white pointer-events-auto"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          // Logo hover/tap deepened with a springy transition — the brand mark gets a bit more life.
+          whileHover={{ scale: 1.08, rotate: -2 }}
+          whileTap={{ scale: 0.92 }}
+          transition={{ type: "spring", stiffness: 400, damping: 12 }}
           onMouseEnter={playHover}
           onClick={playClick}
         >
@@ -77,8 +81,9 @@ export function Nav() {
             onMouseEnter={playHover}
             aria-label="Toggle language"
             className="flex items-center gap-1 border border-white/30 px-2 py-1 text-[10px] uppercase tracking-widest font-bold text-white hover:bg-accent hover:border-accent transition-colors cursor-pointer"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 420, damping: 14 }}
           >
             <span className={lang === "uz" ? "text-accent" : "opacity-40"}>UZ</span>
             <span className="opacity-30">/</span>
@@ -117,9 +122,10 @@ export function Nav() {
                   animate={{ scaleY: 1 }}
                   exit={{
                     scaleY: 0,
-                    transition: { delay: (4 - i) * 0.03, duration: 0.36, ease: [0.76, 0, 0.24, 1] },
+                    transition: { delay: (4 - i) * 0.04, duration: 0.4, ease: [0.76, 0, 0.24, 1] },
                   }}
-                  transition={{ duration: 0.42, ease: [0.76, 0, 0.24, 1], delay: i * 0.04 }}
+                  // Stagger widened (0.04→0.055) so the strip wipe cascades more visibly across the screen.
+                  transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1], delay: i * 0.055 }}
                   className="flex-1 bg-[#0a0a0a] origin-top border-r border-white/5 last:border-r-0"
                 />
               ))}
@@ -173,7 +179,7 @@ export function Nav() {
                       target="_blank"
                       rel="noreferrer"
                       onMouseEnter={playHover}
-                      className="text-xs uppercase tracking-widest hover:text-accent transition-colors"
+                      className="text-xs uppercase tracking-widest hover:text-accent hover:-translate-y-0.5 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] inline-block"
                     >
                       Github
                     </a>
@@ -182,7 +188,7 @@ export function Nav() {
                       target="_blank"
                       rel="noreferrer"
                       onMouseEnter={playHover}
-                      className="text-xs uppercase tracking-widest hover:text-accent transition-colors"
+                      className="text-xs uppercase tracking-widest hover:text-accent hover:-translate-y-0.5 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] inline-block"
                     >
                       LinkedIn
                     </a>
@@ -191,7 +197,7 @@ export function Nav() {
                       target="_blank"
                       rel="noreferrer"
                       onMouseEnter={playHover}
-                      className="text-xs uppercase tracking-widest hover:text-accent transition-colors"
+                      className="text-xs uppercase tracking-widest hover:text-accent hover:-translate-y-0.5 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] inline-block"
                     >
                       YouTube
                     </a>
@@ -288,9 +294,10 @@ function MagneticNavItem({
         animate={{ y: 0, rotateZ: 0, opacity: 1 }}
         exit={{ y: "-110%", rotateZ: -8, opacity: 0 }}
         transition={{
-          duration: 0.48,
+          // Duration +25% and per-item delay +45% (0.038→0.055): menu items cascade in more visibly.
+          duration: 0.6,
           ease: [0.16, 1, 0.3, 1],
-          delay: 0.08 + idx * 0.038,
+          delay: 0.08 + idx * 0.055,
         }}
         href={item.href}
         onClick={onClick}
@@ -309,12 +316,16 @@ function MagneticNavItem({
               key={charIdx}
               className="inline-block"
               whileHover={{
-                y: -14,
-                scale: 1.14,
+                // Slightly bigger throw (y -14→-18, scale 1.14→1.2) with lower damping for more wobble/bounce.
+                y: -18,
+                scale: 1.2,
                 color: "var(--color-accent, #ea580c)",
-                transition: { type: "spring", stiffness: 600, damping: 10 }
+                transition: { type: "spring", stiffness: 520, damping: 8 },
               }}
-              style={{ display: char === " " ? "inline-block" : "inline-block", minWidth: char === " " ? "0.25em" : "auto" }}
+              style={{
+                display: char === " " ? "inline-block" : "inline-block",
+                minWidth: char === " " ? "0.25em" : "auto",
+              }}
             >
               {char}
             </motion.span>

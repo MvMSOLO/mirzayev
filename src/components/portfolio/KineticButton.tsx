@@ -32,7 +32,11 @@ export function KineticButton({ children, onClick, href, className = "", primary
 
   const inner = (
     <motion.span
-      whileTap={{ scale: 0.9 }}
+      // Hover lift + a bouncier press/release spring give the CTA more tactile personality.
+      // Lives on the inner span (not the magnetic outer ref) so it never fights the GSAP x/y pull.
+      whileHover={{ scale: 1.06 }}
+      whileTap={{ scale: 0.93 }}
+      transition={{ type: "spring", stiffness: 420, damping: 14 }}
       className="flex items-center gap-4 w-full justify-center pointer-events-none"
     >
       {primary && (

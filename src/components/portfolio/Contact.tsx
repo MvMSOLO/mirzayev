@@ -27,23 +27,28 @@ export function Contact() {
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
+      // Stagger +43% (0.042→0.06s): footer link list cascades in more visibly.
       opacity: 1,
-      transition: { staggerChildren: 0.042 },
+      transition: { staggerChildren: 0.06 },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, x: -14, filter: "blur(4px)" },
+    // Offset +29% (14→18px) and duration +25% (0.32→0.4s).
+    hidden: { opacity: 0, x: -18, filter: "blur(6px)" },
     visible: {
       opacity: 1,
       x: 0,
       filter: "blur(0px)",
-      transition: { duration: 0.32, ease: [0.16, 1, 0.3, 1] },
+      transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
     },
   };
 
   return (
-    <footer id="contact" className="px-5 md:px-20 lg:px-32 pt-16 pb-12 md:pt-24 md:pb-16 relative overflow-hidden border-t border-border">
+    <footer
+      id="contact"
+      className="px-5 md:px-20 lg:px-32 pt-16 pb-12 md:pt-24 md:pb-16 relative overflow-hidden border-t border-border"
+    >
       {/* Glow */}
       <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-accent/6 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent pointer-events-none" />
@@ -71,7 +76,7 @@ export function Contact() {
             </span>
           </div>
 
-          <h2 className="font-display text-6xl md:text-9xl uppercase leading-[0.85] mb-6 tracking-tighter">
+          <h2 className="heading-hover font-display text-6xl md:text-9xl uppercase leading-[0.85] mb-6 tracking-tighter cursor-default">
             <WordReveal text={t("contact.title_a")} sound /> <br />
             <span className="text-accent">
               <WordReveal text={t("contact.title_b")} delay={0.2} />
@@ -151,7 +156,10 @@ export function Contact() {
                     </span>
                     <span className="text-sm text-white/50 group-hover:text-accent transition-colors flex items-center gap-2 truncate max-w-[60%] relative z-10 group-hover:-translate-x-2 duration-300">
                       {s.v}
-                      <span className="opacity-0 group-hover:opacity-100 transition-opacity">↗</span>
+                      {/* Arrow previously only faded in — added a matching translate+scale pop (transform-only) */}
+                      <span className="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 group-hover:scale-110 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] inline-block">
+                        ↗
+                      </span>
                     </span>
                   </a>
                 </motion.li>
@@ -159,7 +167,10 @@ export function Contact() {
             </ul>
 
             {/* Status indicator */}
-            <BlurReveal delay={0.3} className="mt-8 p-4 border border-border relative overflow-hidden group hover:border-accent/40 transition-colors">
+            <BlurReveal
+              delay={0.3}
+              className="mt-8 p-4 border border-border relative overflow-hidden group hover:border-accent/40 transition-colors"
+            >
               <div className="absolute inset-0 bg-gradient-to-r from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="flex items-center gap-3 relative z-10">
                 <div className="relative">
@@ -179,11 +190,12 @@ export function Contact() {
           </motion.div>
         </div>
 
-        {/* Footer bottom */}
+        {/* Footer bottom — added a translateY so the reveal reads as motion, not just a fade */}
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="border-t border-border pt-8 flex flex-wrap justify-between items-center gap-4 text-[10px] uppercase tracking-widest font-mono"
         >
           <span className="opacity-40">© 2026 LABS-AM</span>

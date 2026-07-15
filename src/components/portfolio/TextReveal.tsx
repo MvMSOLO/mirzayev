@@ -28,7 +28,8 @@ export function WordReveal({
       viewport={{ once: true, margin: "-8%" }}
       onViewportEnter={() => sound && playReveal()}
       variants={{
-        visible: { transition: { staggerChildren: 0.014, delayChildren: delay } },
+        // Stagger +29% (0.014→0.018s) so the word-by-word cascade reads more distinctly.
+        visible: { transition: { staggerChildren: 0.018, delayChildren: delay } },
       }}
     >
       {words.map((word, i) => (
@@ -42,7 +43,8 @@ export function WordReveal({
                 opacity: 1,
                 rotateZ: 0,
                 scale: 1,
-                transition: { duration: 0.52, ease: EXPO },
+                // Duration +25% (0.52→0.65s): headline words settle in with a touch more weight.
+                transition: { duration: 0.65, ease: EXPO },
               },
             }}
           >
@@ -65,10 +67,11 @@ export function RevealBox({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 18, scale: 0.995 }}
+      // Offset +33% (18→24px) and duration +25% (0.52→0.65s): more noticeable entrance on scroll.
+      initial={{ opacity: 0, y: 24, scale: 0.995 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: "-8%" }}
-      transition={{ duration: 0.52, ease: EXPO, delay }}
+      transition={{ duration: 0.65, ease: EXPO, delay }}
       className={className}
     >
       {children}
@@ -90,7 +93,7 @@ export function ClipReveal({
       initial={{ clipPath: "polygon(0 0, 0 0, 0 100%, 0% 100%)", opacity: 0 }}
       whileInView={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", opacity: 1 }}
       viewport={{ once: true, margin: "-8%" }}
-      transition={{ duration: 0.62, ease: EXPO, delay }}
+      transition={{ duration: 0.78, ease: EXPO, delay }}
       className={className}
     >
       {children}
@@ -113,7 +116,7 @@ export function BlurReveal({
       initial={{ opacity: 0, filter: "blur(12px)", scale: 1.02 }}
       whileInView={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
       viewport={{ once: true, margin: "-8%" }}
-      transition={{ duration: 0.6, ease: EXPO, delay }}
+      transition={{ duration: 0.75, ease: EXPO, delay }}
       className={className}
     >
       {children}
@@ -135,20 +138,18 @@ export function SlideReveal({
 }) {
   const initial =
     direction === "left"
-      ? { opacity: 0, x: -36 }
+      ? { opacity: 0, x: -46 }
       : direction === "right"
-        ? { opacity: 0, x: 36 }
-        : { opacity: 0, y: 36 };
+        ? { opacity: 0, x: 46 }
+        : { opacity: 0, y: 46 };
   const animate =
-    direction === "left" || direction === "right"
-      ? { opacity: 1, x: 0 }
-      : { opacity: 1, y: 0 };
+    direction === "left" || direction === "right" ? { opacity: 1, x: 0 } : { opacity: 1, y: 0 };
   return (
     <motion.div
       initial={initial}
       whileInView={animate}
       viewport={{ once: true, margin: "-8%" }}
-      transition={{ duration: 0.52, ease: EXPO, delay }}
+      transition={{ duration: 0.65, ease: EXPO, delay }}
       className={className}
     >
       {children}

@@ -19,28 +19,36 @@ export function WhatIDo() {
   const { t } = useLang();
   const { playHover, playClick } = useSound();
   const items = [
-    "wid.1", "wid.2", "wid.3",
-    "wid.4", "wid.5", "wid.6",
-    "wid.7", "wid.8", "wid.9",
+    "wid.1",
+    "wid.2",
+    "wid.3",
+    "wid.4",
+    "wid.5",
+    "wid.6",
+    "wid.7",
+    "wid.8",
+    "wid.9",
   ] as const;
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
+      // Stagger +43% (0.042→0.06s): the 9-tile service grid cascades in more visibly.
       opacity: 1,
-      transition: { staggerChildren: 0.042 },
+      transition: { staggerChildren: 0.06 },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.88, rotateX: 14, y: 18, filter: "blur(4px)" },
+    // Offset +33% (18→24px) and duration +26% (0.38→0.48s): more presence as tiles land.
+    hidden: { opacity: 0, scale: 0.88, rotateX: 14, y: 24, filter: "blur(4px)" },
     visible: {
       opacity: 1,
       scale: 1,
       rotateX: 0,
       y: 0,
       filter: "blur(0px)",
-      transition: { duration: 0.38, ease: [0.16, 1, 0.3, 1] },
+      transition: { duration: 0.48, ease: [0.16, 1, 0.3, 1] },
     },
   };
 
@@ -59,7 +67,7 @@ export function WhatIDo() {
         <span className="text-[10px] uppercase tracking-widest text-accent">{t("wid.tag")}</span>
       </RevealBox>
 
-      <h2 className="font-display text-5xl md:text-7xl uppercase tracking-tighter mb-12 leading-[0.9]">
+      <h2 className="heading-hover font-display text-5xl md:text-7xl uppercase tracking-tighter mb-12 leading-[0.9] cursor-default">
         <WordReveal text={t("wid.title_a")} sound />
         <span className="text-accent ml-2 mr-2">
           <WordReveal text={t("wid.title_i")} delay={0.1} />
@@ -80,7 +88,7 @@ export function WhatIDo() {
             variants={itemVariants}
             whileHover={{
               z: 20,
-              transition: { duration: 0.1 },
+              transition: { duration: 0.2, ease: [0.34, 1.56, 0.64, 1] },
             }}
             className="group relative bg-[#0c0b0f] border-white/[0.04] p-6 flex flex-col justify-between overflow-hidden cursor-default min-h-[180px]"
             onMouseEnter={playHover}

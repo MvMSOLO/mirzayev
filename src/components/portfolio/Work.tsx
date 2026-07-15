@@ -14,19 +14,21 @@ export function Work() {
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
+      // Stagger +43% (0.07→0.1s) so the project cards cascade in more visibly.
       opacity: 1,
-      transition: { staggerChildren: 0.07 },
+      transition: { staggerChildren: 0.1 },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.93, y: 22, filter: "blur(6px)" },
+    // Offset +27% (22→28px), duration +25% (0.52→0.65s): cards arrive with a touch more weight.
+    hidden: { opacity: 0, scale: 0.93, y: 28, filter: "blur(6px)" },
     visible: {
       opacity: 1,
       scale: 1,
       y: 0,
       filter: "blur(0px)",
-      transition: { duration: 0.52, ease: [0.16, 1, 0.3, 1] },
+      transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] },
     },
   };
 
@@ -45,9 +47,12 @@ export function Work() {
         <RevealBox>
           <div className="mb-4 flex gap-2 items-center">
             <div className="h-[1px] w-8 bg-accent" />
-            <span className="text-[10px] uppercase tracking-widest text-accent">{t("work.tag")}</span>
+            <span className="text-[10px] uppercase tracking-widest text-accent">
+              {t("work.tag")}
+            </span>
           </div>
-          <h2 className="font-display text-5xl md:text-7xl uppercase tracking-tighter leading-[0.9]">
+          {/* heading-hover: subtle transform-only nudge — this title previously had no hover state */}
+          <h2 className="heading-hover font-display text-5xl md:text-7xl uppercase tracking-tighter leading-[0.9] cursor-default">
             <WordReveal text={t("work.title_a")} sound /> <br />
             <WordReveal text={t("work.title_b")} delay={0.2} />
           </h2>
@@ -65,10 +70,11 @@ export function Work() {
         {/* Hero project card */}
         <motion.a
           variants={itemVariants}
+          // Lift deepened (-10→-14) with a bouncy easing for a bit more spring personality on hover.
           whileHover={{
-            y: -10,
+            y: -14,
             boxShadow: "0 32px 64px -12px rgba(255, 69, 0, 0.35)",
-            transition: { duration: 0.18, ease: [0.16, 1, 0.3, 1] },
+            transition: { duration: 0.3, ease: [0.34, 1.56, 0.64, 1] },
           }}
           href="https://github.com/MvMSOLO"
           target="_blank"
@@ -110,7 +116,9 @@ export function Work() {
                 {t("work.neural.sub")}
               </p>
               <div className="flex items-center gap-3 mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <span className="text-[10px] font-mono text-accent uppercase tracking-widest">View Project ↗</span>
+                <span className="text-[10px] font-mono text-accent uppercase tracking-widest">
+                  View Project ↗
+                </span>
               </div>
             </div>
           </div>
@@ -119,7 +127,11 @@ export function Work() {
         {/* YouTube card */}
         <motion.a
           variants={itemVariants}
-          whileHover={{ y: -4, boxShadow: "0 15px 40px rgba(255, 69, 0, 0.2)", transition: { duration: 0.2 } }}
+          whileHover={{
+            y: -6,
+            boxShadow: "0 15px 40px rgba(255, 69, 0, 0.2)",
+            transition: { duration: 0.28, ease: [0.34, 1.56, 0.64, 1] },
+          }}
           href="https://www.youtube.com/@mvmsolo"
           target="_blank"
           rel="noopener noreferrer"
@@ -148,7 +160,11 @@ export function Work() {
         {/* Dashboard card */}
         <motion.a
           variants={itemVariants}
-          whileHover={{ y: -4, boxShadow: "0 15px 40px rgba(255, 69, 0, 0.15)", transition: { duration: 0.2 } }}
+          whileHover={{
+            y: -6,
+            boxShadow: "0 15px 40px rgba(255, 69, 0, 0.15)",
+            transition: { duration: 0.28, ease: [0.34, 1.56, 0.64, 1] },
+          }}
           href="https://github.com/MvMSOLO"
           target="_blank"
           rel="noopener noreferrer"
