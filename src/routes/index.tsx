@@ -25,6 +25,7 @@ import { KineticCursor } from "@/components/portfolio/KineticCursor";
 import { ScrollProgress } from "@/components/portfolio/ScrollProgress";
 import { InteractiveLabPlayground } from "@/components/portfolio/InteractiveLabPlayground";
 import { NeuralTimeline } from "@/components/portfolio/NeuralTimeline";
+import { SecretConsole } from "@/components/secret/SecretConsole";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -65,6 +66,7 @@ function Shell() {
         <Universe />
       )}
       <UniverseTransition />
+      <SecretConsole />
     </>
   );
 }
