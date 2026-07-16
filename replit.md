@@ -1,6 +1,12 @@
 # Project Overview
 
-A TanStack Start (React 19 + Vite + Nitro) app, originally created/exported from Lovable, using Supabase for backend/data.
+**AVAZBEK / 16** — A dual-mode interactive portfolio by Avazbek Mirzayev. Features two visual worlds:
+- **Kinetic mode** (dark "Technical Lab" aesthetic, grid patterns, coordinate tracking)
+- **Universe mode** (light organic aesthetic, fluid typography, "digital alchemy")
+
+Multi-language (UZ/EN), music player, GSAP/Framer Motion/Three.js animations, and SSR via TanStack Start.
+
+Originally created and exported from Lovable; now running on Replit with Supabase as the backend.
 
 ## Stack
 - Vite + `@lovable.dev/vite-tanstack-config` (wraps TanStack Start, Tailwind v4, tsconfig-paths, Nitro)
