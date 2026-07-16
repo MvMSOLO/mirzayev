@@ -1,6 +1,5 @@
 import neural from "@/assets/work-neural.jpg";
 import dashboard from "@/assets/work-dashboard.jpg";
-import vortex from "@/assets/work-vortex.jpg";
 import youtube from "@/assets/work-youtube.jpg";
 import { useLang } from "@/lib/i18n";
 import { motion, type Variants } from "framer-motion";

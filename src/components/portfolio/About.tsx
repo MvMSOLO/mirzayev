@@ -83,7 +83,8 @@ export const About = memo(function About() {
                 width={800}
                 height={1000}
                 className="w-full h-full object-cover grayscale mix-blend-luminosity opacity-80 group-hover:grayscale-0 group-hover:mix-blend-normal group-hover:opacity-100 transition-all duration-700 scale-105 group-hover:scale-100"
-                loading="lazy"
+                loading="eager"
+                fetchPriority="high"
               />
 
               {/* Gradient overlay */}

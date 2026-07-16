@@ -212,12 +212,10 @@ export const Contact = memo(function Contact() {
         </motion.div>
 
         <RevealBox className="mt-20 flex justify-center">
-          <div className="scale-125">
-            <KineticButton onClick={enter} primary>
-              {t("uni.enter")}
-              <span className="text-2xl font-bold ml-2">↗</span>
-            </KineticButton>
-          </div>
+          <KineticButton onClick={enter} primary className="px-12 py-5 text-sm">
+            {t("uni.enter")}
+            <span className="text-xl font-bold ml-2">↗</span>
+          </KineticButton>
         </RevealBox>
       </div>
     </footer>

@@ -90,7 +90,7 @@ export const WhatIDo = memo(function WhatIDo() {
               scale: 1.02,
               transition: { duration: 0.3, ease: [0.34, 1.56, 0.64, 1] },
             }}
-            className="group relative glass-dark border-gradient-accent rounded-xl p-8 flex flex-col justify-between overflow-hidden cursor-default min-h-[240px] shadow-glow-orange"
+            className="group relative glass-dark border-gradient-accent rounded-xl p-8 flex flex-col justify-between overflow-hidden cursor-default min-h-[280px] shadow-glow-orange"
             onMouseEnter={playHover}
           >
             {/* Hover fill — accent gradient */}
@@ -112,11 +112,14 @@ export const WhatIDo = memo(function WhatIDo() {
               </span>
             </div>
 
-            {/* Title */}
+            {/* Title + description */}
             <div className="relative z-10 mt-auto">
               <span className="font-display text-3xl md:text-4xl uppercase tracking-tight text-white group-hover:text-[#0a090c] transition-colors duration-400 block leading-[1.1] drop-shadow-md group-hover:drop-shadow-none">
                 {t(k)}
               </span>
+              <p className="mt-3 text-[11px] text-white/50 group-hover:text-[#0a090c]/70 transition-colors duration-400 leading-[1.7] font-sans max-w-[30ch]">
+                {t(`${k}.d` as Parameters<typeof t>[0])}
+              </p>
               <div className="h-[2px] w-0 bg-[#0a090c]/40 group-hover:w-full transition-all duration-600 mt-4" />
             </div>
 

@@ -403,14 +403,20 @@
 
 /* ===================== LANG SWITCH ===================== */
 @keyframes lang-wipe {
-  0% { transform: scaleX(0); }
-  40% { transform: scaleX(1); }
-  60% { transform: scaleX(1); }
+  0% { transform: scaleX(0); transform-origin: left; }
+  40% { transform: scaleX(1); transform-origin: left; }
+  60% { transform: scaleX(1); transform-origin: right; }
   100% { transform: scaleX(0); transform-origin: right; }
 }
 @keyframes lang-label {
   0%, 100% { opacity: 0; transform: translateY(20px); }
   40%, 60% { opacity: 1; transform: translateY(0); }
+}
+@utility animate-lang-wipe {
+  animation: lang-wipe 0.9s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+@utility animate-lang-label {
+  animation: lang-label 0.9s cubic-bezier(0.76, 0, 0.24, 1) forwards;
 }
 
 /* ===================== UNIVERSE TRANSITION ===================== */
@@ -607,6 +613,18 @@
   transform-origin: left;
   box-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
   pointer-events: none;
+}
+
+/* ===================== FOCUS VISIBLE ===================== */
+/* Keyboard-navigation ring — visible only on keyboard focus, never on mouse click */
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+/* Suppress the default ugly browser outline everywhere (we provide our own above) */
+:focus:not(:focus-visible) {
+  outline: none;
 }
 
 /* ===================== SELECTION ===================== */

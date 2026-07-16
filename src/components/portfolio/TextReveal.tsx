@@ -60,10 +60,12 @@ export function RevealBox({
   children,
   className = "",
   delay = 0,
+  ...rest
 }: {
   children: React.ReactNode;
   className?: string;
   delay?: number;
+  [key: string]: unknown;
 }) {
   return (
     <motion.div
@@ -73,6 +75,7 @@ export function RevealBox({
       viewport={{ once: true, margin: "-8%" }}
       transition={{ duration: 0.65, ease: EXPO, delay }}
       className={className}
+      {...(rest as any)}
     >
       {children}
     </motion.div>

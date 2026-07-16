@@ -65,14 +65,23 @@ export const dict: Dict = {
   "wid.title_i": { uz: "Men", en: "I" },
   "wid.title_b": { uz: " Quraman", en: " Build" },
   "wid.1": { uz: "Zamonaviy Web Ilovalar", en: "Modern Web Apps" },
+  "wid.1.d": { uz: "React 19 va TypeScript bilan tezkor, responsive ilovalar.", en: "Fast, responsive apps with React 19, TypeScript, and modern frameworks." },
   "wid.2": { uz: "Full-Stack Ishlanma", en: "Full-Stack Development" },
+  "wid.2.d": { uz: "Frontend va backend — to'liq tizim arxitekturasi va API.", en: "Frontend + backend — complete system architecture and API design." },
   "wid.3": { uz: "AI Asosidagi Loyihalar", en: "AI Powered Projects" },
+  "wid.3.d": { uz: "LLM, OpenAI va embeddings bilan aqlli raqamli mahsulotlar.", en: "Intelligent products powered by LLMs, OpenAI, and embeddings." },
   "wid.4": { uz: "UI/UX Dizayn", en: "UI/UX Design" },
+  "wid.4.d": { uz: "Foydalanuvchi uchun qulay, estetik va funksional interfeyslar.", en: "User-centered, aesthetic, and functional interface design." },
   "wid.5": { uz: "Landing Sahifalar", en: "Landing Pages" },
+  "wid.5.d": { uz: "Yuqori konversiyali marketing sahifalari — tezkor va esda qoluvchi.", en: "High-converting marketing pages — fast-loading and memorable." },
   "wid.6": { uz: "Dashboardlar", en: "Dashboards" },
+  "wid.6.d": { uz: "Realtaym grafiklar, KPI kartalar va analitika panellari.", en: "Real-time charts, KPI cards, and analytics dashboards." },
   "wid.7": { uz: "Portfolio Saytlar", en: "Portfolio Websites" },
+  "wid.7.d": { uz: "Siz kabi ijodkorlar uchun moslashtirilgan portfel saytlar.", en: "Custom portfolio sites that showcase your unique craft." },
   "wid.8": { uz: "Avtomatlashtirish", en: "Automation Systems" },
+  "wid.8.d": { uz: "Takrorlanadigan jarayonlarni avtomatlashtirish — botlar va AI.", en: "Automating repetitive workflows with bots and AI pipelines." },
   "wid.9": { uz: "Texnik Kontent", en: "Technical Content" },
+  "wid.9.d": { uz: "YouTube va blog kontenti — texnologiya, kod va dizayn haqida.", en: "YouTube & blog content about tech, code, and design." },
 
   // Skills
   "skills.tag": { uz: "// Imkoniyatlar", en: "// Capabilities" },
@@ -245,6 +254,12 @@ export function LangProvider({ children }: { children: ReactNode }) {
       if (saved === "uz" || saved === "en") setLangState(saved);
     } catch {}
   }, []);
+
+  // Keep <html lang> in sync with the active language so screen readers
+  // announce content in the correct language.
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
 
   const setLang = useCallback(
     (l: Lang) => {
