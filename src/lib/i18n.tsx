@@ -233,6 +233,16 @@ export const dict: Dict = {
   "nt.now": { uz: "HOZIR", en: "NOW" },
   "nt.age": { uz: "YOSH", en: "YRS" },
   "nt.hint": { uz: "Tugmani bosing yoki ← → bilan boshqaring", en: "Tap a node or steer with ← →" },
+
+  // Zen Garden
+  "uni.zen.tag": { uz: "// Zen Bog'i", en: "// Zen Garden" },
+  "uni.zen.title": { uz: "Raqamli Zen Bog'i", en: "Digital Zen Garden" },
+  "uni.zen.desc": { uz: "Sichqonchani qum ustida sudrab silliq to'lqinlar hosil qiling. Sayqallangan toshlarni joylashtirish va sokin tovushlarni his qilish uchun bosing.", en: "Rake smooth ripples across the sand with your cursor. Click to place polished stones and trigger meditative frequencies." },
+  "uni.zen.clear": { uz: "Bog'ni tozalash", en: "Clear Garden" },
+  "uni.zen.preset.title": { uz: "Andozalar", en: "Presets" },
+  "uni.zen.preset.1": { uz: "Sokin Oqim", en: "Silent Stream" },
+  "uni.zen.preset.2": { uz: "Kvant To'lqini", en: "Quantum Waves" },
+  "uni.zen.preset.3": { uz: "Abadiy Spiral", en: "Eternal Spiral" },
 };
 
 interface Ctx {

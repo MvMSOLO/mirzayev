@@ -3,6 +3,7 @@ import { UniverseHero } from "./Hero";
 import { UniverseManifesto } from "./Manifesto";
 import { UniverseWorks } from "./Works";
 import { UniverseInteractionLab } from "./InteractionLab";
+import { UniverseZenGarden } from "./ZenGarden";
 import { UniverseFooter } from "./Footer";
 import { MagneticCursor } from "./MagneticCursor";
 
@@ -21,6 +22,7 @@ export function Universe() {
         <UniverseManifesto />
         <UniverseWorks />
         <UniverseInteractionLab />
+        <UniverseZenGarden />
         <UniverseFooter />
       </div>
     </main>
