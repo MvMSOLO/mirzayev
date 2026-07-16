@@ -90,7 +90,7 @@ export const SkillsDetail = memo(function SkillsDetail() {
   return (
     <section
       id="skills"
-      className="px-5 md:px-20 lg:px-32 py-28 md:py-40 border-b border-white/[0.06] relative overflow-hidden bg-atmosphere-orange"
+      className="px-5 md:px-20 lg:px-32 py-16 md:py-40 border-b border-white/[0.06] relative overflow-hidden bg-atmosphere-orange"
     >
       {/* Background */}
       <div className="absolute inset-0 bg-grid-blueprint opacity-[0.03] pointer-events-none" />
@@ -102,9 +102,9 @@ export const SkillsDetail = memo(function SkillsDetail() {
         <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent font-bold drop-shadow-[0_0_8px_rgba(255,69,0,0.6)]">{t("skills.tag")}</span>
       </RevealBox>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-16 lg:gap-24 mb-20 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-10 lg:gap-24 mb-10 md:mb-20 items-start">
         <div>
-          <h2 className="font-display text-7xl md:text-9xl uppercase tracking-tighter mb-8 leading-[0.85] text-white">
+          <h2 className="font-display text-5xl sm:text-7xl md:text-9xl uppercase tracking-tighter mb-8 leading-[0.85] text-white">
             <WordReveal text={t("skills.title_a")} sound /> <br />
             <span className="text-accent drop-shadow-[0_0_20px_rgba(255,69,0,0.4)]">
               <WordReveal text={t("skills.title_b")} delay={0.1} />
@@ -175,7 +175,7 @@ export const SkillsDetail = memo(function SkillsDetail() {
       </div>
 
       {/* Main showcase */}
-      <div className="glass-card border-gradient-accent p-8 md:p-12 relative min-h-[450px] shadow-glow-orange rounded-2xl overflow-hidden">
+      <div className="glass-card border-gradient-accent p-6 md:p-12 relative shadow-glow-orange rounded-2xl overflow-hidden">
         
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.8fr] gap-14 items-center relative z-10">
           {/* Circular gauge */}

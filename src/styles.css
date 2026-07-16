@@ -682,6 +682,11 @@
   box-shadow: 0 20px 40px rgba(0,0,0,0.5);
 }
 
+/* ===================== MOBILE OVERFLOW GUARD ===================== */
+html, body {
+  overflow-x: hidden;
+}
+
 /* ===================== CUSTOM UNI-DRIFT ===================== */
 @keyframes uni-drift {
   0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }

@@ -102,7 +102,7 @@ export const Hero = memo(function Hero() {
   return (
     <section
       id="top"
-      className="relative pt-40 pb-32 overflow-hidden border-b border-white/[0.06] min-h-[95vh] flex flex-col justify-center bg-atmosphere-dual"
+      className="relative pt-24 md:pt-40 pb-16 md:pb-32 overflow-hidden border-b border-white/[0.06] min-h-[95vh] flex flex-col justify-center bg-atmosphere-dual"
     >
       <ParticleField className="opacity-80" />
       <HeroRails />
@@ -199,12 +199,12 @@ export const Hero = memo(function Hero() {
             </motion.div>
 
             {/* Name */}
-            <h1 className="font-display text-8xl md:text-[10rem] uppercase leading-[0.82] tracking-tighter mb-6">
+            <h1 className="font-display text-5xl sm:text-7xl md:text-8xl lg:text-[10rem] uppercase leading-[0.82] tracking-tighter mb-6">
               <span className="relative group inline-block">
                 <WordReveal text={t("hero.first")} sound />
                 {/* Glitch layers on hover */}
                 <span
-                  className="absolute inset-0 font-display text-8xl md:text-[10rem] uppercase leading-[0.82] tracking-tighter text-accent opacity-0 group-hover:opacity-100 pointer-events-none select-none drop-shadow-[0_0_20px_rgba(255,69,0,0.8)]"
+                  className="absolute inset-0 font-display text-5xl sm:text-7xl md:text-8xl lg:text-[10rem] uppercase leading-[0.82] tracking-tighter text-accent opacity-0 group-hover:opacity-100 pointer-events-none select-none drop-shadow-[0_0_20px_rgba(255,69,0,0.8)]"
                   style={{
                     animation: "glitch-1 0.4s linear infinite",
                     clipPath: "inset(0 0 90% 0)",

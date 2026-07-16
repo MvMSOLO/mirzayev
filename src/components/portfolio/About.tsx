@@ -71,7 +71,7 @@ export const About = memo(function About() {
         <span className="font-mono text-[11px] uppercase tracking-[0.3em] font-bold text-[var(--cyan)] drop-shadow-[0_0_8px_rgba(0,212,255,0.6)]">{t("about.tag")}</span>
       </RevealBox>
 
-      <div className="grid lg:grid-cols-[1fr_1.2fr] gap-20 items-center relative">
+      <div className="grid lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-20 items-center relative">
         {/* Portrait column */}
         <RevealBox className="flex justify-center lg:justify-start">
           <div className="relative inline-block">
@@ -210,7 +210,7 @@ export const About = memo(function About() {
       </div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-28 relative z-10">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-14 md:mt-28 relative z-10">
         {[
           { k: t("about.age.k"), v: 16, suffix: "" },
           { k: t("about.projects.k"), v: 50, suffix: "+" },
@@ -220,7 +220,7 @@ export const About = memo(function About() {
           <RevealBox
             key={s.k}
             delay={0.1 * i}
-            className="glass-dark border-gradient-accent p-8 group hover:border-[rgba(255,69,0,0.6)] transition-all duration-400 relative overflow-hidden cursor-default rounded-xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(255,69,0,0.2)]"
+            className="glass-dark border-gradient-accent p-5 md:p-8 group hover:border-[rgba(255,69,0,0.6)] transition-all duration-400 relative overflow-hidden cursor-default rounded-xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(255,69,0,0.2)]"
             onMouseEnter={playHover}
           >
             {/* Hover fill */}

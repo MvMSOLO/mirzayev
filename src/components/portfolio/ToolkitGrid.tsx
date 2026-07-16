@@ -55,7 +55,7 @@ export const ToolkitGrid = memo(function ToolkitGrid() {
   };
 
   return (
-    <section className="px-5 md:px-20 lg:px-32 py-28 md:py-40 border-t border-white/[0.06] relative overflow-hidden bg-atmosphere-cyan">
+    <section className="px-5 md:px-20 lg:px-32 py-16 md:py-40 border-t border-white/[0.06] relative overflow-hidden bg-atmosphere-cyan">
       {/* Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-60 bg-[var(--cyan)]/[0.05] blur-[100px] pointer-events-none" />
 
@@ -66,7 +66,7 @@ export const ToolkitGrid = memo(function ToolkitGrid() {
         </span>
       </RevealBox>
 
-      <h2 className="heading-hover font-display text-7xl md:text-9xl uppercase leading-[0.85] tracking-tighter mb-20 cursor-default text-white">
+      <h2 className="heading-hover font-display text-5xl sm:text-7xl md:text-9xl uppercase leading-[0.85] tracking-tighter mb-12 md:mb-20 cursor-default text-white">
         <WordReveal text={lang === "uz" ? "Ishlash arsenali" : "Working arsenal"} sound />
         <span className="text-[var(--cyan)] drop-shadow-[0_0_20px_rgba(0,212,255,0.4)]">.</span>
       </h2>

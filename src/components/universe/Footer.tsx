@@ -36,7 +36,7 @@ export function UniverseFooter() {
 
   return (
     <footer id="uni-contact" className="px-6 md:px-[8vw] py-[15vh] border-t border-[#111]/15 bg-[#F5F2EC]">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -102,7 +102,7 @@ export function UniverseFooter() {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ delay: 0.5 }}
-        className="mt-32 flex flex-col md:flex-row items-center justify-between gap-10 border-t border-[#111]/10 pt-12"
+        className="mt-16 md:mt-32 flex flex-col md:flex-row items-center justify-between gap-8 border-t border-[#111]/10 pt-10 md:pt-12"
       >
         <div className="text-[10px] uppercase tracking-[0.3em] text-[#111]/40 font-mono text-center md:text-left leading-relaxed">
           © 2026 avazbek mirzayev · all rights reserved <br className="md:hidden" /> · olmaliq

@@ -149,7 +149,7 @@ export function UniverseNav() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
                 transition={{ delay: 0.5, duration: 0.7 }}
-                className="mt-20 flex flex-wrap gap-10 border-t border-[#111]/10 pt-10"
+                className="mt-10 md:mt-20 flex flex-wrap gap-5 md:gap-10 border-t border-[#111]/10 pt-8 md:pt-10"
               >
                 <button
                   onClick={() => {

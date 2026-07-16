@@ -159,7 +159,7 @@ export const Philosophy = memo(function Philosophy() {
   return (
     <section
       id="philosophy"
-      className="px-5 md:px-20 lg:px-32 py-28 md:py-40 border-b border-white/[0.06] relative overflow-hidden bg-atmosphere-orange"
+      className="px-5 md:px-20 lg:px-32 py-16 md:py-40 border-b border-white/[0.06] relative overflow-hidden bg-atmosphere-orange"
     >
       {/* Visual blueprint overlay decoration */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,69,0,0.05),transparent_50%)] pointer-events-none" />
@@ -178,8 +178,8 @@ export const Philosophy = memo(function Philosophy() {
       </RevealBox>
 
       {/* Main Title */}
-      <div className="mb-20">
-        <h2 className="font-display text-7xl md:text-9xl uppercase tracking-tighter leading-[0.85] text-white">
+      <div className="mb-12 md:mb-20">
+        <h2 className="font-display text-5xl sm:text-7xl md:text-9xl uppercase tracking-tighter leading-[0.85] text-white">
           <WordReveal text={t("phi.title_a")} sound /> <br />
           <span className="text-accent drop-shadow-[0_0_20px_rgba(255,69,0,0.4)]">
             <WordReveal text={t("phi.title_b")} delay={0.2} />

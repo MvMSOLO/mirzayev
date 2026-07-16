@@ -54,7 +54,7 @@ export const WhatIDo = memo(function WhatIDo() {
   return (
     <section
       id="services"
-      className="px-5 md:px-20 lg:px-32 py-28 md:py-40 border-b border-white/[0.06] relative overflow-hidden bg-atmosphere-orange"
+      className="px-5 md:px-20 lg:px-32 py-16 md:py-40 border-b border-white/[0.06] relative overflow-hidden bg-atmosphere-orange"
     >
       {/* Background atmosphere */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_0%_60%,rgba(255,69,0,0.08)_0%,transparent_55%)] pointer-events-none" />
@@ -65,7 +65,7 @@ export const WhatIDo = memo(function WhatIDo() {
         <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent font-bold drop-shadow-[0_0_8px_rgba(255,69,0,0.6)]">{t("wid.tag")}</span>
       </RevealBox>
 
-      <h2 className="heading-hover font-display text-7xl md:text-9xl uppercase tracking-tighter mb-20 leading-[0.85] cursor-default text-white">
+      <h2 className="heading-hover font-display text-5xl sm:text-7xl md:text-9xl uppercase tracking-tighter mb-12 md:mb-20 leading-[0.85] cursor-default text-white">
         <WordReveal text={t("wid.title_a")} sound />
         <span className="text-accent ml-3 mr-3 drop-shadow-[0_0_20px_rgba(255,69,0,0.4)]">
           <WordReveal text={t("wid.title_i")} delay={0.1} />

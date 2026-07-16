@@ -40,7 +40,7 @@ export const Work = memo(function Work() {
         SEC_WORK // ARCHIVE.DB
       </div>
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gap-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:mb-20 gap-6 md:gap-8">
         <RevealBox>
           <div className="mb-6 flex gap-4 items-center">
             <div className="h-1 w-12 bg-gradient-to-r from-accent to-transparent rounded-full" />
@@ -48,7 +48,7 @@ export const Work = memo(function Work() {
               {t("work.tag")}
             </span>
           </div>
-          <h2 className="heading-hover font-display text-7xl md:text-9xl uppercase tracking-tighter leading-[0.85] cursor-default">
+          <h2 className="heading-hover font-display text-5xl sm:text-7xl md:text-9xl uppercase tracking-tighter leading-[0.85] cursor-default">
             <WordReveal text={t("work.title_a")} sound /> <br />
             <span className="text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
               <WordReveal text={t("work.title_b")} delay={0.18} />
@@ -97,7 +97,7 @@ export const Work = memo(function Work() {
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a090c] via-[#0a090c]/80 to-transparent group-hover:via-[#0a090c]/40 transition-all duration-700" />
           <div className="absolute inset-0 bg-[var(--cyan)]/0 group-hover:bg-[var(--cyan)]/[0.08] transition-all duration-500" />
 
-          <div className="relative z-10 p-10 h-full flex flex-col justify-between min-h-[500px]">
+          <div className="relative z-10 p-6 md:p-10 h-full flex flex-col justify-between min-h-[340px] md:min-h-[500px]">
             <div className="flex justify-between items-start">
               <span className="font-mono text-[10px] text-[var(--cyan)] font-bold px-3 py-2 bg-[var(--cyan)]/10 border border-[var(--cyan)]/30 uppercase tracking-[0.2em] backdrop-blur-md rounded shadow-[0_0_15px_rgba(0,212,255,0.2)]">
                 {t("work.tag.ai")}
@@ -105,7 +105,7 @@ export const Work = memo(function Work() {
               <span className="font-mono text-[11px] text-white/50 tabular-nums font-bold bg-black/40 px-3 py-1.5 rounded backdrop-blur-md border border-white/10">2025</span>
             </div>
             <div className="translate-y-8 group-hover:translate-y-0 transition-transform duration-500 ease-out-expo">
-              <h3 className="font-display text-5xl md:text-7xl uppercase mb-4 tracking-tighter text-white drop-shadow-lg">
+              <h3 className="font-display text-4xl md:text-7xl uppercase mb-4 tracking-tighter text-white drop-shadow-lg">
                 Neural Flow
               </h3>
               <p className="text-base text-white/70 group-hover:text-white/95 transition-colors duration-500 max-w-[45ch] leading-relaxed font-sans">
@@ -144,7 +144,7 @@ export const Work = memo(function Work() {
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a090c] via-[#0a090c]/60 to-transparent" />
           <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 shadow-[0_0_15px_#ff4500]" />
 
-          <div className="relative z-10 p-8 h-full flex flex-col justify-between min-h-[260px]">
+          <div className="relative z-10 p-6 md:p-8 h-full flex flex-col justify-between min-h-[200px] md:min-h-[260px]">
             <span className="font-mono text-[10px] text-accent font-bold self-start px-3 py-1.5 bg-accent/15 border border-accent/30 uppercase tracking-[0.2em] backdrop-blur-md rounded shadow-[0_0_15px_rgba(255,69,0,0.2)]">
               {t("work.tag.yt")}
             </span>
@@ -180,7 +180,7 @@ export const Work = memo(function Work() {
           <div className="absolute inset-0 bg-gradient-to-r from-[#0a090c]/95 via-[#0a090c]/60 to-transparent" />
           <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--cyan)] to-transparent scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 shadow-[0_0_15px_var(--cyan)]" />
 
-          <div className="relative z-10 p-8 h-full flex flex-col justify-between w-2/3">
+          <div className="relative z-10 p-6 md:p-8 h-full flex flex-col justify-between w-full md:w-2/3">
             <span className="font-mono text-[10px] text-[var(--cyan)] font-bold self-start px-3 py-1.5 bg-[var(--cyan)]/15 border border-[var(--cyan)]/30 uppercase tracking-[0.2em] backdrop-blur-md rounded shadow-[0_0_15px_rgba(0,212,255,0.2)]">
               {t("work.tag.fin")}
             </span>

@@ -91,7 +91,7 @@ export const Updates = memo(function Updates() {
   return (
     <section
       id="updates"
-      className="px-5 md:px-20 lg:px-32 py-28 md:py-40 border-t border-white/[0.06] relative overflow-hidden bg-atmosphere-cyan"
+      className="px-5 md:px-20 lg:px-32 py-16 md:py-40 border-t border-white/[0.06] relative overflow-hidden bg-atmosphere-cyan"
     >
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
@@ -109,9 +109,9 @@ export const Updates = memo(function Updates() {
         <span className="font-mono text-[11px] uppercase tracking-[0.3em] font-bold text-[var(--cyan)] drop-shadow-[0_0_8px_rgba(0,212,255,0.6)]">// UPDATES</span>
       </RevealBox>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.9fr] gap-16 lg:gap-24 mb-20">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.9fr] gap-10 lg:gap-24 mb-12 md:mb-20">
         <div>
-          <h2 className="font-display text-7xl md:text-9xl uppercase leading-[0.85] tracking-tighter text-white">
+          <h2 className="font-display text-5xl sm:text-7xl md:text-9xl uppercase leading-[0.85] tracking-tighter text-white">
             <WordReveal text={lang === "uz" ? "Versiya" : "Build"} sound />
             <br />
             <span className="text-[var(--cyan)] drop-shadow-[0_0_20px_rgba(0,212,255,0.4)]">
@@ -138,7 +138,7 @@ export const Updates = memo(function Updates() {
             <motion.div
               key={update.version}
               variants={cardVariants}
-              className="group relative glass-dark border border-white/10 rounded-xl p-8 hover:border-[var(--cyan)]/50 transition-all duration-500 overflow-hidden cursor-default shadow-md hover:shadow-glow-cyan"
+              className="group relative glass-dark border border-white/10 rounded-xl p-5 md:p-8 hover:border-[var(--cyan)]/50 transition-all duration-500 overflow-hidden cursor-default shadow-md hover:shadow-glow-cyan"
             >
               {/* Hover gradient */}
               <div className="absolute inset-0 bg-gradient-to-br from-[var(--cyan)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

@@ -75,19 +75,19 @@ export const Contact = memo(function Contact() {
             </span>
           </div>
 
-          <h2 className="heading-hover font-display text-7xl md:text-9xl uppercase leading-[0.85] mb-8 tracking-tighter cursor-default text-white">
+          <h2 className="heading-hover font-display text-5xl sm:text-7xl md:text-9xl uppercase leading-[0.85] mb-8 tracking-tighter cursor-default text-white">
             <WordReveal text={t("contact.title_a")} sound /> <br />
             <span className="text-accent drop-shadow-[0_0_20px_rgba(255,69,0,0.4)]">
               <WordReveal text={t("contact.title_b")} delay={0.2} />
             </span>
           </h2>
 
-          <p className="font-mono text-sm text-white/50 max-w-[55ch] mb-20 leading-[1.9] uppercase tracking-[0.2em] font-bold">
+          <p className="font-mono text-sm text-white/50 max-w-[55ch] mb-10 md:mb-20 leading-[1.9] uppercase tracking-[0.2em] font-bold">
             {t("contact.note")}
           </p>
         </RevealBox>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-28">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 mb-14 md:mb-28">
           {/* Social links */}
           <motion.div
             variants={containerVariants}

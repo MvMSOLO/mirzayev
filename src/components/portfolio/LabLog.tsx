@@ -40,7 +40,7 @@ export const LabLog = memo(function LabLog() {
   return (
     <section
       id="lab"
-      className="px-5 md:px-20 lg:px-32 py-28 md:py-40 border-t border-white/[0.06] relative overflow-hidden bg-atmosphere-orange"
+      className="px-5 md:px-20 lg:px-32 py-16 md:py-40 border-t border-white/[0.06] relative overflow-hidden bg-atmosphere-orange"
     >
       {/* Background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_100%_50%,rgba(255,69,0,0.05)_0%,transparent_60%)] pointer-events-none" />
@@ -51,10 +51,10 @@ export const LabLog = memo(function LabLog() {
         <span className="font-mono text-[11px] uppercase tracking-[0.3em] font-bold text-accent drop-shadow-[0_0_8px_rgba(255,69,0,0.6)]">// LAB LOG</span>
       </RevealBox>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-16 lg:gap-24">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-10 lg:gap-24">
         {/* Left: title */}
         <div>
-          <h2 className="font-display text-7xl md:text-9xl uppercase leading-[0.85] tracking-tighter text-white">
+          <h2 className="font-display text-5xl sm:text-7xl md:text-9xl uppercase leading-[0.85] tracking-tighter text-white">
             <WordReveal text={lang === "uz" ? "Ishlab" : "Build"} sound />
             <br />
             <WordReveal text={lang === "uz" ? "chiqarish" : "log"} delay={0.1} />
@@ -104,7 +104,7 @@ export const LabLog = memo(function LabLog() {
               variants={itemVariants}
               whileHover={{ x: 12, backgroundColor: "rgba(255, 69, 0, 0.08)" }}
               transition={{ duration: 0.3 }}
-              className="grid grid-cols-[100px_1fr_auto] gap-6 py-6 border-b border-white/[0.08] items-center group px-4 cursor-default relative overflow-hidden rounded-md"
+              className="grid grid-cols-[70px_1fr_auto] sm:grid-cols-[100px_1fr_auto] gap-4 sm:gap-6 py-5 border-b border-white/[0.08] items-center group px-3 sm:px-4 cursor-default relative overflow-hidden rounded-md"
             >
               {/* Left accent bar */}
               <div className="absolute left-0 top-0 bottom-0 w-0 bg-gradient-to-b from-accent to-[#ff7700] group-hover:w-[3px] transition-all duration-400 shadow-[0_0_10px_#ff4500]" />

@@ -148,7 +148,7 @@ export const Nav = memo(function Nav() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3, delay: 0.2 }}
-              className="absolute inset-0 text-white flex flex-col justify-center px-6 md:px-[10vw]"
+              className="absolute inset-0 text-white flex flex-col justify-center overflow-y-auto px-6 md:px-[10vw] py-24"
             >
               {/* Ambient glow */}
               <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[50vw] h-[50vw] bg-accent/[0.05] blur-[120px] rounded-full pointer-events-none" />
@@ -158,7 +158,7 @@ export const Nav = memo(function Nav() {
                 {t("nav.handle")} // NAV_MATRIX
               </div>
 
-              <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-16">
+              <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-8 md:gap-16">
                 <ul className="space-y-4 md:space-y-6">
                   {navItems.map((item, idx) => (
                     <MagneticNavItem
@@ -179,10 +179,10 @@ export const Nav = memo(function Nav() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 30 }}
                   transition={{ delay: 0.3, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex flex-col gap-10 max-w-sm"
+                  className="flex flex-col gap-6 md:gap-10 max-w-sm w-full md:w-auto"
                 >
                   {/* Status panel */}
-                  <div className="glass-dark border-gradient-cyan p-7 rounded-xl shadow-glow-cyan">
+                  <div className="glass-dark border-gradient-cyan p-5 md:p-7 rounded-xl shadow-glow-cyan">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="relative">
                         <div className="w-2 h-2 bg-[var(--cyan)] rounded-full" />
@@ -319,7 +319,7 @@ const MagneticNavItem = memo(function MagneticNavItem({
         href={item.href}
         onClick={onClick}
         onMouseEnter={onHover}
-        className="group flex items-center gap-8 font-display text-6xl md:text-8xl lg:text-[8vw] font-bold uppercase tracking-tighter leading-none hover:text-accent transition-colors duration-300 cursor-pointer drop-shadow-lg"
+        className="group flex items-center gap-4 md:gap-8 font-display text-4xl sm:text-5xl md:text-8xl lg:text-[8vw] font-bold uppercase tracking-tighter leading-none hover:text-accent transition-colors duration-300 cursor-pointer drop-shadow-lg"
       >
         <span className="text-[12px] font-mono tracking-[0.25em] font-bold text-[var(--cyan)]/40 group-hover:text-[var(--cyan)] transition-all duration-300 group-hover:translate-x-3 shrink-0">
           0{idx + 1}

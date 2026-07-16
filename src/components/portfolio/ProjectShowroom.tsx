@@ -237,7 +237,7 @@ export const ProjectShowroom = memo(function ProjectShowroom() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-[1.4fr_1fr] gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-8 items-start">
         {/* Responsive Virtual Device Box */}
         <div className="space-y-4">
           {/* Device switcher toolbar */}
@@ -281,7 +281,7 @@ export const ProjectShowroom = memo(function ProjectShowroom() {
                 viewport === "desktop"
                   ? "w-full max-w-2xl aspect-[16/10] rounded-md"
                   : viewport === "tablet"
-                    ? "w-[380px] h-[500px] rounded-lg"
+                    ? "w-[min(380px,85vw)] h-[min(500px,70vh)] rounded-lg"
                     : "w-[240px] h-[450px] rounded-[2rem] border-4 border-white/10"
               }`}
             >
