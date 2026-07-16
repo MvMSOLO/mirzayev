@@ -41,6 +41,7 @@ const KNOWN_COMMANDS = [
   "sudo",
   "matrix",
   "gipnos",
+  "zen",
   "exit",
   "close",
 ];
@@ -332,6 +333,34 @@ export function SecretTerminal({ onGipnos }: SecretTerminalProps) {
             onGipnos();
             setOpen(false);
           }, 900);
+          break;
+        }
+        case "zen": {
+          play("success");
+          if (mode !== "creative") {
+            enter();
+            print(
+              lang === "uz"
+                ? "→ Kreativ olamdagi Zen Bog'iga o'tilmoqda..."
+                : "→ Switching to Zen Garden in Creative Universe...",
+              "ok",
+            );
+            setTimeout(() => {
+              scrollTo("uni-zen");
+            }, 1000);
+          } else {
+            const el = document.getElementById("uni-zen");
+            const rect = el?.getBoundingClientRect();
+            const isAtZen = rect && rect.top >= -100 && rect.top < window.innerHeight / 2;
+            if (isAtZen) {
+              scrollTo("top");
+              print(lang === "uz" ? "→ Zen Bog'idan chiqildi." : "→ Exited Zen Garden.", "ok");
+            } else {
+              scrollTo("uni-zen");
+              print(lang === "uz" ? "→ Zen Bog'iga kirildi." : "→ Entered Zen Garden.", "ok");
+            }
+          }
+          closeTerminal();
           break;
         }
         case "exit":

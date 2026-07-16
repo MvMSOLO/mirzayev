@@ -57,8 +57,8 @@ export const Nav = memo(function Nav() {
     <>
       {/* Top Bar */}
       <nav
-        className={`fixed top-0 w-full z-50 px-5 md:px-12 lg:px-32 flex justify-between items-center pointer-events-none transition-all duration-700 ${
-          scrolled
+        className={`fixed top-0 w-full z-[53] px-5 md:px-12 lg:px-32 flex justify-between items-center pointer-events-none transition-all duration-700 ${
+          scrolled && !isOpen
             ? "py-4 bg-[#08070b]/80 backdrop-blur-3xl border-b border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.05)]"
             : "py-8 mix-blend-difference"
         }`}
@@ -121,7 +121,7 @@ export const Nav = memo(function Nav() {
             role="dialog"
             aria-modal="true"
             aria-label={t("nav.handle")}
-            className="fixed inset-0 z-40"
+            className="fixed inset-0 z-[52]"
           >
             {/* Kinetic Strip Background */}
             <div className="absolute inset-0 flex">
