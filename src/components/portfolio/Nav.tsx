@@ -57,15 +57,15 @@ export const Nav = memo(function Nav() {
     <>
       {/* Top Bar */}
       <nav
-        className={`fixed top-0 w-full z-50 px-5 md:px-12 lg:px-32 flex justify-between items-center pointer-events-none transition-all duration-500 ${
+        className={`fixed top-0 w-full z-50 px-5 md:px-12 lg:px-32 flex justify-between items-center pointer-events-none transition-all duration-700 ${
           scrolled
-            ? "py-3 bg-[#0d0c10]/90 backdrop-blur-2xl border-b border-white/[0.06] shadow-[0_1px_0_rgba(255,69,0,0.08),0_8px_40px_rgba(0,0,0,0.6)]"
-            : "py-6 mix-blend-difference"
+            ? "py-4 bg-[#08070b]/80 backdrop-blur-3xl border-b border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.05)]"
+            : "py-8 mix-blend-difference"
         }`}
       >
         <motion.a
           href="#top"
-          className="font-mono text-[11px] font-bold tracking-[0.2em] text-white pointer-events-auto uppercase"
+          className="font-mono text-[12px] font-bold tracking-[0.25em] text-white pointer-events-auto uppercase drop-shadow-md"
           whileHover={{ scale: 1.06, x: 2 }}
           whileTap={{ scale: 0.93 }}
           transition={{ type: "spring", stiffness: 420, damping: 14 }}
@@ -75,7 +75,7 @@ export const Nav = memo(function Nav() {
           {t("nav.handle")}
         </motion.a>
 
-        <div className="flex gap-3 items-center pointer-events-auto">
+        <div className="flex gap-4 items-center pointer-events-auto">
           {/* Language toggle */}
           <motion.button
             onClick={() => {
@@ -84,24 +84,24 @@ export const Nav = memo(function Nav() {
             }}
             onMouseEnter={playHover}
             aria-label="Toggle language"
-            className="relative flex items-center gap-0.5 border border-white/20 px-2.5 py-1.5 text-[9px] uppercase tracking-[0.2em] font-bold text-white hover:border-accent/60 transition-all duration-300 cursor-pointer overflow-hidden group"
+            className="relative flex items-center gap-1 glass-card border border-white/10 px-3 py-2 text-[10px] uppercase tracking-[0.2em] font-bold text-white hover:border-[var(--cyan)]/60 transition-all duration-300 cursor-pointer overflow-hidden group rounded-md shadow-sm"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.92 }}
             transition={{ type: "spring", stiffness: 420, damping: 14 }}
           >
-            <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/8 transition-colors duration-300" />
-            <span className={`relative z-10 transition-colors duration-200 ${lang === "uz" ? "text-accent" : "opacity-35"}`}>UZ</span>
+            <div className="absolute inset-0 bg-[var(--cyan)]/0 group-hover:bg-[var(--cyan)]/10 transition-colors duration-300" />
+            <span className={`relative z-10 transition-colors duration-200 ${lang === "uz" ? "text-[var(--cyan)] drop-shadow-[0_0_5px_rgba(0,212,255,0.6)]" : "opacity-40"}`}>UZ</span>
             <span className="relative z-10 opacity-20 mx-0.5">/</span>
-            <span className={`relative z-10 transition-colors duration-200 ${lang === "en" ? "text-accent" : "opacity-35"}`}>EN</span>
+            <span className={`relative z-10 transition-colors duration-200 ${lang === "en" ? "text-[var(--cyan)] drop-shadow-[0_0_5px_rgba(0,212,255,0.6)]" : "opacity-40"}`}>EN</span>
           </motion.button>
 
           {/* Status pill */}
-          <div className="hidden sm:flex items-center gap-2 text-white">
+          <div className="hidden sm:flex items-center gap-2.5 text-white glass-card px-3 py-2 border border-white/10 rounded-md">
             <div className="relative">
-              <div className="size-1.5 bg-accent rounded-full" />
+              <div className="size-2 bg-accent rounded-full" />
               <div className="absolute inset-0 bg-accent rounded-full animate-ping opacity-60" />
             </div>
-            <span className="text-[9px] uppercase tracking-[0.18em] opacity-60">{t("nav.status")}</span>
+            <span className="text-[10px] uppercase tracking-[0.2em] opacity-80 font-mono font-bold">{t("nav.status")}</span>
           </div>
 
           <MenuButton
@@ -132,34 +132,34 @@ export const Nav = memo(function Nav() {
                   animate={{ scaleY: 1 }}
                   exit={{
                     scaleY: 0,
-                    transition: { delay: (4 - i) * 0.04, duration: 0.38, ease: [0.76, 0, 0.24, 1] },
+                    transition: { delay: (4 - i) * 0.04, duration: 0.4, ease: [0.76, 0, 0.24, 1] },
                   }}
-                  transition={{ duration: 0.48, ease: [0.76, 0, 0.24, 1], delay: i * 0.055 }}
-                  className="flex-1 bg-[#09080d] origin-top"
+                  transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1], delay: i * 0.05 }}
+                  className="flex-1 bg-[#08070b] origin-top border-r border-white/[0.02]"
                 />
               ))}
             </div>
 
             {/* Accent grid overlay */}
-            <div className="absolute inset-0 bg-grid-blueprint opacity-[0.025] pointer-events-none" />
+            <div className="absolute inset-0 bg-grid-blueprint opacity-[0.03] pointer-events-none" />
 
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.22, delay: 0.18 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
               className="absolute inset-0 text-white flex flex-col justify-center px-6 md:px-[10vw]"
             >
               {/* Ambient glow */}
-              <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[40vw] h-[40vw] bg-accent/[0.04] blur-[100px] rounded-full pointer-events-none" />
+              <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[50vw] h-[50vw] bg-accent/[0.05] blur-[120px] rounded-full pointer-events-none" />
 
               {/* Top corner label */}
-              <div className="absolute top-6 left-6 md:left-[10vw] font-mono text-[9px] text-white/20 uppercase tracking-widest">
+              <div className="absolute top-8 left-6 md:left-[10vw] font-mono text-[10px] text-[var(--cyan)]/40 uppercase tracking-[0.25em] font-bold">
                 {t("nav.handle")} // NAV_MATRIX
               </div>
 
-              <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
-                <ul className="space-y-3 md:space-y-5">
+              <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-16">
+                <ul className="space-y-4 md:space-y-6">
                   {navItems.map((item, idx) => (
                     <MagneticNavItem
                       key={item.label}
@@ -175,31 +175,31 @@ export const Nav = memo(function Nav() {
                 </ul>
 
                 <motion.div
-                  initial={{ opacity: 0, x: 20 }}
+                  initial={{ opacity: 0, x: 30 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ delay: 0.24, duration: 0.44, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex flex-col gap-8 max-w-xs"
+                  exit={{ opacity: 0, x: 30 }}
+                  transition={{ delay: 0.3, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  className="flex flex-col gap-10 max-w-sm"
                 >
                   {/* Status panel */}
-                  <div className="border border-white/[0.07] bg-white/[0.02] p-5">
-                    <div className="flex items-center gap-2 mb-3">
+                  <div className="glass-dark border-gradient-cyan p-7 rounded-xl shadow-glow-cyan">
+                    <div className="flex items-center gap-3 mb-4">
                       <div className="relative">
-                        <div className="w-1.5 h-1.5 bg-accent rounded-full" />
-                        <div className="absolute inset-0 bg-accent rounded-full animate-ping opacity-50" />
+                        <div className="w-2 h-2 bg-[var(--cyan)] rounded-full" />
+                        <div className="absolute inset-0 bg-[var(--cyan)] rounded-full animate-ping opacity-60" />
                       </div>
-                      <span className="font-mono text-[9px] text-accent uppercase tracking-widest">
+                      <span className="font-mono text-[10px] text-[var(--cyan)] uppercase tracking-[0.25em] font-bold">
                         {t("nav.status")}
                       </span>
                     </div>
-                    <p className="text-xs text-white/60 leading-relaxed font-mono">
-                      Currently available for freelance projects & full-time roles starting 2026.
+                    <p className="text-sm text-white/70 leading-[1.8] font-sans font-light">
+                      Currently available for freelance projects & full-time roles starting 2026. Let's build the future together.
                     </p>
                   </div>
 
                   {/* Social links */}
-                  <div className="space-y-2">
-                    <span className="font-mono text-[9px] text-white/25 uppercase tracking-widest block mb-3">// Social</span>
+                  <div className="space-y-3">
+                    <span className="font-mono text-[10px] text-white/30 uppercase tracking-[0.25em] block mb-4 font-bold">// Social</span>
                     {[
                       { label: "Github", href: "https://github.com/MvMSOLO" },
                       { label: "LinkedIn", href: "https://linkedin.com/in/avazbek-mirzayev" },
@@ -211,10 +211,10 @@ export const Nav = memo(function Nav() {
                         target="_blank"
                         rel="noreferrer"
                         onMouseEnter={playHover}
-                        className="flex items-center justify-between group text-[10px] uppercase tracking-widest text-white/40 hover:text-accent transition-all duration-200 py-1"
+                        className="flex items-center justify-between group text-[12px] uppercase tracking-widest text-white/50 hover:text-accent transition-all duration-300 py-2 border-b border-white/10 hover:border-accent/40"
                       >
-                        <span className="group-hover:translate-x-1 transition-transform duration-200">{link.label}</span>
-                        <span className="opacity-0 group-hover:opacity-100 transition-opacity">↗</span>
+                        <span className="group-hover:translate-x-2 transition-transform duration-300 font-bold">{link.label}</span>
+                        <span className="opacity-0 group-hover:opacity-100 transition-opacity font-mono text-lg">↗</span>
                       </a>
                     ))}
                   </div>
@@ -225,9 +225,9 @@ export const Nav = memo(function Nav() {
                       toggleMute();
                     }}
                     onMouseEnter={playHover}
-                    className="flex items-center gap-2 text-[9px] uppercase tracking-widest text-white/35 hover:text-accent transition-colors self-start cursor-pointer"
+                    className="flex items-center gap-3 text-[10px] uppercase tracking-[0.2em] text-white/50 hover:text-accent transition-colors self-start cursor-pointer font-bold border border-white/10 glass-card px-4 py-2 rounded-md hover:border-accent/40"
                   >
-                    {isMuted ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
+                    {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                     {isMuted ? t("sound.off") : t("sound.on")}
                   </button>
                 </motion.div>
@@ -263,28 +263,28 @@ const MenuButton = memo(function MenuButton({
       aria-expanded={isOpen}
       aria-controls={controls}
       aria-label="Toggle menu"
-      className="relative w-10 h-10 flex items-center justify-center border border-white/15 hover:border-accent/60 transition-all duration-300 cursor-pointer pointer-events-auto group overflow-hidden"
+      className="relative w-12 h-12 flex items-center justify-center glass-card border border-white/15 hover:border-accent/80 transition-all duration-300 cursor-pointer pointer-events-auto group overflow-hidden rounded-md shadow-md"
     >
-      <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/8 transition-colors duration-300" />
-      <div className="relative w-4 h-4 flex flex-col justify-center items-center gap-[5px] z-10">
+      <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/15 transition-colors duration-300" />
+      <div className="relative w-5 h-5 flex flex-col justify-center items-center gap-[6px] z-10">
         <motion.span
           animate={{
             rotate: isOpen ? 45 : 0,
-            y: isOpen ? 6 : 0,
+            y: isOpen ? 7 : 0,
             backgroundColor: isOpen ? "#ff4500" : "#ffffff",
             width: isOpen ? "100%" : "100%",
           }}
-          transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
-          className="block h-[1.5px] w-full bg-white origin-center"
+          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="block h-[2px] w-full bg-white origin-center rounded-full"
         />
         <motion.span
           animate={{
             rotate: isOpen ? -45 : 0,
-            y: isOpen ? -6 : 0,
+            y: isOpen ? -7 : 0,
             backgroundColor: isOpen ? "#ff4500" : "#ffffff",
           }}
-          transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
-          className="block h-[1.5px] w-full bg-white origin-center"
+          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="block h-[2px] w-full bg-white origin-center rounded-full"
         />
       </div>
     </button>
@@ -308,20 +308,20 @@ const MagneticNavItem = memo(function MagneticNavItem({
     <li className="overflow-hidden p-2 -m-2">
       <motion.a
         ref={ref}
-        initial={{ y: "110%", rotateZ: 6, opacity: 0 }}
+        initial={{ y: "110%", rotateZ: 4, opacity: 0 }}
         animate={{ y: 0, rotateZ: 0, opacity: 1 }}
-        exit={{ y: "-110%", rotateZ: -6, opacity: 0 }}
+        exit={{ y: "-110%", rotateZ: -4, opacity: 0 }}
         transition={{
-          duration: 0.58,
+          duration: 0.6,
           ease: [0.16, 1, 0.3, 1],
-          delay: 0.08 + idx * 0.055,
+          delay: 0.1 + idx * 0.06,
         }}
         href={item.href}
         onClick={onClick}
         onMouseEnter={onHover}
-        className="group flex items-center gap-6 font-display text-5xl md:text-7xl lg:text-[7vw] font-bold uppercase tracking-tighter leading-none hover:text-accent transition-colors duration-200 cursor-pointer"
+        className="group flex items-center gap-8 font-display text-6xl md:text-8xl lg:text-[8vw] font-bold uppercase tracking-tighter leading-none hover:text-accent transition-colors duration-300 cursor-pointer drop-shadow-lg"
       >
-        <span className="text-[10px] font-mono tracking-widest text-white/25 group-hover:text-accent/50 transition-all duration-300 group-hover:translate-x-1 shrink-0">
+        <span className="text-[12px] font-mono tracking-[0.25em] font-bold text-[var(--cyan)]/40 group-hover:text-[var(--cyan)] transition-all duration-300 group-hover:translate-x-3 shrink-0">
           0{idx + 1}
         </span>
         <span className="relative overflow-hidden inline-flex">
@@ -330,13 +330,13 @@ const MagneticNavItem = memo(function MagneticNavItem({
               key={charIdx}
               className="inline-block"
               whileHover={{
-                y: -16,
+                y: -20,
                 scale: 1.15,
                 color: "#ff4500",
                 transition: { type: "spring", stiffness: 500, damping: 10 },
               }}
               style={{
-                minWidth: char === " " ? "0.25em" : "auto",
+                minWidth: char === " " ? "0.3em" : "auto",
               }}
             >
               {char}

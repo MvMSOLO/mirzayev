@@ -39,94 +39,93 @@ export const ToolkitGrid = memo(function ToolkitGrid() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.022 },
+      transition: { staggerChildren: 0.03 },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.55, rotate: -10, y: 14 },
+    hidden: { opacity: 0, scale: 0.5, rotate: -15, y: 20 },
     visible: {
       opacity: 1,
       scale: 1,
       rotate: 0,
       y: 0,
-      transition: { type: "spring", stiffness: 420, damping: 17 },
+      transition: { type: "spring", stiffness: 400, damping: 18 },
     },
   };
 
   return (
-    <section className="px-5 md:px-20 lg:px-32 py-20 md:py-32 border-t border-white/[0.06] relative overflow-hidden">
+    <section className="px-5 md:px-20 lg:px-32 py-28 md:py-40 border-t border-white/[0.06] relative overflow-hidden bg-atmosphere-cyan">
       {/* Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-40 bg-accent/[0.04] blur-[80px] pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-60 bg-[var(--cyan)]/[0.05] blur-[100px] pointer-events-none" />
 
-      <RevealBox className="mb-12 flex gap-3 items-center">
-        <div className="h-px w-10 bg-accent" />
-        <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent">
+      <RevealBox className="mb-14 flex gap-4 items-center">
+        <div className="h-1 w-12 bg-gradient-to-r from-[var(--cyan)] to-transparent rounded-full" />
+        <span className="font-mono text-[11px] uppercase tracking-[0.3em] font-bold text-[var(--cyan)] drop-shadow-[0_0_8px_rgba(0,212,255,0.6)]">
           // TOOLKIT · {tools.length} MODULES
         </span>
       </RevealBox>
 
-      <h2 className="heading-hover font-display text-5xl md:text-7xl uppercase leading-[0.85] tracking-tighter mb-14 cursor-default">
+      <h2 className="heading-hover font-display text-7xl md:text-9xl uppercase leading-[0.85] tracking-tighter mb-20 cursor-default text-white">
         <WordReveal text={lang === "uz" ? "Ishlash arsenali" : "Working arsenal"} sound />
-        <span className="text-accent">.</span>
+        <span className="text-[var(--cyan)] drop-shadow-[0_0_20px_rgba(0,212,255,0.4)]">.</span>
       </h2>
 
       <motion.div
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-5%" }}
-        className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-px bg-white/[0.04] [perspective:1200px]"
+        viewport={{ once: true, margin: "-10%" }}
+        className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4 [perspective:1200px]"
       >
         {tools.map((tool, i) => (
           <motion.div
             key={tool.name}
             variants={itemVariants}
             whileHover={{
-              scale: 1.16,
-              zIndex: 10,
-              rotateY: 12,
-              rotateX: -8,
-              boxShadow: "0 0 32px rgba(255,69,0,0.45), 0 8px 24px rgba(0,0,0,0.6)",
-              transition: { duration: 0.22, ease: [0.34, 1.56, 0.64, 1] },
+              scale: 1.15,
+              zIndex: 20,
+              rotateY: 15,
+              rotateX: -10,
+              transition: { duration: 0.3, ease: [0.34, 1.56, 0.64, 1] },
             }}
-            className="aspect-square bg-[#0c0b0f] flex flex-col items-center justify-center relative group hover:bg-accent hover:border-accent transition-colors duration-250 cursor-default"
+            className="aspect-square glass-card border-gradient-cyan flex flex-col items-center justify-center relative group hover:bg-[var(--cyan)] hover:border-[var(--cyan)] transition-colors duration-300 cursor-default rounded-xl shadow-md hover:shadow-[0_0_40px_rgba(0,212,255,0.5),0_15px_30px_rgba(0,0,0,0.8)]"
             onMouseEnter={playHover}
           >
             {/* Icon */}
-            <span className="text-base text-white/20 group-hover:text-background/50 group-hover:scale-130 transition-all duration-250 ease-[cubic-bezier(0.34,1.56,0.64,1)] mb-1 leading-none select-none"
+            <span className="text-3xl text-white/30 group-hover:text-[#0a090c]/70 group-hover:scale-125 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] mb-2 leading-none select-none drop-shadow-sm group-hover:drop-shadow-none"
               style={{ transform: "var(--tw-transform)" }}
             >
               {tool.icon}
             </span>
 
             {/* Name */}
-            <span className="font-mono text-[8px] md:text-[9px] uppercase tracking-[0.12em] group-hover:text-background transition-colors duration-250 text-center px-1 text-white/40 leading-tight">
+            <span className="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.2em] font-bold group-hover:text-[#0a090c] transition-colors duration-300 text-center px-2 text-white/60 leading-tight">
               {tool.name}
             </span>
 
             {/* Index */}
-            <span className="absolute top-1.5 left-1.5 font-mono text-[6px] text-white/15 group-hover:text-background/40 transition-colors duration-250">
+            <span className="absolute top-2 left-2 font-mono text-[8px] text-[var(--cyan)]/40 group-hover:text-[#0a090c]/40 font-bold transition-colors duration-300">
               {String(i + 1).padStart(2, "0")}
             </span>
 
             {/* Corner accents */}
-            <div className="absolute top-1.5 right-1.5 w-1.5 h-1.5 border-t border-r border-white/0 group-hover:border-background/35 transition-colors duration-250" />
-            <div className="absolute bottom-1.5 left-1.5 w-1.5 h-1.5 border-b border-l border-white/0 group-hover:border-background/35 transition-colors duration-250" />
+            <div className="absolute top-2 right-2 w-2 h-2 border-t-2 border-r-2 border-[var(--cyan)]/20 group-hover:border-[#0a090c]/40 transition-colors duration-300" />
+            <div className="absolute bottom-2 left-2 w-2 h-2 border-b-2 border-l-2 border-[var(--cyan)]/20 group-hover:border-[#0a090c]/40 transition-colors duration-300" />
           </motion.div>
         ))}
       </motion.div>
 
       {/* Footer label */}
       <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ delay: 0.2 }}
-        className="mt-5 flex items-center justify-between font-mono text-[9px] text-white/18 uppercase tracking-[0.2em]"
+        transition={{ delay: 0.3, duration: 0.6 }}
+        className="mt-12 flex items-center justify-between font-mono text-[11px] text-white/40 uppercase tracking-[0.25em] font-bold glass-card border border-white/10 px-6 py-4 rounded-lg shadow-md"
       >
         <span>{lang === "uz" ? "Texnologiyalar steki" : "Technology stack"}</span>
-        <span>
+        <span className="text-[var(--cyan)] drop-shadow-[0_0_5px_rgba(0,212,255,0.4)]">
           {tools.length} {lang === "uz" ? "vosita" : "tools"}
         </span>
       </motion.div>

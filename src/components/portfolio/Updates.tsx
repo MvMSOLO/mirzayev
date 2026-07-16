@@ -61,10 +61,10 @@ const updates: Update[] = [
 ];
 
 const tagStyles: Record<string, string> = {
-  major: "text-accent border-accent/50 bg-accent/8",
-  feature: "text-emerald-400 border-emerald-400/35 bg-emerald-400/8",
-  minor: "text-blue-400 border-blue-400/35 bg-blue-400/8",
-  fix: "text-amber-400 border-amber-400/35 bg-amber-400/8",
+  major: "text-accent border-accent/50 bg-accent/10 shadow-[0_0_10px_rgba(255,69,0,0.2)]",
+  feature: "text-[var(--cyan)] border-[var(--cyan)]/50 bg-[var(--cyan)]/10 shadow-[0_0_10px_rgba(0,212,255,0.2)]",
+  minor: "text-blue-400 border-blue-400/50 bg-blue-400/10 shadow-[0_0_10px_rgba(96,165,250,0.2)]",
+  fix: "text-amber-400 border-amber-400/50 bg-amber-400/10 shadow-[0_0_10px_rgba(251,191,36,0.2)]",
 };
 
 export const Updates = memo(function Updates() {
@@ -74,52 +74,52 @@ export const Updates = memo(function Updates() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.12 },
+      transition: { staggerChildren: 0.15 },
     },
   };
 
   const cardVariants: Variants = {
-    hidden: { opacity: 0, x: -28, filter: "blur(4px)" },
+    hidden: { opacity: 0, x: -40, filter: "blur(8px)" },
     visible: {
       opacity: 1,
       x: 0,
       filter: "blur(0px)",
-      transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] },
+      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
     },
   };
 
   return (
     <section
       id="updates"
-      className="px-5 md:px-20 lg:px-32 py-20 md:py-32 border-t border-white/[0.06] relative overflow-hidden"
+      className="px-5 md:px-20 lg:px-32 py-28 md:py-40 border-t border-white/[0.06] relative overflow-hidden bg-atmosphere-cyan"
     >
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/[0.03] rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent/[0.02] rounded-full blur-[80px]" />
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[var(--cyan)]/[0.04] rounded-full blur-[160px]" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-accent/[0.03] rounded-full blur-[120px]" />
       </div>
 
       {/* Corner label */}
-      <div className="absolute top-6 right-6 font-mono text-[8px] text-white/[0.08] hidden lg:block uppercase tracking-widest">
+      <div className="absolute top-10 right-10 font-mono text-[9px] text-[var(--cyan)]/40 font-bold hidden lg:block uppercase tracking-[0.25em] glass-card border border-[var(--cyan)]/20 px-3 py-1.5 rounded">
         SYS_LOG // CHANGELOG.DB
       </div>
 
-      <RevealBox className="mb-14 flex gap-3 items-center">
-        <div className="h-px w-10 bg-accent" />
-        <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent">// UPDATES</span>
+      <RevealBox className="mb-16 flex gap-4 items-center">
+        <div className="h-1 w-12 bg-gradient-to-r from-[var(--cyan)] to-transparent rounded-full" />
+        <span className="font-mono text-[11px] uppercase tracking-[0.3em] font-bold text-[var(--cyan)] drop-shadow-[0_0_8px_rgba(0,212,255,0.6)]">// UPDATES</span>
       </RevealBox>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.9fr] gap-14 mb-16">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.9fr] gap-16 lg:gap-24 mb-20">
         <div>
-          <h2 className="font-display text-5xl md:text-7xl uppercase leading-[0.85] tracking-tighter">
+          <h2 className="font-display text-7xl md:text-9xl uppercase leading-[0.85] tracking-tighter text-white">
             <WordReveal text={lang === "uz" ? "Versiya" : "Build"} sound />
             <br />
-            <span className="text-accent">
+            <span className="text-[var(--cyan)] drop-shadow-[0_0_20px_rgba(0,212,255,0.4)]">
               <WordReveal text={lang === "uz" ? "jurnali." : "log."} delay={0.2} />
             </span>
           </h2>
-          <BlurReveal delay={0.4} className="mt-7">
-            <p className="text-sm text-white/45 max-w-[34ch] leading-[1.9]">
+          <BlurReveal delay={0.4} className="mt-8">
+            <p className="text-base md:text-lg text-white/70 max-w-[34ch] leading-[1.8] font-sans font-light">
               {lang === "uz"
                 ? "Portfolio doimiy rivojlanib boradi. Har bir versiyada yangi imkoniyatlar, dizayn va texnologiyalar."
                 : "The portfolio evolves constantly. Every version brings new capabilities, design refinements, and technologies."}
@@ -131,48 +131,48 @@ export const Updates = memo(function Updates() {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-5%" }}
-          className="space-y-3"
+          viewport={{ once: true, margin: "-10%" }}
+          className="space-y-6"
         >
           {updates.map((update, i) => (
             <motion.div
               key={update.version}
               variants={cardVariants}
-              className="group relative border border-white/[0.07] bg-white/[0.01] backdrop-blur-sm p-6 hover:border-accent/40 transition-all duration-400 overflow-hidden cursor-default"
+              className="group relative glass-dark border border-white/10 rounded-xl p-8 hover:border-[var(--cyan)]/50 transition-all duration-500 overflow-hidden cursor-default shadow-md hover:shadow-glow-cyan"
             >
               {/* Hover gradient */}
-              <div className="absolute inset-0 bg-gradient-to-r from-accent/[0.04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[var(--cyan)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               {/* Top line sweep */}
-              <div className="absolute top-0 left-0 h-px w-0 bg-accent group-hover:w-full transition-all duration-600" />
+              <div className="absolute top-0 left-0 h-[2px] w-0 bg-[var(--cyan)] group-hover:w-full transition-all duration-700 shadow-[0_0_10px_var(--cyan)]" />
 
               <div className="relative z-10">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <span className="font-mono text-accent text-sm font-bold">{update.version}</span>
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                  <div className="flex items-center gap-4">
+                    <span className="font-mono text-[var(--cyan)] text-lg font-bold drop-shadow-[0_0_5px_rgba(0,212,255,0.6)]">{update.version}</span>
                     <span
-                      className={`font-mono text-[8px] uppercase tracking-[0.18em] border px-2 py-0.5 ${tagStyles[update.tag]}`}
+                      className={`font-mono text-[10px] uppercase tracking-[0.2em] border px-3 py-1 rounded font-bold ${tagStyles[update.tag]}`}
                     >
                       {update.tag}
                     </span>
                   </div>
-                  <span className="font-mono text-[9px] text-white/25 tabular-nums">{update.date}</span>
+                  <span className="font-mono text-[11px] text-white/40 tabular-nums font-bold bg-black/40 px-3 py-1.5 rounded-md border border-white/10">{update.date}</span>
                 </div>
 
-                <h4 className="font-display text-xl uppercase tracking-tight mb-4 group-hover:text-accent transition-colors duration-300">
+                <h4 className="font-display text-3xl md:text-4xl uppercase tracking-tight mb-6 text-white group-hover:text-[var(--cyan)] transition-colors duration-400 drop-shadow-md">
                   {update.title[lang]}
                 </h4>
 
-                <ul className="space-y-2">
+                <ul className="space-y-3">
                   {update.items.map((item, j) => (
                     <motion.li
                       key={j}
-                      initial={{ opacity: 0, x: -8 }}
+                      initial={{ opacity: 0, x: -10 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
-                      transition={{ delay: i * 0.08 + j * 0.04 }}
-                      className="flex items-center gap-2.5 font-mono text-[11px] text-white/40 group-hover:text-white/65 transition-colors duration-250"
+                      transition={{ delay: i * 0.1 + j * 0.05 }}
+                      className="flex items-start gap-4 font-sans text-sm text-white/60 group-hover:text-white/90 transition-colors duration-300 leading-[1.7]"
                     >
-                      <span className="w-1 h-1 bg-accent/40 group-hover:bg-accent flex-shrink-0 transition-colors duration-250" />
+                      <span className="w-1.5 h-1.5 bg-[var(--cyan)]/50 group-hover:bg-[var(--cyan)] flex-shrink-0 transition-colors duration-300 rounded-full mt-1.5 shadow-[0_0_5px_rgba(0,212,255,0.4)]" />
                       {item[lang]}
                     </motion.li>
                   ))}
@@ -184,28 +184,29 @@ export const Updates = memo(function Updates() {
       </div>
 
       {/* Author badge */}
-      <RevealBox delay={0.3}>
-        <div className="border-t border-white/[0.07] pt-10 flex flex-wrap items-center justify-between gap-6">
-          <div className="flex items-center gap-4">
+      <RevealBox delay={0.4}>
+        <div className="border-t border-white/10 pt-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+          <div className="flex items-center gap-6 glass-card px-6 py-4 rounded-xl border border-white/10 hover:border-accent/40 transition-colors duration-300 group shadow-md hover:shadow-glow-orange cursor-default">
             <div className="relative">
-              <div className="w-9 h-9 bg-accent flex items-center justify-center shadow-[0_0_20px_rgba(255,69,0,0.4)]">
-                <span className="text-background font-bold text-xs tracking-wider">AM</span>
+              <div className="w-12 h-12 bg-gradient-to-br from-accent to-[#ff7700] rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,69,0,0.6)] z-10 relative">
+                <span className="text-[#0a090c] font-display text-xl tracking-wider">AM</span>
               </div>
-              <div className="absolute -inset-1 bg-accent/20 rounded animate-ping-lg" />
+              <div className="absolute inset-0 bg-accent/40 rounded-full animate-ping-lg z-0" />
             </div>
             <div>
-              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/30">
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/50 font-bold mb-1 group-hover:text-accent transition-colors">
                 {lang === "uz" ? "Muallif" : "Creator"}
               </p>
-              <p className="text-sm font-bold tracking-tight mt-0.5">
-                <span className="text-accent">Avazbek Mirzayev</span>
-                <span className="text-white/45"> · Portfolio Labs</span>
+              <p className="text-base font-bold tracking-tight">
+                <span className="text-white drop-shadow-md">Avazbek Mirzayev</span>
+                <span className="text-white/40"> · Portfolio Labs</span>
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-5 font-mono text-[9px] text-white/22 uppercase tracking-[0.15em]">
+          <div className="flex flex-wrap items-center gap-4 md:gap-6 font-mono text-[10px] text-[var(--cyan)]/70 font-bold uppercase tracking-[0.2em] bg-black/40 px-6 py-4 rounded-lg border border-white/5">
             <span>React 19 · Vite · Tailwind v4</span>
+            <span className="hidden md:block w-1 h-1 bg-[var(--cyan)]/50 rounded-full" />
             <span className="hidden md:block">Bun · TanStack · Supabase</span>
           </div>
         </div>

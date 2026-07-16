@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
@@ -31,6 +32,8 @@
   --color-ring-offset-background: var(--background);
   --font-display: "Anton", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: 'Inter Tight', sans-serif;
+  --color-cyan: var(--cyan);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   /* Bouncier "spring" personality for hover/press micro-interactions (buttons, cards, icons) */
   --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -65,9 +68,9 @@
 
 :root {
   --radius: 0.5rem;
-  --background: #0d0c10;
+  --background: #0a090c;
   --foreground: #ffffff;
-  --card: #16151a;
+  --card: #111015;
   --card-foreground: #ffffff;
   --popover: #16151a;
   --popover-foreground: #ffffff;
@@ -78,6 +81,7 @@
   --muted: #1a191e;
   --muted-foreground: rgba(255, 255, 255, 0.5);
   --accent: #ff4500;
+  --cyan: #00d4ff;
   --accent-foreground: #ffffff;
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: #ffffff;
@@ -90,6 +94,11 @@
 @utility shadow-glow-orange {
   box-shadow: 0 0 25px rgba(255, 69, 0, 0.2), 0 0 60px rgba(255, 69, 0, 0.07), 0 30px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
   border-color: rgba(255, 69, 0, 0.3);
+}
+
+@utility shadow-glow-cyan {
+  box-shadow: 0 0 25px rgba(0, 212, 255, 0.2), 0 0 60px rgba(0, 212, 255, 0.07), 0 30px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
+  border-color: rgba(0, 212, 255, 0.3);
 }
 
 /* ===================== MARQUEE ===================== */
@@ -483,23 +492,51 @@
 
 /* ===================== GLASS MORPHISM ===================== */
 @utility glass {
-  background: rgba(255, 255, 255, 0.025);
+  background: rgba(255, 255, 255, 0.02);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 @utility glass-dark {
-  background: rgba(13, 12, 16, 0.82);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  background: rgba(10, 9, 12, 0.75);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 0 rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 @utility glass-card {
-  background: rgba(22, 21, 26, 0.78);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background: linear-gradient(145deg, rgba(22, 21, 26, 0.6), rgba(15, 14, 18, 0.8));
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06), inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@utility border-gradient-accent {
+  border: 1px solid transparent;
+  background: linear-gradient(var(--color-card), var(--color-card)) padding-box,
+              linear-gradient(135deg, rgba(255, 69, 0, 0.5), rgba(255, 69, 0, 0.05)) border-box;
+}
+
+@utility border-gradient-cyan {
+  border: 1px solid transparent;
+  background: linear-gradient(var(--color-card), var(--color-card)) padding-box,
+              linear-gradient(135deg, rgba(0, 212, 255, 0.5), rgba(0, 212, 255, 0.05)) border-box;
+}
+
+@utility bg-atmosphere-orange {
+  background: radial-gradient(ellipse at 50% 0%, rgba(255, 69, 0, 0.08) 0%, transparent 60%);
+}
+
+@utility bg-atmosphere-cyan {
+  background: radial-gradient(ellipse at 100% 100%, rgba(0, 212, 255, 0.06) 0%, transparent 60%);
+}
+
+@utility bg-atmosphere-dual {
+  background: radial-gradient(ellipse at 0% 0%, rgba(255, 69, 0, 0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 100% 100%, rgba(0, 212, 255, 0.05) 0%, transparent 50%);
 }
 
 /* ===================== MARQUEE EDGE MASK ===================== */

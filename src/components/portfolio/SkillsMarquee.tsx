@@ -25,27 +25,30 @@ export const SkillsMarquee = memo(function SkillsMarquee() {
   return (
     <section
       aria-label="Tech stack"
-      className="bg-accent py-4 overflow-hidden relative"
-      style={{ borderTop: "1px solid rgba(255,255,255,0.12)", borderBottom: "1px solid rgba(0,0,0,0.4)" }}
+      className="bg-accent py-8 overflow-hidden relative shadow-[0_0_50px_rgba(255,69,0,0.3)] z-10"
+      style={{ borderTop: "2px solid rgba(255,255,255,0.2)", borderBottom: "2px solid rgba(0,0,0,0.6)" }}
     >
       {/* Edge fade masks */}
-      <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-accent to-transparent z-10 pointer-events-none" />
-      <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-accent to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-accent to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-accent to-transparent z-10 pointer-events-none" />
 
       {/* Noise/texture overlay */}
-      <div className="absolute inset-0 opacity-[0.08] pointer-events-none bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.15)_0px,rgba(0,0,0,0.15)_1px,transparent_1px,transparent_3px)]" />
+      <div className="absolute inset-0 opacity-[0.15] pointer-events-none bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.2)_0px,rgba(0,0,0,0.2)_1px,transparent_1px,transparent_4px)] mix-blend-overlay" />
 
-      <div className="whitespace-nowrap flex">
+      {/* Lighting effect */}
+      <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
+
+      <div className="whitespace-nowrap flex relative z-10">
         <div className="flex animate-marquee-fast shrink-0">
           {[0, 1].map((k) => (
             <span
               key={k}
-              className="font-display text-xl md:text-3xl text-background uppercase pr-8 flex items-center gap-8 shrink-0 font-bold tracking-tight"
+              className="font-display text-4xl md:text-5xl text-[#0a090c] uppercase pr-12 flex items-center gap-12 shrink-0 font-bold tracking-tight drop-shadow-[0_2px_0_rgba(255,255,255,0.4)]"
             >
               {tokens.map((t) => (
-                <span key={t + k} className="flex items-center gap-7">
+                <span key={t + k} className="flex items-center gap-10">
                   {t}
-                  <span className="text-background/30 text-sm">✦</span>
+                  <span className="text-white/40 text-2xl drop-shadow-none">✦</span>
                 </span>
               ))}
             </span>

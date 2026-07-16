@@ -118,65 +118,65 @@ export function NeuralTimeline() {
     <section
       id="neural-timeline"
       aria-labelledby="neural-timeline-heading"
-      className="px-5 md:px-20 lg:px-32 py-16 md:py-24 border-t border-border relative overflow-hidden"
+      className="px-5 md:px-20 lg:px-32 py-24 md:py-32 border-t border-white/[0.06] relative overflow-hidden bg-atmosphere-dual"
     >
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-0 w-72 h-72 -translate-y-1/2 bg-accent/3 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-0 w-[500px] h-[500px] -translate-y-1/2 bg-[var(--cyan)]/[0.04] rounded-full blur-[120px]" />
       </div>
 
-      <div className="absolute top-8 right-8 font-mono text-[8px] text-white/10 hidden lg:block">
+      <div className="absolute top-10 right-10 font-mono text-[10px] text-[var(--cyan)]/40 font-bold hidden lg:block border border-[var(--cyan)]/20 px-4 py-2 glass-card rounded-md shadow-glow-cyan">
         SYS_LOG // NEURAL_TIMELINE.DB // AGE_11-16
       </div>
 
-      <RevealBox className="mb-10 flex gap-2 items-center">
-        <div className="h-[1px] w-8 bg-accent" />
-        <span className="text-[10px] uppercase tracking-widest text-accent">{t("nt.tag")}</span>
+      <RevealBox className="mb-16 flex gap-4 items-center">
+        <div className="h-1 w-12 bg-gradient-to-r from-[var(--cyan)] to-transparent rounded-full" />
+        <span className="text-[11px] uppercase tracking-[0.3em] text-[var(--cyan)] font-bold drop-shadow-[0_0_8px_rgba(0,212,255,0.6)]">{t("nt.tag")}</span>
       </RevealBox>
 
-      <div className="mb-16">
+      <div className="mb-24">
         <h2
           id="neural-timeline-heading"
-          className="font-display text-5xl md:text-7xl uppercase leading-[0.85] tracking-tighter"
+          className="font-display text-6xl md:text-8xl uppercase leading-[0.85] tracking-tighter text-white"
         >
           <WordReveal text={t("nt.title_a")} sound />
           <br />
-          <span className="text-accent">
+          <span className="text-accent drop-shadow-[0_0_20px_rgba(255,69,0,0.4)]">
             <WordReveal text={t("nt.title_b")} delay={0.2} />
           </span>
         </h2>
-        <BlurReveal delay={0.4} className="mt-6">
-          <p className="text-sm text-white/50 max-w-[42ch] leading-relaxed">{t("nt.sub")}</p>
+        <BlurReveal delay={0.4} className="mt-8">
+          <p className="text-base md:text-lg text-white/70 max-w-[50ch] leading-[1.8] font-sans font-light">{t("nt.sub")}</p>
         </BlurReveal>
       </div>
 
-      <RevealBox delay={0.15}>
-        <div className="overflow-x-auto pb-2 -mx-1 px-1">
+      <RevealBox delay={0.2}>
+        <div className="overflow-x-auto pb-6 -mx-2 px-2">
           <div
             role="tablist"
             aria-label={t("nt.tag")}
             aria-orientation="horizontal"
-            className="relative grid gap-1 min-w-[460px] md:min-w-0"
+            className="relative grid gap-2 min-w-[700px] md:min-w-0"
             style={{ gridTemplateColumns: `repeat(${timeline.length}, 1fr)` }}
           >
             {/* base rail */}
             <div
-              className="absolute left-0 right-0 top-4 md:top-5 h-px bg-border"
+              className="absolute left-0 right-0 top-8 md:top-10 h-[2px] bg-white/10 rounded-full"
               aria-hidden="true"
             />
             {/* traveled signal */}
             <motion.div
-              className="absolute left-0 top-4 md:top-5 h-px bg-accent"
+              className="absolute left-0 top-8 md:top-10 h-[2px] bg-gradient-to-r from-accent to-[var(--cyan)] rounded-full shadow-[0_0_15px_var(--cyan)]"
               initial={false}
               animate={{ width: `${pct}%` }}
-              transition={{ duration: 0.5, ease: EXPO }}
+              transition={{ duration: 0.6, ease: EXPO }}
               aria-hidden="true"
             />
             {/* traveling pulse */}
             <motion.div
-              className="absolute top-4 md:top-5 w-2 h-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow-[0_0_12px_2px_rgba(255,69,0,0.55)]"
+              className="absolute top-8 md:top-10 w-4 h-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--cyan)] shadow-[0_0_20px_rgba(0,212,255,0.8)] border-2 border-[#0a090c]"
               initial={false}
               animate={{ left: `${pct}%` }}
-              transition={{ duration: 0.5, ease: EXPO }}
+              transition={{ duration: 0.6, ease: EXPO }}
               aria-hidden="true"
             />
 
@@ -198,25 +198,25 @@ export function NeuralTimeline() {
                   onKeyDown={(e) => handleKeyDown(e, i)}
                   onMouseEnter={() => playHover()}
                   onClick={() => select(i)}
-                  className="group relative z-10 flex flex-col items-center gap-2.5 pt-6 outline-none rounded-lg focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className="group relative z-10 flex flex-col items-center gap-4 pt-10 outline-none rounded-xl focus-visible:ring-2 focus-visible:ring-[var(--cyan)] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a090c]"
                 >
                   {isLast && (
-                    <span className="absolute top-0 text-[8px] uppercase tracking-widest text-accent font-mono">
+                    <span className="absolute top-0 text-[10px] uppercase tracking-widest text-accent font-mono font-bold drop-shadow-[0_0_5px_rgba(255,69,0,0.6)] bg-accent/10 px-2 py-1 border border-accent/20 rounded">
                       {t("nt.now")}
                     </span>
                   )}
                   <span
-                    className={`flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full border font-mono text-[10px] md:text-xs transition-all duration-300 ${
+                    className={`flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full border-2 font-mono text-[14px] md:text-base font-bold transition-all duration-400 shadow-md ${
                       isActive
-                        ? "bg-accent border-accent text-background scale-110"
-                        : "bg-background border-border text-white/40 group-hover:border-accent/60 group-hover:text-accent"
+                        ? "bg-[var(--cyan)] border-[var(--cyan)] text-[#0a090c] scale-110 shadow-[0_0_20px_rgba(0,212,255,0.5)]"
+                        : "bg-[#0a090c] border-white/20 text-white/50 group-hover:border-[var(--cyan)]/60 group-hover:text-[var(--cyan)] group-hover:shadow-[0_0_15px_rgba(0,212,255,0.2)]"
                     }`}
                   >
                     {item.age}
                   </span>
                   <span
-                    className={`text-[8px] md:text-[9px] font-mono uppercase tracking-widest transition-colors ${
-                      isActive ? "text-accent" : "text-white/30"
+                    className={`text-[10px] md:text-[11px] font-mono uppercase tracking-[0.2em] font-bold transition-colors duration-400 ${
+                      isActive ? "text-[var(--cyan)] drop-shadow-[0_0_5px_rgba(0,212,255,0.4)]" : "text-white/40"
                     }`}
                   >
                     {item.year}
@@ -227,42 +227,43 @@ export function NeuralTimeline() {
           </div>
         </div>
 
-        <p className="mt-4 text-[10px] uppercase tracking-widest text-white/20 font-mono hidden md:block">
+        <p className="mt-8 text-[11px] uppercase tracking-[0.25em] text-white/30 font-mono hidden md:block text-center font-bold">
           {t("nt.hint")}
         </p>
 
-        <div className="mt-10 relative min-h-[176px]">
+        <div className="mt-14 relative min-h-[220px]">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeYear.age}
               id={`nt-panel-${activeYear.age}`}
               role="tabpanel"
               aria-labelledby={`nt-tab-${activeYear.age}`}
-              initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
+              initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-              transition={{ duration: 0.4, ease: EXPO }}
-              className="border border-border bg-background/50 backdrop-blur p-6 md:p-8 relative overflow-hidden"
+              exit={{ opacity: 0, y: -10, filter: "blur(8px)" }}
+              transition={{ duration: 0.5, ease: EXPO }}
+              className="glass-card border-gradient-cyan p-8 md:p-10 relative overflow-hidden rounded-2xl shadow-glow-cyan"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent pointer-events-none" />
-              <div className="relative z-10 flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+              <div className="absolute inset-0 bg-gradient-to-br from-[var(--cyan)]/[0.05] to-transparent pointer-events-none" />
+              <div className="relative z-10 flex flex-col md:flex-row md:items-start md:justify-between gap-8">
                 <div>
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="font-mono text-accent text-sm font-bold">
+                  <div className="flex items-center gap-4 mb-5">
+                    <span className="font-mono text-[var(--cyan)] text-lg font-bold drop-shadow-[0_0_5px_rgba(0,212,255,0.4)]">
                       {activeYear.age} {t("nt.age")}
                     </span>
-                    <span className="text-[9px] uppercase tracking-widest border border-border px-2 py-0.5 font-mono text-white/40">
+                    <span className="text-[10px] uppercase tracking-widest border border-white/20 px-3 py-1 font-mono text-white/60 bg-black/40 rounded-md font-bold">
                       {activeYear.year}
                     </span>
                   </div>
-                  <h3 className="font-display text-2xl md:text-3xl uppercase tracking-tight mb-3 text-foreground">
+                  <h3 className="font-display text-4xl md:text-5xl uppercase tracking-tight mb-4 text-white drop-shadow-md">
                     {activeYear.title[lang]}
                   </h3>
-                  <p className="text-sm text-white/60 max-w-[54ch] leading-relaxed">
+                  <p className="text-base md:text-lg text-white/75 max-w-[60ch] leading-[1.8] font-sans font-light">
                     {activeYear.desc[lang]}
                   </p>
                 </div>
-                <span className="text-[10px] uppercase tracking-widest font-mono text-accent/80 border border-accent/30 px-3 py-1.5 whitespace-nowrap">
+                <span className="text-[11px] uppercase tracking-[0.2em] font-mono text-accent font-bold glass-dark border border-accent/40 px-5 py-2.5 whitespace-nowrap rounded-md shadow-[0_0_15px_rgba(255,69,0,0.2)] flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse" />
                   {activeYear.tech}
                 </span>
               </div>
