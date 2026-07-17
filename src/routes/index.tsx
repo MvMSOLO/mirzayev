@@ -42,6 +42,7 @@ function Shell() {
           <KineticCursor />
           <div className="fixed inset-0 bg-grid-blueprint opacity-[0.03] pointer-events-none" />
           <div className="fixed inset-0 bg-grid-dots opacity-[0.1] pointer-events-none" />
+          <div className="fixed inset-0 bg-grid-fine pointer-events-none" />
           <TechnicalOverlay />
           <Nav />
           <Hero />

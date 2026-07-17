@@ -2,6 +2,7 @@ import { motion, type Variants } from "framer-motion";
 import { RevealBox, WordReveal, BlurReveal } from "./TextReveal";
 import { useLang } from "@/lib/i18n";
 import { memo } from "react";
+import { GitBranch } from "lucide-react";
 
 interface Update {
   version: string;
@@ -61,10 +62,10 @@ const updates: Update[] = [
 ];
 
 const tagStyles: Record<string, string> = {
-  major: "text-accent border-accent/50 bg-accent/10 shadow-[0_0_10px_rgba(255,69,0,0.2)]",
-  feature: "text-[var(--cyan)] border-[var(--cyan)]/50 bg-[var(--cyan)]/10 shadow-[0_0_10px_rgba(0,212,255,0.2)]",
-  minor: "text-blue-400 border-blue-400/50 bg-blue-400/10 shadow-[0_0_10px_rgba(96,165,250,0.2)]",
-  fix: "text-amber-400 border-amber-400/50 bg-amber-400/10 shadow-[0_0_10px_rgba(251,191,36,0.2)]",
+  major: "text-accent border-accent/50 bg-accent/10 shadow-[0_0_12px_rgba(255,69,0,0.3)]",
+  feature: "text-[var(--cyan)] border-[var(--cyan)]/50 bg-[var(--cyan)]/10 shadow-[0_0_12px_rgba(0,212,255,0.3)]",
+  minor: "text-blue-400 border-blue-400/50 bg-blue-400/10 shadow-[0_0_12px_rgba(96,165,250,0.25)]",
+  fix: "text-amber-400 border-amber-400/40 bg-amber-400/10 shadow-[0_0_16px_rgba(251,191,36,0.45)] drop-shadow-[0_0_6px_rgba(251,191,36,0.5)]",
 };
 
 export const Updates = memo(function Updates() {
@@ -106,6 +107,7 @@ export const Updates = memo(function Updates() {
 
       <RevealBox className="mb-16 flex gap-4 items-center">
         <div className="h-1 w-12 bg-gradient-to-r from-[var(--cyan)] to-transparent rounded-full" />
+        <GitBranch className="w-3.5 h-3.5 text-[var(--cyan)] opacity-80" />
         <span className="font-mono text-[11px] uppercase tracking-[0.3em] font-bold text-[var(--cyan)] drop-shadow-[0_0_8px_rgba(0,212,255,0.6)]">// UPDATES</span>
       </RevealBox>
 
@@ -138,7 +140,7 @@ export const Updates = memo(function Updates() {
             <motion.div
               key={update.version}
               variants={cardVariants}
-              className="group relative glass-dark border border-white/10 rounded-xl p-5 md:p-8 hover:border-[var(--cyan)]/50 transition-all duration-500 overflow-hidden cursor-default shadow-md hover:shadow-glow-cyan"
+              className="group relative glass-card-strong border border-white/8 rounded-xl p-5 md:p-8 hover:border-[var(--cyan)]/50 transition-all duration-500 overflow-hidden cursor-default shadow-md hover:shadow-glow-cyan"
             >
               {/* Hover gradient */}
               <div className="absolute inset-0 bg-gradient-to-br from-[var(--cyan)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -170,7 +172,7 @@ export const Updates = memo(function Updates() {
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: i * 0.1 + j * 0.05 }}
-                      className="flex items-start gap-4 font-sans text-sm text-white/60 group-hover:text-white/90 transition-colors duration-300 leading-[1.7]"
+                      className="flex items-start gap-4 font-sans text-sm text-white/42 group-hover:text-white/90 transition-colors duration-300 leading-[1.7]"
                     >
                       <span className="w-1.5 h-1.5 bg-[var(--cyan)]/50 group-hover:bg-[var(--cyan)] flex-shrink-0 transition-colors duration-300 rounded-full mt-1.5 shadow-[0_0_5px_rgba(0,212,255,0.4)]" />
                       {item[lang]}

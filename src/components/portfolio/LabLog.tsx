@@ -2,6 +2,7 @@ import { useLang } from "@/lib/i18n";
 import { motion, type Variants } from "framer-motion";
 import { RevealBox, WordReveal } from "./TextReveal";
 import { memo } from "react";
+import { ScrollText } from "lucide-react";
 
 const entries = [
   { v: "v6.0.0", uz: "500+ animatsiya, IDE qayta qurildi", en: "500+ animations, IDE rebuilt" },
@@ -48,6 +49,7 @@ export const LabLog = memo(function LabLog() {
 
       <RevealBox className="mb-16 flex gap-4 items-center">
         <div className="h-1 w-12 bg-gradient-to-r from-accent to-transparent rounded-full" />
+        <ScrollText className="w-3.5 h-3.5 text-accent opacity-80" />
         <span className="font-mono text-[11px] uppercase tracking-[0.3em] font-bold text-accent drop-shadow-[0_0_8px_rgba(255,69,0,0.6)]">// LAB LOG</span>
       </RevealBox>
 

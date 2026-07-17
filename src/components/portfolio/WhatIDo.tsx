@@ -3,6 +3,7 @@ import { motion, type Variants } from "framer-motion";
 import { RevealBox, WordReveal } from "./TextReveal";
 import { useSound } from "@/hooks/useSound";
 import { memo } from "react";
+import { Layers } from "lucide-react";
 
 const serviceIcons: Record<string, string> = {
   "wid.1": "⬡",
@@ -62,6 +63,7 @@ export const WhatIDo = memo(function WhatIDo() {
 
       <RevealBox className="mb-14 flex gap-4 items-center">
         <div className="h-1 w-12 bg-gradient-to-r from-accent to-transparent rounded-full" />
+        <Layers className="w-3.5 h-3.5 text-accent opacity-80" />
         <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent font-bold drop-shadow-[0_0_8px_rgba(255,69,0,0.6)]">{t("wid.tag")}</span>
       </RevealBox>
 
@@ -117,7 +119,7 @@ export const WhatIDo = memo(function WhatIDo() {
               <span className="font-display text-3xl md:text-4xl uppercase tracking-tight text-white group-hover:text-[#0a090c] transition-colors duration-400 block leading-[1.1] drop-shadow-md group-hover:drop-shadow-none">
                 {t(k)}
               </span>
-              <p className="mt-3 text-[11px] text-white/50 group-hover:text-[#0a090c]/70 transition-colors duration-400 leading-[1.7] font-sans max-w-[30ch]">
+              <p className="mt-3 text-[11px] text-white/38 group-hover:text-[#0a090c]/70 transition-colors duration-400 leading-[1.7] font-sans max-w-[30ch]">
                 {t(`${k}.d` as Parameters<typeof t>[0])}
               </p>
               <div className="h-[2px] w-0 bg-[#0a090c]/40 group-hover:w-full transition-all duration-600 mt-4" />

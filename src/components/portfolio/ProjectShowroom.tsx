@@ -190,11 +190,11 @@ export const ProjectShowroom = memo(function ProjectShowroom() {
         </div>
 
         {/* Diagnostic Technical Meters */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 self-end bg-white/[0.015] border border-white/[0.06] backdrop-blur-sm p-5 shadow-[0_8px_40px_rgba(0,0,0,0.55)]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 self-end glass-card-strong border border-white/[0.07] p-5 shadow-[0_8px_40px_rgba(0,0,0,0.55)] rounded-sm">
           {[
             { label: "PERFORMANCE", val: activeProj.metrics.perf, icon: <Flame className="w-4 h-4 text-orange-500" /> },
             { label: "CLEAN CODE", val: activeProj.metrics.code, icon: <ShieldCheck className="w-4 h-4 text-green-500" /> },
-            { label: "SYSTEM UX", val: activeProj.metrics.ux, icon: <Zap className="w-4 h-4 text-yellow-500" /> },
+            { label: "SYSTEM UX", val: activeProj.metrics.ux, icon: <Zap className="w-4 h-4 text-yellow-400 drop-shadow-[0_0_6px_rgba(250,204,21,0.7)]" /> },
             { label: "SEO OPTIMIZED", val: activeProj.metrics.seo, icon: <CheckCircle className="w-4 h-4 text-blue-500" /> },
           ].map((m) => (
             <div key={m.label} className="font-mono text-[10px] uppercase space-y-2">

@@ -3,6 +3,7 @@ import { motion, type Variants } from "framer-motion";
 import { RevealBox, WordReveal } from "./TextReveal";
 import { useSound } from "@/hooks/useSound";
 import { memo } from "react";
+import { Wrench } from "lucide-react";
 
 const tools = [
   { name: "REACT", icon: "⚛", category: "frontend" },
@@ -61,6 +62,7 @@ export const ToolkitGrid = memo(function ToolkitGrid() {
 
       <RevealBox className="mb-14 flex gap-4 items-center">
         <div className="h-1 w-12 bg-gradient-to-r from-[var(--cyan)] to-transparent rounded-full" />
+        <Wrench className="w-3.5 h-3.5 text-[var(--cyan)] opacity-80" />
         <span className="font-mono text-[11px] uppercase tracking-[0.3em] font-bold text-[var(--cyan)] drop-shadow-[0_0_8px_rgba(0,212,255,0.6)]">
           // TOOLKIT · {tools.length} MODULES
         </span>
@@ -89,7 +91,7 @@ export const ToolkitGrid = memo(function ToolkitGrid() {
               rotateX: -10,
               transition: { duration: 0.3, ease: [0.34, 1.56, 0.64, 1] },
             }}
-            className="aspect-square glass-card border-gradient-cyan flex flex-col items-center justify-center relative group hover:bg-[var(--cyan)] hover:border-[var(--cyan)] transition-colors duration-300 cursor-default rounded-xl shadow-md hover:shadow-[0_0_40px_rgba(0,212,255,0.5),0_15px_30px_rgba(0,0,0,0.8)]"
+            className="aspect-square glass-card-strong border-gradient-cyan flex flex-col items-center justify-center relative group hover:bg-[var(--cyan)] hover:border-[var(--cyan)] transition-colors duration-300 cursor-default rounded-xl shadow-md hover:shadow-[0_0_40px_rgba(0,212,255,0.5),0_15px_30px_rgba(0,0,0,0.8)]"
             onMouseEnter={playHover}
           >
             {/* Icon */}
@@ -100,7 +102,7 @@ export const ToolkitGrid = memo(function ToolkitGrid() {
             </span>
 
             {/* Name */}
-            <span className="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.2em] font-bold group-hover:text-[#0a090c] transition-colors duration-300 text-center px-2 text-white/60 leading-tight">
+            <span className="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.2em] font-bold group-hover:text-[#0a090c] transition-colors duration-300 text-center px-2 text-white/42 leading-tight">
               {tool.name}
             </span>
 

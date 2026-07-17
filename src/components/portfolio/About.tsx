@@ -3,7 +3,15 @@ import { useLang } from "@/lib/i18n";
 import { motion } from "framer-motion";
 import { WordReveal, RevealBox, CountUp, BlurReveal } from "./TextReveal";
 import { useSound } from "@/hooks/useSound";
-import { memo } from "react";
+import { memo, type ReactNode } from "react";
+import { ScanLine, Layers, Cpu, BrainCircuit, MonitorPlay } from "lucide-react";
+
+const nodeIcons: Record<string, React.ReactNode> = {
+  design: <Layers className="w-3.5 h-3.5" />,
+  dev: <Cpu className="w-3.5 h-3.5" />,
+  ai: <BrainCircuit className="w-3.5 h-3.5" />,
+  content: <MonitorPlay className="w-3.5 h-3.5" />,
+};
 
 const ecosystemNodes = [
   {
@@ -68,6 +76,7 @@ export const About = memo(function About() {
       {/* Section tag */}
       <RevealBox className="mb-16 flex gap-4 items-center">
         <div className="h-1 w-12 bg-gradient-to-r from-[var(--cyan)] to-transparent rounded-full" />
+        <ScanLine className="w-3.5 h-3.5 text-[var(--cyan)] opacity-80" />
         <span className="font-mono text-[11px] uppercase tracking-[0.3em] font-bold text-[var(--cyan)] drop-shadow-[0_0_8px_rgba(0,212,255,0.6)]">{t("about.tag")}</span>
       </RevealBox>
 
@@ -195,11 +204,12 @@ export const About = memo(function About() {
                       ACTIVE
                     </span>
                   </div>
-                  <h4 className="font-display text-lg uppercase tracking-wider text-white group-hover:text-[var(--cyan)] transition-colors duration-300 mb-1.5 relative z-10">
+                  <h4 className="font-display text-lg uppercase tracking-wider text-white group-hover:text-[var(--cyan)] transition-colors duration-300 mb-1.5 relative z-10 flex items-center gap-2">
+                    <span className="text-[var(--cyan)]/50 group-hover:text-[var(--cyan)] transition-colors duration-300">{nodeIcons[node.id]}</span>
                     {node.title[lang]}
                   </h4>
-                  <p className="font-mono text-[10px] text-white/50 mb-3 font-semibold relative z-10">{node.subtitle[lang]}</p>
-                  <p className="text-xs text-white/60 leading-[1.7] group-hover:text-white/90 transition-colors duration-300 relative z-10 font-sans">
+                  <p className="font-mono text-[10px] text-white/38 mb-3 font-semibold relative z-10">{node.subtitle[lang]}</p>
+                  <p className="text-xs text-white/48 leading-[1.7] group-hover:text-white/90 transition-colors duration-300 relative z-10 font-sans">
                     {node.desc[lang]}
                   </p>
                 </motion.div>
@@ -234,7 +244,7 @@ export const About = memo(function About() {
             >
               {s.raw ? s.raw : <CountUp end={s.v!} suffix={s.suffix} />}
             </p>
-            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-white/50 font-bold relative z-10 group-hover:text-white transition-colors duration-400">
+            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-white/38 font-bold relative z-10 group-hover:text-white transition-colors duration-400">
               {s.k}
             </p>
           </RevealBox>
