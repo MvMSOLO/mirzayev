@@ -1,24 +1,26 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
-interface TrailPoint {
-  x: number;
-  y: number;
-  id: number;
-}
+const TRAIL_LEN = 8;
 
 export function KineticCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
-  const [trail, setTrail] = useState<TrailPoint[]>([]);
-  const idRef = useRef(0);
+  const trailRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const histX = useRef<number[]>(Array(TRAIL_LEN).fill(0));
+  const histY = useRef<number[]>(Array(TRAIL_LEN).fill(0));
 
   useEffect(() => {
     if (window.matchMedia("(pointer: coarse)").matches) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const target = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    const pos = { ...target };
-    const ringPos = { ...target };
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    histX.current.fill(cx);
+    histY.current.fill(cy);
+
+    const target = { x: cx, y: cy };
+    const pos = { x: cx, y: cy };
+    const ringPos = { x: cx, y: cy };
     let raf = 0;
     let hover = false;
     let clicking = false;
@@ -28,37 +30,45 @@ export function KineticCursor() {
       target.y = e.clientY;
       const el = e.target as HTMLElement | null;
       hover = !!el?.closest("a,button,[data-cursor]");
-
-      // Add trail point
-      idRef.current++;
-      const id = idRef.current;
-      setTrail((prev) => {
-        const next = [...prev, { x: e.clientX, y: e.clientY, id }];
-        return next.slice(-8); // keep last 8 points
-      });
+      // Shift trail — pure array mutation, zero React re-renders
+      for (let i = TRAIL_LEN - 1; i > 0; i--) {
+        histX.current[i] = histX.current[i - 1];
+        histY.current[i] = histY.current[i - 1];
+      }
+      histX.current[0] = e.clientX;
+      histY.current[0] = e.clientY;
     };
-
     const onDown = () => { clicking = true; };
     const onUp = () => { clicking = false; };
 
     const loop = () => {
-      // Main cursor - fast follow
       pos.x += (target.x - pos.x) * 0.25;
       pos.y += (target.y - pos.y) * 0.25;
-
-      // Ring - slower follow
       ringPos.x += (target.x - ringPos.x) * 0.1;
       ringPos.y += (target.y - ringPos.y) * 0.1;
 
       if (cursorRef.current) {
         const scale = clicking ? 0.7 : hover ? 0.5 : 1;
-        cursorRef.current.style.transform = `translate(${pos.x}px, ${pos.y}px) scale(${scale}) rotate(${hover ? 45 : 0}deg)`;
+        cursorRef.current.style.transform = `translate(${pos.x}px,${pos.y}px) scale(${scale}) rotate(${hover ? 45 : 0}deg)`;
       }
-
       if (ringRef.current) {
         const scale = hover ? 2 : clicking ? 0.8 : 1;
-        ringRef.current.style.transform = `translate(${ringPos.x}px, ${ringPos.y}px) scale(${scale})`;
+        ringRef.current.style.transform = `translate(${ringPos.x}px,${ringPos.y}px) scale(${scale})`;
         ringRef.current.style.opacity = hover ? "0.6" : "0.3";
+      }
+
+      // Update trail dots directly — no React state, no re-renders
+      const refs = trailRefs.current;
+      const xs = histX.current;
+      const ys = histY.current;
+      for (let i = 0; i < TRAIL_LEN; i++) {
+        const el = refs[i];
+        if (!el) continue;
+        const sz = 2 + i * 0.5;
+        el.style.transform = `translate(${xs[i]}px,${ys[i]}px) translate(-50%,-50%)`;
+        el.style.opacity = String(((i + 1) / TRAIL_LEN) * 0.25);
+        el.style.width = `${sz}px`;
+        el.style.height = `${sz}px`;
       }
 
       raf = requestAnimationFrame(loop);
@@ -79,18 +89,12 @@ export function KineticCursor() {
 
   return (
     <>
-      {/* Trail dots */}
-      {trail.map((point, i) => (
+      {/* Trail dots — pre-rendered, zero React re-renders, updated via DOM refs in rAF */}
+      {Array.from({ length: TRAIL_LEN }, (_, i) => (
         <div
-          key={point.id}
+          key={i}
+          ref={(el) => { trailRefs.current[i] = el; }}
           className="pointer-events-none fixed top-0 left-0 z-[148] rounded-full bg-accent hidden md:block"
-          style={{
-            width: `${2 + i * 0.5}px`,
-            height: `${2 + i * 0.5}px`,
-            transform: `translate(${point.x}px, ${point.y}px) translate(-50%, -50%)`,
-            opacity: (i + 1) / trail.length * 0.25,
-            transition: "opacity 0.1s",
-          }}
           aria-hidden
         />
       ))}

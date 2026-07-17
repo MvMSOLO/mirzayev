@@ -7,46 +7,72 @@ import { useSound } from "@/hooks/useSound";
 import { useEffect, useState, useRef, memo } from "react";
 import { Cpu, Zap, Activity, Sliders, Play, Square, Terminal } from "lucide-react";
 
+// Isolated wave component — manages its own rAF loop via DOM ref.
+// Parent Hero NEVER re-renders at 60fps just for the wave animation.
+const WaveGraph = memo(function WaveGraph({ cpuLoad }: { cpuLoad: number }) {
+  const pathRef = useRef<SVGPathElement>(null);
+  const cpuRef = useRef(cpuLoad);
+  cpuRef.current = cpuLoad; // always fresh without triggering re-render
+
+  useEffect(() => {
+    let offset = 0;
+    let raf = 0;
+    const draw = () => {
+      const load = cpuRef.current;
+      const amp = 8 + (load / 100) * 22;
+      const freq = 0.05 + (load / 100) * 0.05;
+      const points: string[] = [];
+      for (let x = 0; x <= 220; x += 4) {
+        points.push(`${x},${(30 + Math.sin(x * freq + offset) * amp).toFixed(2)}`);
+      }
+      pathRef.current?.setAttribute("d", `M ${points.join(" L ")}`);
+      offset = (offset + 0.15) % (Math.PI * 2);
+      raf = requestAnimationFrame(draw);
+    };
+    raf = requestAnimationFrame(draw);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  return (
+    <svg className="w-full h-12" viewBox="0 0 220 60" preserveAspectRatio="none">
+      <path
+        ref={pathRef}
+        fill="none"
+        stroke="var(--cyan)"
+        strokeWidth="2"
+        style={{ filter: "drop-shadow(0 0 6px rgba(0,212,255,0.6))" }}
+      />
+      <line x1="55" y1="0" x2="55" y2="60" stroke="rgba(255,255,255,0.05)" />
+      <line x1="110" y1="0" x2="110" y2="60" stroke="rgba(255,255,255,0.05)" />
+      <line x1="165" y1="0" x2="165" y2="60" stroke="rgba(255,255,255,0.05)" />
+    </svg>
+  );
+});
+
 export const Hero = memo(function Hero() {
   const { t, lang } = useLang();
   const { playHover, playClick, playSynthesis } = useSound();
 
   // Quantum Cyber Console State
   const [cpuLoad, setCpuLoad] = useState(30);
-  const [temp, setTemp] = useState(42);
   const [logs, setLogs] = useState<string[]>([
     "// QUANTUM SYSTEM V6.12.0 INITIALIZED",
     "// NEURAL INTERFACE STATUS: CONNECTED",
     "// READY FOR HUMAN COMMAND INPUT...",
   ]);
-  const [waveOffset, setWaveOffset] = useState(0);
 
-  // Smooth ticking for simulated CPU load variation
+  // Derived — no separate state needed, no extra re-render
+  const temp = Math.floor(35 + (cpuLoad / 100) * 45);
+
+  // CPU load ticks every 2.5s — acceptable re-render cadence
   useEffect(() => {
     const id = setInterval(() => {
       setCpuLoad((prev) => {
         const delta = Math.floor(Math.random() * 7 - 3);
-        const next = Math.max(10, Math.min(95, prev + delta));
-        return next;
+        return Math.max(10, Math.min(95, prev + delta));
       });
     }, 2500);
     return () => clearInterval(id);
-  }, []);
-
-  // Update temperature based on CPU load
-  useEffect(() => {
-    setTemp(Math.floor(35 + (cpuLoad / 100) * 45));
-  }, [cpuLoad]);
-
-  // Sine Wave movement loop
-  useEffect(() => {
-    let animId = 0;
-    const animateWave = () => {
-      setWaveOffset((prev) => (prev + 0.15) % (Math.PI * 2));
-      animId = requestAnimationFrame(animateWave);
-    };
-    animId = requestAnimationFrame(animateWave);
-    return () => cancelAnimationFrame(animId);
   }, []);
 
   // Trigger sound feedback when sliding CPU slider
@@ -87,17 +113,6 @@ export const Hero = memo(function Hero() {
     },
   };
 
-  // Generate interactive wave path for graph HUD
-  const getWavePath = () => {
-    const points = [];
-    const amp = 8 + (cpuLoad / 100) * 22; // higher load = bigger waves!
-    const freq = 0.05 + (cpuLoad / 100) * 0.05; // higher load = higher frequency!
-    for (let x = 0; x <= 220; x += 4) {
-      const y = 30 + Math.sin(x * freq + waveOffset) * amp;
-      points.push(`${x},${y}`);
-    }
-    return `M ${points.join(" L ")}`;
-  };
 
   return (
     <section
@@ -285,24 +300,12 @@ export const Hero = memo(function Hero() {
 
             {/* Main Interactive Screen with Wave & Cooling Fan */}
             <div className="grid grid-cols-[1fr_110px] gap-5 mb-6 items-center glass-card border border-white/10 rounded-xl p-5 relative z-10 shadow-[inset_0_4px_20px_rgba(0,0,0,0.5)]">
-              {/* SVG Live Wave HUD */}
+              {/* SVG Live Wave HUD — isolated in WaveGraph, no parent re-renders */}
               <div className="h-20 flex flex-col justify-between relative overflow-hidden">
                 <span className="font-mono text-[9px] text-white/40 tracking-widest uppercase font-semibold">
                   WAVEFORM ANALYSIS: <span className="text-[var(--cyan)]">{cpuLoad}% LOAD</span>
                 </span>
-                <svg className="w-full h-12" viewBox="0 0 220 60" preserveAspectRatio="none">
-                  <path
-                    d={getWavePath()}
-                    fill="none"
-                    stroke="var(--cyan)"
-                    strokeWidth="2"
-                    style={{ filter: "drop-shadow(0 0 6px rgba(0, 212, 255, 0.6))" }}
-                  />
-                  {/* Subtle static grid crosslines in background */}
-                  <line x1="55" y1="0" x2="55" y2="60" stroke="rgba(255,255,255,0.05)" />
-                  <line x1="110" y1="0" x2="110" y2="60" stroke="rgba(255,255,255,0.05)" />
-                  <line x1="165" y1="0" x2="165" y2="60" stroke="rgba(255,255,255,0.05)" />
-                </svg>
+                <WaveGraph cpuLoad={cpuLoad} />
               </div>
 
               {/* Dynamic Cooling Fan Vector (Speed scales with CPU load!) */}

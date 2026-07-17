@@ -1,5 +1,4 @@
 import { useLang } from "@/lib/i18n";
-import { motion } from "framer-motion";
 import { memo } from "react";
 
 export const AetherFlow = memo(function AetherFlow() {
@@ -12,6 +11,7 @@ export const AetherFlow = memo(function AetherFlow() {
       opacity: "opacity-[0.88]",
       speed: "animate-marquee",
       color: "text-white",
+      spinDuration: "5s",
     },
     {
       key: "aether.2" as const,
@@ -20,6 +20,7 @@ export const AetherFlow = memo(function AetherFlow() {
       opacity: "opacity-[0.55]",
       speed: "animate-marquee-reverse",
       color: "text-accent",
+      spinDuration: "4s",
     },
     {
       key: "aether.3" as const,
@@ -28,6 +29,7 @@ export const AetherFlow = memo(function AetherFlow() {
       opacity: "opacity-[0.72]",
       speed: "animate-marquee-slow",
       color: "text-white",
+      spinDuration: "6s",
     },
   ];
 
@@ -45,11 +47,10 @@ export const AetherFlow = memo(function AetherFlow() {
       {/* Subtle grid */}
       <div className="absolute inset-0 bg-grid-blueprint opacity-[0.015] pointer-events-none" />
 
-      {/* Scanning beam */}
-      <motion.div
-        animate={{ x: ["-100%", "200%"] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+      {/* Scanning beam — CSS only, no Framer Motion */}
+      <div
         className="absolute top-0 bottom-0 w-48 bg-gradient-to-r from-transparent via-accent/[0.04] to-transparent pointer-events-none z-20"
+        style={{ animation: "aether-scan 10s linear infinite" }}
       />
 
       {rows.map((r, i) => (
@@ -61,13 +62,16 @@ export const AetherFlow = memo(function AetherFlow() {
                 className={`font-display uppercase tracking-tighter pr-12 ${r.size} ${r.opacity} ${r.color}`}
               >
                 {t(r.key)}{" "}
-                <motion.span
+                {/* Pure CSS spin — no Framer Motion overhead */}
+                <span
                   className="text-accent inline-block"
-                  animate={{ rotate: [0, 180, 360] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: "linear", delay: i * 0.7 }}
+                  style={{
+                    animation: `spin ${r.spinDuration} linear infinite`,
+                    animationDelay: `${i * 0.7}s`,
+                  }}
                 >
                   ✦
-                </motion.span>{" "}
+                </span>{" "}
               </span>
             ))}
           </div>

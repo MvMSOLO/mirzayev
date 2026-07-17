@@ -719,3 +719,9 @@ html, body {
 @utility animate-uni-drift {
   animation: uni-drift 8s ease-in-out infinite;
 }
+
+/* ===================== AETHER SCAN (CSS-only, no Framer Motion) ===================== */
+@keyframes aether-scan {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(300%); }
+}

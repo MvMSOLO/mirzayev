@@ -1,23 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 
 export function ScrollProgress() {
-  const [progress, setProgress] = useState(0);
+  const barRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => {
       const el = document.documentElement;
-      const scrolled = el.scrollTop;
       const total = el.scrollHeight - el.clientHeight;
-      setProgress(total > 0 ? (scrolled / total) * 100 : 0);
+      const pct = total > 0 ? (el.scrollTop / total) * 100 : 0;
+      // Direct DOM mutation — zero React re-renders on scroll
+      if (barRef.current) barRef.current.style.width = `${pct}%`;
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  return (
-    <div
-      id="scroll-progress-bar"
-      style={{ width: `${progress}%` }}
-    />
-  );
+  return <div ref={barRef} id="scroll-progress-bar" />;
 }

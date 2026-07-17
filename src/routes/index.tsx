@@ -26,10 +26,38 @@ import { ScrollProgress } from "@/components/portfolio/ScrollProgress";
 import { InteractiveLabPlayground } from "@/components/portfolio/InteractiveLabPlayground";
 import { NeuralTimeline } from "@/components/portfolio/NeuralTimeline";
 import { SecretConsole } from "@/components/secret/SecretConsole";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
+
+/** Defer mounting until the element is near the viewport.
+ *  SSR-safe: renders nothing on the server (Suspense boundary not needed),
+ *  then activates on the client when scrolled into view (rootMargin: 300px).
+ */
+function LazySection({ children }: { children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setMounted(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "300px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return <div ref={ref}>{mounted ? children : null}</div>;
+}
 
 function Shell() {
   const { mode } = useUniverse();
@@ -45,23 +73,25 @@ function Shell() {
           <div className="fixed inset-0 bg-grid-fine pointer-events-none" />
           <TechnicalOverlay />
           <Nav />
+          {/* Above-fold: load immediately */}
           <Hero />
           <About />
           <NeuralTimeline />
-          <WhatIDo />
-          <SkillsMarquee />
-          <SkillsDetail />
-          <ToolkitGrid />
-          <AetherFlow />
-          <Work />
-          <ProjectShowroom />
-          <FutureCompiler />
-          <InteractiveLabPlayground />
-          <Philosophy />
-          <LabLog />
-          <Updates />
-          <ParallelContact />
-          <Contact />
+          {/* Below-fold: mount only when near viewport */}
+          <LazySection><WhatIDo /></LazySection>
+          <LazySection><SkillsMarquee /></LazySection>
+          <LazySection><SkillsDetail /></LazySection>
+          <LazySection><ToolkitGrid /></LazySection>
+          <LazySection><AetherFlow /></LazySection>
+          <LazySection><Work /></LazySection>
+          <LazySection><ProjectShowroom /></LazySection>
+          <LazySection><FutureCompiler /></LazySection>
+          <LazySection><InteractiveLabPlayground /></LazySection>
+          <LazySection><Philosophy /></LazySection>
+          <LazySection><LabLog /></LazySection>
+          <LazySection><Updates /></LazySection>
+          <LazySection><ParallelContact /></LazySection>
+          <LazySection><Contact /></LazySection>
         </main>
       ) : (
         <Universe />

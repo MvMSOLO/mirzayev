@@ -9,6 +9,23 @@ interface P {
   vz: number;
 }
 
+// Spatial grid for O(n) nearest-neighbor lookup instead of O(n²)
+const CELL = 75; // slightly larger than connection threshold √5000≈70.7
+
+function buildGrid(pts: { x: number; y: number; s: number; a: number }[], W: number) {
+  const cols = Math.ceil(W / CELL) + 2;
+  const grid = new Map<number, number[]>();
+  for (let i = 0; i < pts.length; i++) {
+    const cx = Math.floor(pts[i].x / CELL);
+    const cy = Math.floor(pts[i].y / CELL);
+    const key = cx + cy * 10000;
+    const bucket = grid.get(key);
+    if (bucket) bucket.push(i);
+    else grid.set(key, [i]);
+  }
+  return { grid, cols };
+}
+
 export function ParticleField({ className = "" }: { className?: string }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const mouse = useRef({ x: 0, y: 0, active: false });
@@ -21,10 +38,10 @@ export function ParticleField({ className = "" }: { className?: string }) {
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    let W = 0,
-      H = 0;
+    let W = 0, H = 0;
     const particles: P[] = [];
-    const COUNT = reduced ? 60 : 140;
+    // Reduced from 140 → 90; still looks dense, ~35% fewer comparisons
+    const COUNT = reduced ? 40 : 90;
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -59,32 +76,22 @@ export function ParticleField({ className = "" }: { className?: string }) {
       mouse.current.y = e.clientY - rect.top - H / 2;
       mouse.current.active = true;
     };
-    const onLeave = () => {
-      mouse.current.active = false;
-    };
+    const onLeave = () => { mouse.current.active = false; };
     canvas.addEventListener("mousemove", onMove);
     canvas.addEventListener("mouseleave", onLeave);
 
     let raf = 0;
     let visible = true;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        visible = e.isIntersecting;
-      },
-      { threshold: 0 },
-    );
+    const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0 });
     io.observe(canvas);
 
     const draw = () => {
-      if (!visible) {
-        raf = requestAnimationFrame(draw);
-        return;
-      }
+      if (!visible) { raf = requestAnimationFrame(draw); return; }
+
       ctx.fillStyle = "rgba(13,12,16,0.35)";
       ctx.fillRect(0, 0, W, H);
 
-      const cx = W / 2,
-        cy = H / 2;
+      const cx = W / 2, cy = H / 2;
       const mx = mouse.current.active ? mouse.current.x * 0.0006 : 0;
       const my = mouse.current.active ? mouse.current.y * 0.0006 : 0;
 
@@ -99,7 +106,6 @@ export function ParticleField({ className = "" }: { className?: string }) {
           p.x = (Math.random() - 0.5) * W;
           p.y = (Math.random() - 0.5) * H;
         }
-
         const f = 400 / p.z;
         const sx = cx + p.x * f;
         const sy = cy + p.y * f;
@@ -109,20 +115,32 @@ export function ParticleField({ className = "" }: { className?: string }) {
         pts.push({ x: sx, y: sy, s: size, a: alpha });
       }
 
-      // connect close pts
+      // Spatial grid: O(n) connections instead of O(n²)
+      const { grid } = buildGrid(pts, W);
       ctx.strokeStyle = "rgba(255,69,0,0.35)";
       ctx.lineWidth = 0.4;
+
       for (let i = 0; i < pts.length; i++) {
-        for (let j = i + 1; j < pts.length; j++) {
-          const dx = pts[i].x - pts[j].x,
-            dy = pts[i].y - pts[j].y;
-          const d2 = dx * dx + dy * dy;
-          if (d2 < 5000) {
-            ctx.globalAlpha = (1 - d2 / 5000) * 0.35 * Math.min(pts[i].a, pts[j].a);
-            ctx.beginPath();
-            ctx.moveTo(pts[i].x, pts[i].y);
-            ctx.lineTo(pts[j].x, pts[j].y);
-            ctx.stroke();
+        const gcx = Math.floor(pts[i].x / CELL);
+        const gcy = Math.floor(pts[i].y / CELL);
+        // Check only 9 neighboring cells
+        for (let dy = -1; dy <= 1; dy++) {
+          for (let dx = -1; dx <= 1; dx++) {
+            const bucket = grid.get((gcx + dx) + (gcy + dy) * 10000);
+            if (!bucket) continue;
+            for (const j of bucket) {
+              if (j <= i) continue; // avoid double-drawing
+              const ddx = pts[i].x - pts[j].x;
+              const ddy = pts[i].y - pts[j].y;
+              const d2 = ddx * ddx + ddy * ddy;
+              if (d2 < 5000) {
+                ctx.globalAlpha = (1 - d2 / 5000) * 0.35 * Math.min(pts[i].a, pts[j].a);
+                ctx.beginPath();
+                ctx.moveTo(pts[i].x, pts[i].y);
+                ctx.lineTo(pts[j].x, pts[j].y);
+                ctx.stroke();
+              }
+            }
           }
         }
       }
