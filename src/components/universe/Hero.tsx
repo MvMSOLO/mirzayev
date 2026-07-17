@@ -41,26 +41,45 @@ export function UniverseHero() {
       onMouseLeave={() => setHovered(false)}
       className="relative min-h-[100svh] w-full overflow-hidden pt-24 md:pt-32"
     >
-      {/* Dynamic interactive cursor-following glow ripple in Universe mode */}
-      {hovered && (
-        <motion.div
-          animate={{
-            x: mousePos.x - 150,
-            y: mousePos.y - 150,
-          }}
-          transition={{ type: "spring", stiffness: 280, damping: 28, mass: 0.6 }}
-          className="absolute w-[300px] h-[300px] rounded-full bg-[#DFFF00]/12 blur-3xl pointer-events-none z-0"
-        />
-      )}
+      {/* Warm ambient background gradient */}
+      <div className="absolute inset-0 bg-gradient-radial from-[#F4F1E8] to-[#F9F6F0] pointer-events-none" />
 
-      {/* Center blob image */}
+      {/* Dynamic interactive cursor-following glow ripple in Universe mode */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.9, filter: "blur(20px)" }}
+        animate={{
+          x: mousePos.x - 200,
+          y: mousePos.y - 200,
+          opacity: hovered ? 1 : 0,
+        }}
+        transition={{ type: "spring", stiffness: 200, damping: 30, mass: 0.8 }}
+        className="absolute w-[400px] h-[400px] rounded-full bg-[#DFFF00]/20 blur-[80px] pointer-events-none z-0"
+      />
+
+      {/* Secondary ambient ripple — offset for depth */}
+      <motion.div
+        animate={{
+          x: mousePos.x - 100,
+          y: mousePos.y - 100,
+          opacity: hovered ? 0.5 : 0,
+        }}
+        transition={{ type: "spring", stiffness: 140, damping: 24, mass: 1 }}
+        className="absolute w-[200px] h-[200px] rounded-full bg-[#111]/5 blur-[40px] pointer-events-none z-0"
+      />
+
+      {/* Center blob image — enhanced with multi-layer effect */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.85, filter: "blur(30px)" }}
         animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-        transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
         className="absolute inset-0 flex items-center justify-center pointer-events-none px-4"
       >
-        <div className="relative w-full max-w-[880px] aspect-square">
+        <div className="relative w-full max-w-[920px] aspect-square">
+          {/* Outer glow ring */}
+          <motion.div
+            animate={{ scale: [1, 1.03, 1], opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute inset-[-5%] rounded-full bg-[#DFFF00]/15 blur-3xl"
+          />
           <Blob
             variant="a"
             src={etherea}
@@ -70,28 +89,43 @@ export function UniverseHero() {
         </div>
       </motion.div>
 
-      {/* Asymmetric typography */}
+      {/* Floating decorative elements */}
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.6, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute top-[15%] right-[8%] hidden lg:block z-10 pointer-events-none"
+      >
+        <div className="text-[9px] uppercase tracking-[0.4em] text-[#111]/20 font-mono flex flex-col gap-1 text-right">
+          <span>Creative Universe</span>
+          <span className="text-[#111]/10">v2026.∞</span>
+        </div>
+      </motion.div>
+
+      {/* Asymmetric typography with enhanced entrance */}
       <div className="relative z-10 pointer-events-none select-none px-6 md:px-[4vw]">
-        <motion.h1
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.18 }}
-          className="font-serif italic leading-[0.85] text-[#111]"
-          style={{
-            fontFamily: '"Instrument Serif", "Cormorant Garamond", serif',
-            fontSize: "clamp(60px, 18vw, 280px)",
-            marginTop: "10vh",
-            fontWeight: 400,
-          }}
-        >
-          avazbek
-        </motion.h1>
-        <div className="flex justify-end">
+        <div className="overflow-hidden">
+          <motion.h1
+            initial={{ opacity: 0, y: 80, skewY: 3 }}
+            animate={{ opacity: 1, y: 0, skewY: 0 }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.18 }}
+            className="font-serif italic leading-[0.85] text-[#111]"
+            style={{
+              fontFamily: '"Instrument Serif", "Cormorant Garamond", serif',
+              fontSize: "clamp(60px, 18vw, 280px)",
+              marginTop: "10vh",
+              fontWeight: 400,
+            }}
+          >
+            avazbek
+          </motion.h1>
+        </div>
+        <div className="flex justify-end overflow-hidden">
           <motion.span
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.28 }}
-            className="font-serif italic leading-[0.85] text-[#111] -mt-[2vw] md:-mt-[4vw]"
+            initial={{ opacity: 0, y: 80, skewY: -3 }}
+            animate={{ opacity: 1, y: 0, skewY: 0 }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.32 }}
+            className="font-serif italic leading-[0.85] text-[#111] -mt-[2vw] md:-mt-[4vw] inline-block"
             style={{
               fontFamily: '"Instrument Serif", "Cormorant Garamond", serif',
               fontSize: "clamp(50px, 15vw, 240px)",
@@ -105,30 +139,39 @@ export function UniverseHero() {
 
       {/* Manifesto snippet */}
       <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: 0.38 }}
-        className="absolute bottom-12 md:bottom-24 left-6 md:left-[8vw] max-w-[32ch] z-20"
+        initial={{ opacity: 0, x: -30, filter: "blur(8px)" }}
+        animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
+        className="absolute bottom-12 md:bottom-24 left-6 md:left-[8vw] max-w-[36ch] z-20"
       >
+        <div className="w-8 h-px bg-[#111]/20 mb-5" />
         <p
-          className="text-base md:text-xl text-[#111] leading-relaxed mb-8"
+          className="text-base md:text-xl text-[#111]/80 leading-[1.8] mb-10"
           style={{ fontFamily: '"Instrument Serif", serif' }}
         >
           {t("uni.hero.desc")}
         </p>
-        <div>
-          <LiquidButton href="#uni-works">{t("uni.hero.cta")}</LiquidButton>
-        </div>
+        <LiquidButton href="#uni-works">{t("uni.hero.cta")}</LiquidButton>
       </motion.div>
 
+      {/* Scroll indicator — right side */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ delay: 0.8, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="absolute bottom-12 right-6 md:right-[8vw] z-20 hidden md:block"
       >
-        <div className="text-[10px] uppercase tracking-[0.4em] text-[#111]/40 font-mono rotate-90 origin-right translate-y-full">
-          scroll to explore
+        <div className="flex flex-col items-center gap-3">
+          <div className="text-[9px] uppercase tracking-[0.4em] text-[#111]/30 font-mono">
+            scroll
+          </div>
+          <div className="w-px h-12 bg-[#111]/10 relative overflow-hidden">
+            <motion.div
+              animate={{ y: ["-100%", "200%"] }}
+              transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute inset-x-0 h-6 bg-gradient-to-b from-transparent via-[#111]/40 to-transparent"
+            />
+          </div>
         </div>
       </motion.div>
     </section>

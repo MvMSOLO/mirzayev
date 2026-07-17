@@ -74,6 +74,9 @@ export function KineticCursor() {
       raf = requestAnimationFrame(loop);
     };
 
+    // Hide the native cursor — KineticCursor replaces it
+    document.body.classList.add("kinetic-cursor-active");
+
     window.addEventListener("mousemove", onMove);
     window.addEventListener("mousedown", onDown);
     window.addEventListener("mouseup", onUp);
@@ -81,6 +84,7 @@ export function KineticCursor() {
 
     return () => {
       cancelAnimationFrame(raf);
+      document.body.classList.remove("kinetic-cursor-active");
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mousedown", onDown);
       window.removeEventListener("mouseup", onUp);

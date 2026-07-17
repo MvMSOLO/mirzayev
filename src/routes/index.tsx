@@ -26,6 +26,7 @@ import { ScrollProgress } from "@/components/portfolio/ScrollProgress";
 import { InteractiveLabPlayground } from "@/components/portfolio/InteractiveLabPlayground";
 import { NeuralTimeline } from "@/components/portfolio/NeuralTimeline";
 import { SecretConsole } from "@/components/secret/SecretConsole";
+import { PortalSwitcher } from "@/components/portfolio/PortalSwitcher";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
 export const Route = createFileRoute("/")({
@@ -71,6 +72,14 @@ function Shell() {
           <div className="fixed inset-0 bg-grid-blueprint opacity-[0.03] pointer-events-none" />
           <div className="fixed inset-0 bg-grid-dots opacity-[0.1] pointer-events-none" />
           <div className="fixed inset-0 bg-grid-fine pointer-events-none" />
+          {/* Film grain noise texture — adds cinematic texture depth */}
+          <div
+            className="fixed inset-0 pointer-events-none z-[200] opacity-[0.035] animate-grain"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+              backgroundSize: "256px 256px",
+            }}
+          />
           <TechnicalOverlay />
           <Nav />
           {/* Above-fold: load immediately */}
@@ -97,6 +106,7 @@ function Shell() {
         <Universe />
       )}
       <UniverseTransition />
+      <PortalSwitcher />
       <SecretConsole />
     </>
   );

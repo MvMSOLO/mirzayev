@@ -222,34 +222,61 @@ export const About = memo(function About() {
       {/* Stats row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-14 md:mt-28 relative z-10">
         {[
-          { k: t("about.age.k"), v: 16, suffix: "" },
-          { k: t("about.projects.k"), v: 50, suffix: "+" },
-          { k: t("about.years.k"), v: 5, suffix: "" },
-          { k: t("about.location.k"), raw: "UZ" },
+          { k: t("about.age.k"), v: 16, suffix: "", icon: "⚡" },
+          { k: t("about.projects.k"), v: 50, suffix: "+", icon: "◈" },
+          { k: t("about.years.k"), v: 5, suffix: "", icon: "◎" },
+          { k: t("about.location.k"), raw: "UZ", icon: "◉" },
         ].map((s, i) => (
-          <RevealBox
+          <motion.div
             key={s.k}
-            delay={0.1 * i}
-            className="glass-dark border-gradient-accent p-5 md:p-8 group hover:border-[rgba(255,69,0,0.6)] transition-all duration-400 relative overflow-hidden cursor-default rounded-xl hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(255,69,0,0.2)]"
+            initial={{ opacity: 0, y: 40, scale: 0.9, filter: "blur(12px)" }}
+            whileInView={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+            viewport={{ once: true, margin: "-5%" }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 * i }}
+            whileHover={{
+              y: -8,
+              scale: 1.02,
+              transition: { duration: 0.3, ease: [0.34, 1.56, 0.64, 1] },
+            }}
+            className="glass-dark border-gradient-accent p-5 md:p-8 group hover:border-[rgba(255,69,0,0.6)] transition-colors duration-400 relative overflow-hidden cursor-default rounded-xl hover:shadow-[0_20px_60px_rgba(255,69,0,0.25)] spotlight"
             onMouseEnter={playHover}
           >
-            {/* Hover fill */}
-            <div className="absolute inset-0 bg-gradient-to-br from-accent/[0.12] to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-400 ease-out-expo" />
-            
-            {/* Corner accent */}
-            <div className="absolute top-0 right-0 w-0 h-0 border-l-[24px] border-l-transparent border-t-[24px] border-t-accent/20 group-hover:border-t-accent/70 transition-colors duration-400" />
+            {/* Animated fill on hover */}
+            <div className="absolute inset-0 bg-gradient-to-br from-accent/[0.14] via-accent/[0.06] to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]" />
 
-            <p
-              className="font-display text-7xl md:text-8xl leading-none text-accent relative z-10 mb-3 drop-shadow-[0_0_30px_rgba(255,69,0,0.4)]"
-            >
+            {/* Glow pulse ring */}
+            <div className="absolute -top-8 -right-8 w-24 h-24 bg-accent/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-neon-flare" />
+
+            {/* Corner accent triangle */}
+            <div className="absolute top-0 right-0 w-0 h-0 border-l-[28px] border-l-transparent border-t-[28px] border-t-accent/20 group-hover:border-t-accent/80 transition-colors duration-400 z-10" />
+
+            {/* Icon */}
+            <div className="font-mono text-2xl text-accent/20 group-hover:text-accent/50 transition-colors duration-400 mb-4 relative z-10 leading-none">
+              {s.icon}
+            </div>
+
+            <p className="font-display text-6xl md:text-7xl xl:text-8xl leading-none text-accent relative z-10 mb-3 drop-shadow-[0_0_40px_rgba(255,69,0,0.5)]">
               {s.raw ? s.raw : <CountUp end={s.v!} suffix={s.suffix} />}
             </p>
-            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-white/38 font-bold relative z-10 group-hover:text-white transition-colors duration-400">
+
+            {/* Divider line */}
+            <div className="h-px w-0 group-hover:w-full bg-gradient-to-r from-accent/60 to-transparent transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] mb-3 relative z-10" />
+
+            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-white/40 font-bold relative z-10 group-hover:text-white/80 transition-colors duration-400">
               {s.k}
             </p>
-          </RevealBox>
+          </motion.div>
         ))}
       </div>
+
+      {/* Accent divider at bottom */}
+      <motion.div
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+        className="mt-16 h-px bg-gradient-to-r from-transparent via-[var(--cyan)]/30 to-transparent origin-left"
+      />
     </section>
   );
 });

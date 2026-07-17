@@ -725,3 +725,248 @@ html, body {
   from { transform: translateX(-100%); }
   to   { transform: translateX(300%); }
 }
+
+/* ===================== FILM GRAIN / NOISE TEXTURE ===================== */
+@keyframes grain-shift {
+  0%, 100% { transform: translate(0, 0); }
+  10%       { transform: translate(-1%, -2%); }
+  20%       { transform: translate(2%, 1%); }
+  30%       { transform: translate(-1.5%, 2%); }
+  40%       { transform: translate(2.5%, -1%); }
+  50%       { transform: translate(-1%, 2.5%); }
+  60%       { transform: translate(1%, -1.5%); }
+  70%       { transform: translate(-2%, 1%); }
+  80%       { transform: translate(1.5%, -2%); }
+  90%       { transform: translate(-1%, 1.5%); }
+}
+@utility animate-grain {
+  animation: grain-shift 0.35s steps(1) infinite;
+}
+
+/* ===================== KINETIC CURSOR — hide native cursor ===================== */
+.kinetic-cursor-active,
+.kinetic-cursor-active * {
+  cursor: none !important;
+}
+
+/* ===================== HERO CINEMATIC SCAN ===================== */
+@keyframes hero-scan {
+  0%   { top: -4px; opacity: 0; }
+  5%   { opacity: 1; }
+  95%  { opacity: 0.6; }
+  100% { top: 100%; opacity: 0; }
+}
+@utility animate-hero-scan {
+  animation: hero-scan 3.5s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+}
+
+/* ===================== REVEAL CLIP VERTICAL ===================== */
+@keyframes reveal-clip-up {
+  from { clip-path: inset(100% 0 0 0); opacity: 0; }
+  to   { clip-path: inset(0 0 0 0); opacity: 1; }
+}
+@utility animate-reveal-up {
+  animation: reveal-clip-up 0.7s var(--ease-out-expo) forwards;
+}
+
+/* ===================== MAGNETIC SCALE PULSE ===================== */
+@keyframes mag-pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.04); }
+}
+@utility animate-mag-pulse {
+  animation: mag-pulse 2.4s ease-in-out infinite;
+}
+
+/* ===================== GRADIENT ROTATE ===================== */
+@keyframes gradient-rotate {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@utility animate-gradient-rotate {
+  background-size: 300% 300%;
+  animation: gradient-rotate 4s ease infinite;
+}
+
+/* ===================== NEON FLARE ===================== */
+@keyframes neon-flare {
+  0%, 100% { opacity: 0.6; filter: blur(8px); }
+  50%       { opacity: 1;   filter: blur(4px); }
+}
+@utility animate-neon-flare {
+  animation: neon-flare 2.8s ease-in-out infinite;
+}
+
+/* ===================== MORPH BORDER ===================== */
+@keyframes morph-border {
+  0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  50%       { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+}
+@utility animate-morph {
+  animation: morph-border 6s ease-in-out infinite;
+}
+
+/* ===================== DATA STREAM ===================== */
+@keyframes data-stream {
+  0%   { transform: translateY(-100%) scaleY(0.5); opacity: 0; }
+  10%  { opacity: 1; scaleY: 1; }
+  90%  { opacity: 0.7; }
+  100% { transform: translateY(100vh) scaleY(0.5); opacity: 0; }
+}
+
+/* ===================== 3D CARD TILT ===================== */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s var(--ease-out-expo);
+}
+.tilt-card:hover {
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 212, 255, 0.15);
+}
+.tilt-card-inner {
+  transform: translateZ(20px);
+}
+
+/* ===================== SPOTLIGHT HOVER ===================== */
+.spotlight {
+  position: relative;
+  overflow: hidden;
+}
+.spotlight::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,69,0,0.08), transparent 40%);
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+  z-index: 1;
+}
+.spotlight:hover::before {
+  opacity: 1;
+}
+
+/* ===================== SECTION DIVIDER GLOW ===================== */
+@utility divider-glow-orange {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,69,0,0.4) 30%, rgba(255,69,0,0.7) 50%, rgba(255,69,0,0.4) 70%, transparent);
+  box-shadow: 0 0 20px rgba(255,69,0,0.3);
+}
+
+@utility divider-glow-cyan {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.4) 30%, rgba(0,212,255,0.7) 50%, rgba(0,212,255,0.4) 70%, transparent);
+  box-shadow: 0 0 20px rgba(0,212,255,0.3);
+}
+
+/* ===================== TEXT GLOW ANIMATIONS ===================== */
+@keyframes text-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@utility text-gradient-animated {
+  background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.6) 25%, #ff4500 50%, rgba(255,255,255,0.6) 75%, #fff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-shimmer 4s linear infinite;
+}
+
+/* ===================== KINETIC CARD 3D ===================== */
+@utility card-3d {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* ===================== SCROLL APPEAR ===================== */
+@keyframes scroll-appear {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.96);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+@utility animate-scroll-appear {
+  animation: scroll-appear 0.7s var(--ease-out-expo) forwards;
+}
+
+/* ===================== ORBIT ===================== */
+@keyframes orbit {
+  from { transform: rotate(0deg) translateX(var(--orbit-radius, 40px)) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(var(--orbit-radius, 40px)) rotate(-360deg); }
+}
+@utility animate-orbit {
+  animation: orbit 4s linear infinite;
+}
+
+/* ===================== AMBIENT DRIFT ===================== */
+@keyframes ambient-drift {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  33%       { transform: translate(15px, -10px) scale(1.02); }
+  66%       { transform: translate(-8px, 15px) scale(0.98); }
+}
+@utility animate-ambient-drift {
+  animation: ambient-drift 12s ease-in-out infinite;
+}
+
+/* ===================== RIPPLE ===================== */
+@keyframes ripple {
+  0%   { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+@utility animate-ripple {
+  animation: ripple 1.4s ease-out infinite;
+}
+
+/* ===================== ENHANCED SCROLLBAR ===================== */
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ff4500, #ff7700);
+  border-radius: 2px;
+  box-shadow: 0 0 6px rgba(255,69,0,0.4);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ff6600, #ff9900);
+  box-shadow: 0 0 12px rgba(255,69,0,0.6);
+}
+
+/* ===================== GALAXY GLOW ===================== */
+@utility glow-galaxy {
+  box-shadow:
+    0 0 15px rgba(255, 69, 0, 0.3),
+    0 0 40px rgba(255, 69, 0, 0.15),
+    0 0 80px rgba(255, 69, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* ===================== ACTIVE LINK INDICATOR ===================== */
+.nav-link-active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--color-accent);
+  box-shadow: 0 0 8px var(--color-accent);
+}
+
+/* ===================== ENHANCED BLUR GLASS ===================== */
+@utility ultra-glass {
+  background: rgba(10, 9, 12, 0.6);
+  backdrop-filter: blur(60px) saturate(180%) brightness(0.8);
+  -webkit-backdrop-filter: blur(60px) saturate(180%) brightness(0.8);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+}

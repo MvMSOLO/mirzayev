@@ -123,25 +123,33 @@ export const Nav = memo(function Nav() {
             aria-label={t("nav.handle")}
             className="fixed inset-0 z-[52]"
           >
-            {/* Kinetic Strip Background */}
+            {/* Kinetic Strip Background — 8 panels for smoother reveal */}
             <div className="absolute inset-0 flex">
-              {[...Array(5)].map((_, i) => (
+              {[...Array(8)].map((_, i) => (
                 <motion.div
                   key={i}
                   initial={{ scaleY: 0 }}
                   animate={{ scaleY: 1 }}
                   exit={{
                     scaleY: 0,
-                    transition: { delay: (4 - i) * 0.04, duration: 0.4, ease: [0.76, 0, 0.24, 1] },
+                    transition: { delay: (7 - i) * 0.03, duration: 0.45, ease: [0.76, 0, 0.24, 1] },
                   }}
-                  transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1], delay: i * 0.05 }}
-                  className="flex-1 bg-[#08070b] origin-top border-r border-white/[0.02]"
+                  transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1], delay: i * 0.04 }}
+                  className="flex-1 bg-[#08070b] origin-top border-r border-white/[0.015]"
                 />
               ))}
             </div>
 
             {/* Accent grid overlay */}
-            <div className="absolute inset-0 bg-grid-blueprint opacity-[0.03] pointer-events-none" />
+            <div className="absolute inset-0 bg-grid-blueprint opacity-[0.025] pointer-events-none" />
+
+            {/* Sweeping scan line through the menu */}
+            <motion.div
+              initial={{ top: "-2px", opacity: 0 }}
+              animate={{ top: ["0%", "100%"], opacity: [0, 1, 0] }}
+              transition={{ duration: 1.2, delay: 0.3, ease: "linear" }}
+              className="absolute inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-accent/60 to-transparent pointer-events-none z-30"
+            />
 
             <motion.div
               initial={{ opacity: 0 }}

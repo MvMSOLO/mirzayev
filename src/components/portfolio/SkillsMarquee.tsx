@@ -25,8 +25,12 @@ export const SkillsMarquee = memo(function SkillsMarquee() {
   return (
     <section
       aria-label="Tech stack"
-      className="bg-accent py-8 overflow-hidden relative shadow-[0_0_50px_rgba(255,69,0,0.3)] z-10"
-      style={{ borderTop: "2px solid rgba(255,255,255,0.2)", borderBottom: "2px solid rgba(0,0,0,0.6)" }}
+      className="bg-accent py-10 overflow-hidden relative z-10"
+      style={{
+        borderTop: "2px solid rgba(255,255,255,0.25)",
+        borderBottom: "2px solid rgba(0,0,0,0.7)",
+        boxShadow: "0 0 60px rgba(255,69,0,0.4), 0 4px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.2)",
+      }}
     >
       {/* Edge fade masks */}
       <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-accent to-transparent z-10 pointer-events-none" />

@@ -36,7 +36,7 @@ export const AetherFlow = memo(function AetherFlow() {
   return (
     <section
       aria-label="Aether flow"
-      className="py-24 border-y border-white/[0.06] overflow-hidden space-y-6 bg-[#070609] relative"
+      className="py-28 border-y border-white/[0.06] overflow-hidden space-y-8 bg-[#070609] relative"
     >
       {/* Gradient fades */}
       <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-[#070609] to-transparent z-10 pointer-events-none" />

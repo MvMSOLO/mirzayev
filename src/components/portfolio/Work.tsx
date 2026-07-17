@@ -2,31 +2,57 @@ import neural from "@/assets/work-neural.jpg";
 import dashboard from "@/assets/work-dashboard.jpg";
 import youtube from "@/assets/work-youtube.jpg";
 import { useLang } from "@/lib/i18n";
-import { motion, type Variants } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, type Variants } from "framer-motion";
 import { RevealBox, WordReveal, BlurReveal } from "./TextReveal";
 import { useSound } from "@/hooks/useSound";
-import { memo } from "react";
+import { memo, useRef } from "react";
+
+// 3D-tilt hook — tracks mouse position relative to element center
+function useTilt(strength = 15) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const springConfig = { stiffness: 200, damping: 22, mass: 0.5 };
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [strength, -strength]), springConfig);
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-strength, strength]), springConfig);
+  const ref = useRef<HTMLAnchorElement>(null);
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    x.set((e.clientX - rect.left) / rect.width - 0.5);
+    y.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+
+  const onMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return { ref, rotateX, rotateY, onMouseMove, onMouseLeave };
+}
 
 export const Work = memo(function Work() {
   const { t } = useLang();
   const { playHover } = useSound();
+  const tilt = useTilt(8);
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.1 },
+      transition: { staggerChildren: 0.12 },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.96, y: 30, filter: "blur(8px)" },
+    hidden: { opacity: 0, scale: 0.96, y: 40, filter: "blur(10px)" },
     visible: {
       opacity: 1,
       scale: 1,
       y: 0,
       filter: "blur(0px)",
-      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
     },
   };
 
@@ -65,14 +91,18 @@ export const Work = memo(function Work() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-10%" }}
-        className="grid grid-cols-6 gap-6 md:gap-8"
+        className="grid grid-cols-6 gap-6 md:gap-8 [perspective:1200px]"
       >
-        {/* Hero card */}
+        {/* Hero card — 3D tilt on mouse move */}
         <motion.a
+          ref={tilt.ref}
           variants={itemVariants}
+          style={{ rotateX: tilt.rotateX, rotateY: tilt.rotateY, transformStyle: "preserve-3d" }}
+          onMouseMove={tilt.onMouseMove}
+          onMouseLeave={tilt.onMouseLeave}
           whileHover={{
-            y: -20,
-            scale: 1.02,
+            y: -12,
+            scale: 1.01,
             transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
           }}
           href="https://github.com/MvMSOLO"

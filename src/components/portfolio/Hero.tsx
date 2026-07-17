@@ -1,11 +1,11 @@
 import { useLang } from "@/lib/i18n";
 import { ParticleField } from "./ParticleField";
 import { HeroRails } from "./HeroRails";
-import { motion, type Variants } from "framer-motion";
+import { motion, useScroll, useTransform, type Variants } from "framer-motion";
 import { WordReveal, RevealBox, BlurReveal } from "./TextReveal";
 import { useSound } from "@/hooks/useSound";
 import { useEffect, useState, useRef, memo } from "react";
-import { Cpu, Zap, Activity, Sliders, Play, Square, Terminal } from "lucide-react";
+import { Cpu, Zap, Activity, Sliders, Play, Square, Terminal, ArrowUpRight } from "lucide-react";
 
 // Isolated wave component — manages its own rAF loop via DOM ref.
 // Parent Hero NEVER re-renders at 60fps just for the wave animation.
@@ -52,6 +52,12 @@ const WaveGraph = memo(function WaveGraph({ cpuLoad }: { cpuLoad: number }) {
 export const Hero = memo(function Hero() {
   const { t, lang } = useLang();
   const { playHover, playClick, playSynthesis } = useSound();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Scroll-linked parallax for hero content
+  const { scrollY } = useScroll();
+  const parallaxY = useTransform(scrollY, [0, 500], [0, -80]);
+  const parallaxOpacity = useTransform(scrollY, [0, 400], [1, 0]);
 
   // Quantum Cyber Console State
   const [cpuLoad, setCpuLoad] = useState(30);
@@ -60,6 +66,13 @@ export const Hero = memo(function Hero() {
     "// NEURAL INTERFACE STATUS: CONNECTED",
     "// READY FOR HUMAN COMMAND INPUT...",
   ]);
+
+  // Cinematic scan line — sweeps once on mount
+  const [scanVisible, setScanVisible] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setScanVisible(true), 400);
+    return () => clearTimeout(t);
+  }, []);
 
   // Derived — no separate state needed, no extra re-render
   const temp = Math.floor(35 + (cpuLoad / 100) * 45);
@@ -79,7 +92,7 @@ export const Hero = memo(function Hero() {
   const handleSliderChange = (val: number) => {
     setCpuLoad(val);
     if (Math.random() > 0.8) {
-      playSynthesis(Math.floor(Math.random() * 12)); // Satisfying synth chime on drag
+      playSynthesis(Math.floor(Math.random() * 12));
     }
     const timeStr = new Date().toLocaleTimeString().split(" ")[0];
     setLogs((prev) => [
@@ -93,21 +106,21 @@ export const Hero = memo(function Hero() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.15,
+        staggerChildren: 0.12,
+        delayChildren: 0.3,
       },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 22, scale: 0.97, filter: "blur(9px)" },
+    hidden: { opacity: 0, y: 32, scale: 0.96, filter: "blur(12px)" },
     visible: {
       opacity: 1,
       y: 0,
       scale: 1,
       filter: "blur(0px)",
       transition: {
-        duration: 0.62,
+        duration: 0.8,
         ease: [0.16, 1, 0.3, 1],
       },
     },
@@ -116,12 +129,25 @@ export const Hero = memo(function Hero() {
 
   return (
     <section
+      ref={sectionRef}
       id="top"
       className="relative pt-24 md:pt-40 pb-16 md:pb-32 overflow-hidden border-b border-white/[0.06] min-h-[95vh] flex flex-col justify-center bg-atmosphere-dual"
     >
       <ParticleField className="opacity-80" />
       <HeroRails />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/10 to-background pointer-events-none" />
+
+      {/* Cinematic full-section scan line — fires once on mount */}
+      {scanVisible && (
+        <div
+          className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--cyan)] to-transparent shadow-[0_0_30px_rgba(0,212,255,0.8)] pointer-events-none z-20 animate-hero-scan"
+          style={{ top: 0 }}
+        />
+      )}
+
+      {/* Ambient radial glows — layered for depth */}
+      <div className="absolute top-1/3 left-1/4 w-[600px] h-[600px] bg-accent/[0.04] rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-[var(--cyan)]/[0.04] rounded-full blur-[100px] pointer-events-none" />
 
       {/* Top marquee */}
       <div className="absolute -top-10 left-0 whitespace-nowrap flex pointer-events-none select-none">
@@ -190,24 +216,33 @@ export const Hero = memo(function Hero() {
         </div>
       </motion.div>
 
+      {/* Scroll-linked parallax wrapper */}
       <motion.div
+        style={{ y: parallaxY, opacity: parallaxOpacity }}
         className="px-5 md:px-20 lg:px-32 relative z-10 w-full"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
       >
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
         <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
           {/* LEFT COLUMN: Hero content info */}
           <div className="space-y-8">
             {/* Chip */}
             <motion.div
               variants={itemVariants}
-              className="inline-block bg-gradient-to-r from-accent to-[#ff7700] px-5 py-2.5 mb-2 relative group cursor-default shadow-glow-orange border border-white/10 backdrop-blur-sm rounded-sm"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-accent to-[#ff7700] px-5 py-2.5 mb-2 relative group cursor-default shadow-glow-orange border border-white/10 backdrop-blur-sm rounded-sm"
               onMouseEnter={playHover}
             >
               <div className="absolute -top-1 -left-1 w-2 h-2 border-t border-l border-white/50" />
               <div className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-white/50" />
               <div className="absolute inset-0 animate-shimmer opacity-50 pointer-events-none" />
+              <motion.div
+                animate={{ opacity: [1, 0, 1] }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: "steps(1)" }}
+                className="w-1.5 h-4 bg-white/80 relative z-10"
+              />
               <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] relative z-10 text-white drop-shadow-md">
                 {t("hero.chip")}
               </span>
@@ -258,31 +293,48 @@ export const Hero = memo(function Hero() {
               {t("hero.sub")}
             </motion.p>
 
-            {/* Scroll indicator */}
-            <motion.div
-              variants={itemVariants}
-              className="flex items-center gap-5 text-[11px] uppercase tracking-[0.2em] text-white/50 font-bold"
-            >
-              <span className="text-[var(--cyan)]">{t("hero.scroll")}</span>
-              <div className="relative h-12 w-px bg-white/10 overflow-hidden">
-                <motion.div
-                  animate={{ y: ["-100%", "200%"] }}
-                  transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute inset-x-0 h-6 bg-gradient-to-b from-transparent via-[var(--cyan)] to-transparent"
-                />
+            {/* CTA row */}
+            <motion.div variants={itemVariants} className="flex flex-wrap items-center gap-5">
+              <motion.a
+                href="#work"
+                whileHover={{ scale: 1.04, y: -2 }}
+                whileTap={{ scale: 0.96 }}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                onMouseEnter={playHover}
+                onClick={playClick}
+                className="inline-flex items-center gap-3 px-6 py-3 bg-accent text-white font-mono text-[11px] uppercase tracking-[0.2em] font-bold shadow-glow-orange border border-white/10 hover:shadow-[0_0_50px_rgba(255,69,0,0.6)] transition-shadow duration-400 rounded-sm group"
+              >
+                <span>View Work</span>
+                <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
+              </motion.a>
+
+              {/* Scroll indicator */}
+              <div className="flex items-center gap-5 text-[11px] uppercase tracking-[0.2em] text-white/50 font-bold">
+                <span className="text-[var(--cyan)]">{t("hero.scroll")}</span>
+                <div className="relative h-12 w-px bg-white/10 overflow-hidden">
+                  <motion.div
+                    animate={{ y: ["-100%", "200%"] }}
+                    transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute inset-x-0 h-6 bg-gradient-to-b from-transparent via-[var(--cyan)] to-transparent"
+                  />
+                </div>
+                <span>{t("hero.est")}</span>
               </div>
-              <span>{t("hero.est")}</span>
             </motion.div>
           </div>
 
           {/* RIGHT COLUMN: Quantum Cyber Console Widget */}
           <motion.div
             variants={itemVariants}
-            className="w-full relative glass-dark border-gradient-cyan rounded-2xl p-7 shadow-glow-cyan overflow-hidden"
+            whileHover={{ y: -4, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }}
+            className="w-full relative glass-dark border-gradient-cyan rounded-2xl p-7 shadow-glow-cyan overflow-hidden ultra-glass"
           >
             {/* Tech scanner bar inside the widget */}
             <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--cyan)] to-transparent shadow-[0_0_15px_var(--cyan)] animate-[scan-y_4s_linear_infinite]" />
             <div className="absolute inset-0 bg-gradient-to-br from-[var(--cyan)]/5 to-transparent pointer-events-none" />
+            {/* Corner glow accents */}
+            <div className="absolute top-0 left-0 w-20 h-20 bg-[var(--cyan)]/5 rounded-br-full blur-2xl pointer-events-none" />
+            <div className="absolute bottom-0 right-0 w-20 h-20 bg-accent/5 rounded-tl-full blur-2xl pointer-events-none" />
 
             {/* Header banner */}
             <div className="flex items-center justify-between border-b border-white/10 pb-5 mb-5 relative z-10">
@@ -403,6 +455,7 @@ export const Hero = memo(function Hero() {
             </div>
           </motion.div>
         </div>
+        </motion.div>
       </motion.div>
 
       {/* Animated corner brackets that appear on load */}

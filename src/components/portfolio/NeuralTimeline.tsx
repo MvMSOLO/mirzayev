@@ -122,6 +122,7 @@ export function NeuralTimeline() {
     >
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-0 w-[500px] h-[500px] -translate-y-1/2 bg-[var(--cyan)]/[0.04] rounded-full blur-[120px]" />
+        <div className="absolute top-1/2 right-0 w-[300px] h-[300px] -translate-y-1/2 bg-accent/[0.03] rounded-full blur-[100px]" />
       </div>
 
       <div className="absolute top-10 right-10 font-mono text-[10px] text-[var(--cyan)]/40 font-bold hidden lg:block border border-[var(--cyan)]/20 px-4 py-2 glass-card rounded-md shadow-glow-cyan">
