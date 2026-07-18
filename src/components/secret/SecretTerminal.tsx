@@ -4,6 +4,7 @@ import { ChevronUp, TerminalSquare, X } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { useUniverse } from "@/lib/universe";
 import { useSound } from "@/hooks/useSound";
+import { useNavigate } from "@tanstack/react-router";
 
 interface SecretTerminalProps {
   onGipnos: () => void;
@@ -65,6 +66,7 @@ export function SecretTerminal({ onGipnos, onRobloxStudio }: SecretTerminalProps
   const { lang, setLang } = useLang();
   const { mode, enter, exit, phase } = useUniverse();
   const { play, playClick, playOpen, playClose, toggleMute, isMuted } = useSound();
+  const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
   const [seenBefore, setSeenBefore] = useState(true);
@@ -329,8 +331,8 @@ export function SecretTerminal({ onGipnos, onRobloxStudio }: SecretTerminalProps
             "ok",
           );
           setTimeout(() => {
-            onRobloxStudio();
             closeTerminal();
+            navigate({ to: "/studio" });
           }, 600);
           break;
         }
