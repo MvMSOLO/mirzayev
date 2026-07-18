@@ -246,13 +246,66 @@ export function RobloxStudioIDE({ onClose }: Props) {
   }, []);
 
   const handleAddPreset = useCallback((preset: Preset) => {
+    const isScript = ['Script', 'LocalScript', 'ModuleScript'].includes(preset.type);
+
     setObjects(prev => {
       const map = new Map(prev);
+
       // Find Workspace
       let wsId = '';
       for (const [id, obj] of map) { if (obj.type === 'Workspace') { wsId = id; break; } }
       if (!wsId) return prev;
 
+      const PART_TYPES = ['Part', 'SpawnLocation', 'Baseplate', 'NPCModel'];
+
+      if (isScript) {
+        // ── Script preset: attach to selected Part (or auto-create a host Part) ──
+        let hostId = selectedId && PART_TYPES.includes(map.get(selectedId)?.type ?? '') ? selectedId : '';
+
+        if (!hostId) {
+          // Create a host Part alongside the script
+          const hostCount = Array.from(map.values()).filter(o => o.type === 'Part').length;
+          const defaultPos = { x: (hostCount % 5) * 8 - 16, y: 2, z: Math.floor(hostCount / 5) * 8 - 8 };
+          hostId = makeId();
+          const hostPart: StudioObject = {
+            id: hostId,
+            type: 'Part',
+            name: `${preset.name.replace(' ', '')}Part`,
+            parentId: wsId,
+            properties: {
+              Size: { x: 4, y: 4, z: 4 },
+              Position: defaultPos,
+              Color: { r: 0.639, g: 0.635, b: 0.647 },
+              Material: 'SmoothPlastic',
+              Anchored: true,
+              CanCollide: true,
+              Transparency: 0,
+            },
+            children: [],
+          };
+          map.set(hostId, hostPart);
+          const ws = map.get(wsId)!;
+          map.set(wsId, { ...ws, children: [...ws.children, hostId] });
+        }
+
+        // Attach script as child of the host Part
+        const scriptId = makeId();
+        const scriptObj: StudioObject = {
+          id: scriptId,
+          type: preset.type as ObjectType,
+          name: preset.name,
+          parentId: hostId,
+          properties: { ...preset.properties },
+          children: [],
+        };
+        map.set(scriptId, scriptObj);
+        const host = map.get(hostId)!;
+        map.set(hostId, { ...host, children: [...host.children, scriptId] });
+        setSelectedId(scriptId);
+        return map;
+      }
+
+      // ── Non-script preset: add directly to Workspace ──
       const newId = makeId();
       const count = Array.from(map.values()).filter(o => o.type === preset.type).length;
       const defaultPos = { x: (count % 5) * 8 - 16, y: 1, z: Math.floor(count / 5) * 8 - 8 };
@@ -260,7 +313,7 @@ export function RobloxStudioIDE({ onClose }: Props) {
       const newObj: StudioObject = {
         id: newId,
         type: preset.type as ObjectType,
-        name: `${preset.name}${count > 0 ? count + 1 : ''}`,
+        name: `${preset.name}${count > 0 ? String(count + 1) : ''}`,
         parentId: wsId,
         properties: {
           ...preset.properties,
@@ -274,7 +327,8 @@ export function RobloxStudioIDE({ onClose }: Props) {
       setSelectedId(newId);
       return map;
     });
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedId]);
 
   // ─── AI operations ──────────────────────────────────────────────────────────
 

@@ -82,7 +82,9 @@ export function StudioToolbox({ onAddPreset }: Props) {
 
       {/* Footer hint */}
       <div className="px-3 py-2 border-t border-[#3c3c3c] shrink-0">
-        <p className="text-[9px] text-gray-500 font-mono">Click to add to scene</p>
+        <p className="text-[9px] text-gray-500 font-mono">
+          Click to add · Scripts auto-attach to selected Part
+        </p>
       </div>
     </div>
   );
