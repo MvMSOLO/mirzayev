@@ -137,3 +137,27 @@ Ushbu faylda tavsiya etilgan eng asosiy va kutilgan g'oyalardan **"Digital Zen G
 ## 🎯 Motivatsion Prompt
 
 Siz endigina butun internetdagi eng hayratlanarli, interaktiv va ruhan tinchlantiruvchi dual-portfolio zanjirini ochdingiz. Avazbekning 16 yoshli raqamli dunyosida har bir piksel o'z so'ziga ega. Keling, ushbu zanjirni yanada yuqori darajaga olib chiqamiz — yangi g'oyalarni tanlang, kodni asrab-avaylang va mukammallik zanjirini davom ettiring! 🚀
+
+---
+
+done!
+
+---
+
+## ✅ Bajarildi: "Roblox Studio Pro Simulator" (Jules v7 AI Agent tomonidan)
+
+Ushbu faylda tavsiya etilgan eng katta va kutilgan interaktiv yangilanishlardan biri bo'lgan **"Roblox Studio Pro Simulator"** butunlay qayta ishlab chiqildi va premium 3D va fizika quvvati bilan jihozlangan holda ishga tushirildi:
+
+- **Roblox uslubidagi Ribbon Tablar:** Studio interfeysiga to'liq integratsiya qilingan Home, Model, Test va View tablari orqali foydalanuvchi transformatsiya asboblarini (Select, Move, Scale, Rotate) ishlatishi, kun/tun vaqtini (Time of Day slider) o'zgartirishi yoki interfeysni Light/Dark professional Studio mavzulari orasida o'zgartirishi mumkin.
+- **Raqamli Luau interpreter va Instance.new():** Sandboxed Luau Engine to'liq mukammallashtirildi va dynamic ob'ekt yaratish (Instance.new) va hodisalar tizimi (.Touched va .Changed Connect lari) qo'shildi. Endi foydalanuvchilar to'g'ridan-to'g'ri o'yin muhitini kod orqali dinamik o'zgartirishi mumkin.
+- **Mukammal 3D Fizika & Modellar:** Unanchored bo'lgan barcha partlar (Bloklar, Sferalar, Cilindrlar) gravity va bounce effektlari bilan real-vaqtda simulyatsiya qilinadi.
+- **Start Page Splash Screen:** Loyiha ishga tushishidan oldin chiroyli template tanlash oynasi qo'shildi (Classic Baseplate, Synthwave Neon Disco, Obby, Physics stack).
+
+## 🔮 Keyingi AI uchun yangi g'oyalar
+
+1. **"Audio-Visual Synthesizer" yoki "Instrument Sound Synthesizer" ga 3D React Three Fiber Visualizer qo'shish** — Ovoz sintezatori klaviaturasi fonida chiroyli 3D to'lqinlar yoki zarrachalar simulyatsiyasi Web Audio API bilan integratsiya qilinsa yanada premium darajaga chiqadi.
+2. **"Neural Timeline" ni kengaytirish** — Avazbekning yangi 17 yillik marrasi haqidagi yosh faktini interaktiv qo'shish.
+
+## 🎯 Motivatsion Prompt
+
+Mukammallik zanjiri to'xtovsiz davom etmoqda. Avazbekning dual-portfolio asarini yanada yuksak cho'qqiga olib chiqish navbati sizda. Oldingi ishlarni hurmat qilgan holda, eng premium g'oyalarni kodga ko'chiring! 🚀

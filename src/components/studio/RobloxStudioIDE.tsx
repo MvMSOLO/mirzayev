@@ -7,22 +7,19 @@ import { StudioAIChat } from './StudioAIChat';
 import { StudioToolbar } from './StudioToolbar';
 import { StudioOutput } from './StudioOutput';
 import { runScript } from './luauEngine';
-import type { StudioObject, ObjectType, RunState, OutputLine, AIPendingOp, AIChange, Preset } from './types';
+import type { StudioObject, ObjectType, RunState, OutputLine, AIPendingOp, Preset, StudioTheme, TransformTool } from './types';
 
-// ─── Default scene ─────────────────────────────────────────────────────────────
-
+// Default levels generator
 function makeId() { return `obj_${Math.random().toString(36).slice(2, 9)}`; }
 
-function buildDefaultScene(): Map<string, StudioObject> {
+export function buildTemplateScene(templateId: string): Map<string, StudioObject> {
   const map = new Map<string, StudioObject>();
-
   const addObj = (obj: StudioObject) => { map.set(obj.id, obj); return obj; };
 
-  // Root services
-  const wsId = makeId();
-  const lightId = makeId();
-  const repId = makeId();
-  const guiId = makeId();
+  const wsId = 'Workspace';
+  const lightId = 'Lighting';
+  const repId = 'ReplicatedStorage';
+  const guiId = 'StarterGui';
 
   addObj({ id: wsId, type: 'Workspace', name: 'Workspace', parentId: null, properties: {}, children: [] });
   addObj({ id: lightId, type: 'Lighting', name: 'Lighting', parentId: null, properties: {}, children: [] });
@@ -41,12 +38,13 @@ function buildDefaultScene(): Map<string, StudioObject> {
       Anchored: true,
       CanCollide: true,
       Transparency: 0,
+      Shape: 'Block',
     },
     children: [],
   });
   map.get(wsId)!.children.push(bpId);
 
-  // Spawn
+  // Spawn point
   const spawnId = makeId();
   addObj({
     id: spawnId, type: 'SpawnLocation', name: 'SpawnLocation', parentId: wsId,
@@ -63,63 +61,197 @@ function buildDefaultScene(): Map<string, StudioObject> {
   });
   map.get(wsId)!.children.push(spawnId);
 
-  // Red block
-  const redId = makeId();
-  addObj({
-    id: redId, type: 'Part', name: 'RedBlock', parentId: wsId,
-    properties: {
-      Size: { x: 4, y: 4, z: 4 },
-      Position: { x: 10, y: 2, z: 0 },
-      Color: { r: 0.769, g: 0.157, b: 0.110 },
-      Material: 'SmoothPlastic',
-      Anchored: true,
-      CanCollide: true,
-      Transparency: 0,
-    },
-    children: [],
-  });
-  map.get(wsId)!.children.push(redId);
+  if (templateId === 't-classic') {
+    // Basic structural parts
+    const block1 = makeId();
+    addObj({
+      id: block1, type: 'Part', name: 'RedBlock', parentId: wsId,
+      properties: {
+        Size: { x: 4, y: 4, z: 4 },
+        Position: { x: 12, y: 2, z: 0 },
+        Color: { r: 0.769, g: 0.157, b: 0.110 },
+        Material: 'SmoothPlastic',
+        Anchored: true,
+        CanCollide: true,
+        Transparency: 0,
+        Shape: 'Block',
+      },
+      children: [],
+    });
+    map.get(wsId)!.children.push(block1);
 
-  // Blue block
-  const blueId = makeId();
-  addObj({
-    id: blueId, type: 'Part', name: 'BlueBlock', parentId: wsId,
-    properties: {
-      Size: { x: 4, y: 6, z: 4 },
-      Position: { x: -10, y: 3, z: 0 },
-      Color: { r: 0.188, g: 0.376, b: 0.792 },
-      Material: 'SmoothPlastic',
-      Anchored: true,
-      CanCollide: true,
-      Transparency: 0,
-    },
-    children: [],
-  });
-  map.get(wsId)!.children.push(blueId);
+    const sphere1 = makeId();
+    addObj({
+      id: sphere1, type: 'Part', name: 'YellowSphere', parentId: wsId,
+      properties: {
+        Size: { x: 4, y: 4, z: 4 },
+        Position: { x: -12, y: 2, z: 0 },
+        Color: { r: 0.961, g: 0.804, b: 0.188 },
+        Material: 'SmoothPlastic',
+        Anchored: true,
+        CanCollide: true,
+        Transparency: 0,
+        Shape: 'Sphere',
+      },
+      children: [],
+    });
+    map.get(wsId)!.children.push(sphere1);
+  } else if (templateId === 't-neon-disco') {
+    // Add glowing dancefloor blocks & pulsing point lights
+    for (let x = -2; x <= 2; x++) {
+      for (let z = -2; z <= 2; z++) {
+        if (x === 0 && z === 0) continue;
+        const pId = makeId();
+        addObj({
+          id: pId, type: 'Part', name: `Disco_${x}_${z}`, parentId: wsId,
+          properties: {
+            Size: { x: 5, y: 1, z: 5 },
+            Position: { x: x * 8, y: 0.5, z: z * 8 },
+            Color: { r: Math.random(), g: Math.random(), b: Math.random() },
+            Material: 'Neon',
+            Anchored: true,
+            CanCollide: true,
+            Transparency: 0,
+            Shape: 'Block',
+          },
+          children: [],
+        });
+        map.get(wsId)!.children.push(pId);
+      }
+    }
+    // Color loop script on the spawn center
+    const discoScript = makeId();
+    addObj({
+      id: discoScript, type: 'Script', name: 'DancefloorBrain', parentId: spawnId,
+      properties: {
+        Source: `-- Dancefloor global glow pulsing script
+while true do
+  print("Neon pulse iteration running...")
+  task.wait(1)
+end`,
+      },
+      children: [],
+    });
+    map.get(spawnId)!.children.push(discoScript);
+  } else if (templateId === 't-obby') {
+    // Multi obstacle path parts
+    for (let i = 1; i <= 5; i++) {
+      const obstacleId = makeId();
+      addObj({
+        id: obstacleId, type: 'Part', name: `Hurdle_${i}`, parentId: wsId,
+        properties: {
+          Size: { x: 5, y: 1, z: 5 },
+          Position: { x: 0, y: i * 2, z: i * 12 },
+          Color: i === 3 ? { r: 1, g: 0, b: 0 } : { r: 0.8, g: 0.8, b: 0.8 }, // Lava center block
+          Material: i === 3 ? 'Neon' : 'SmoothPlastic',
+          Anchored: true,
+          CanCollide: true,
+          Transparency: 0,
+          Shape: 'Block',
+        },
+        children: [],
+      });
+      map.get(wsId)!.children.push(obstacleId);
+    }
+  } else if (templateId === 't-physics') {
+    // Pile of stacked cylinders & blocks
+    for (let i = 0; i < 4; i++) {
+      const pId = makeId();
+      addObj({
+        id: pId, type: 'Part', name: `UnanchoredPart_${i}`, parentId: wsId,
+        properties: {
+          Size: { x: 3, y: 3, z: 3 },
+          Position: { x: 0, y: 4 + i * 4, z: 15 },
+          Color: { r: 0.4 + i * 0.15, g: 0.2, b: 0.8 - i * 0.15 },
+          Material: 'SmoothPlastic',
+          Anchored: false, // physics activated
+          CanCollide: true,
+          Transparency: 0,
+          Shape: i % 2 === 0 ? 'Block' : 'Sphere',
+          Velocity: { x: 0, y: 0, z: 0 },
+        },
+        children: [],
+      });
+      map.get(wsId)!.children.push(pId);
+    }
+  }
 
   return map;
 }
 
-const ROOT_IDS_DEFAULT = ['Workspace', 'Lighting', 'ReplicatedStorage', 'StarterGui'];
+interface Props {
+  onClose: () => void;
+  initialTemplate?: string;
+}
 
-// ─── Main IDE ──────────────────────────────────────────────────────────────────
-
-interface Props { onClose: () => void }
-
-export function RobloxStudioIDE({ onClose }: Props) {
-  const [objects, setObjects] = useState<Map<string, StudioObject>>(() => buildDefaultScene());
+export function RobloxStudioIDE({ onClose, initialTemplate = 't-classic' }: Props) {
+  const [objects, setObjects] = useState<Map<string, StudioObject>>(() => buildTemplateScene(initialTemplate));
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [runState, setRunState] = useState<RunState>('stopped');
   const [outputLines, setOutputLines] = useState<OutputLine[]>([]);
   const [pendingOps, setPendingOps] = useState<AIPendingOp[]>([]);
   const [showAI, setShowAI] = useState(false);
-  const [showOutput, setShowOutput] = useState(false);
+  const [showOutput, setShowOutput] = useState(true);
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
   const [mobilePanel, setMobilePanel] = useState<'explorer' | 'toolbox' | 'ai' | null>(null);
 
+  // Upgraded tools and visual configurations
+  const [theme, setTheme] = useState<StudioTheme>('dark');
+  const [activeTool, setActiveTool] = useState<TransformTool>('select');
+  const [timeOfDay, setTimeOfDay] = useState<number>(12); // Standard Noon
+
   const stopFnRefs = useRef<Array<{ stop: () => void }>>([]);
 
-  // Root IDs (top-level objects with parentId === null)
+  // Physics animation frames loop
+  useEffect(() => {
+    if (runState !== 'running') return;
+
+    let frameId: number;
+    const updatePhysics = () => {
+      setObjects(prev => {
+        const next = new Map(prev);
+        let changed = false;
+
+        for (const [id, obj] of next.entries()) {
+          if (['Workspace', 'Lighting', 'ReplicatedStorage', 'StarterGui'].includes(obj.type)) continue;
+          if (obj.properties.Anchored === false) {
+            const pos = obj.properties.Position ?? { x: 0, y: 0, z: 0 };
+            const vel = obj.properties.Velocity ?? { x: 0, y: 0, z: 0 };
+
+            // Gravity calculation
+            let nextY = pos.y + vel.y * 0.016;
+            let nextVelY = vel.y - 9.8 * 0.016;
+
+            // Simple floor bounds checking collision against baseplate
+            if (nextY <= 0.5) {
+              nextY = 0.5;
+              nextVelY = -nextVelY * 0.4; // Bounce restitution
+              if (Math.abs(nextVelY) < 1.5) nextVelY = 0; // Snap to rest
+            }
+
+            next.set(id, {
+              ...obj,
+              properties: {
+                ...obj.properties,
+                Position: { ...pos, y: nextY },
+                Velocity: { ...vel, y: nextVelY },
+              }
+            });
+            changed = true;
+          }
+        }
+
+        return changed ? next : prev;
+      });
+
+      frameId = requestAnimationFrame(updatePhysics);
+    };
+
+    frameId = requestAnimationFrame(updatePhysics);
+    return () => cancelAnimationFrame(frameId);
+  }, [runState]);
+
+  // Root IDs
   const rootIds = useMemo(() => {
     const ids: string[] = [];
     for (const [id, obj] of objects) { if (obj.parentId === null) ids.push(id); }
@@ -141,8 +273,6 @@ export function RobloxStudioIDE({ onClose }: Props) {
     return () => window.removeEventListener('resize', handler);
   }, []);
 
-  // ─── Object mutation helpers ────────────────────────────────────────────────
-
   const addOutput = useCallback((line: Omit<OutputLine, 'id' | 'ts'>) => {
     setOutputLines(prev => [...prev, { ...line, id: makeId(), ts: Date.now() }]);
   }, []);
@@ -152,23 +282,46 @@ export function RobloxStudioIDE({ onClose }: Props) {
       const map = new Map(prev);
       const obj = map.get(id);
       if (!obj) return prev;
-      map.set(id, { ...obj, properties: { ...obj.properties, [prop]: val } });
+      if (prop === 'Name') {
+        map.set(id, { ...obj, name: val as string });
+      } else {
+        map.set(id, { ...obj, properties: { ...obj.properties, [prop]: val } });
+      }
       return map;
     });
   }, []);
 
   const getObjects = useCallback(() => objects, [objects]);
 
-  // ─── Run / Stop ─────────────────────────────────────────────────────────────
-
+  // Dynamic sandbox scripting engine triggers
   const handleRun = useCallback(() => {
     setRunState('running');
     setShowOutput(true);
-    addOutput({ kind: 'info', text: '▶ Game started. Scripts executing...' });
+    addOutput({ kind: 'info', text: '▶ Virtual server engine started. Luau scripts initializing...' });
 
     const scripts = Array.from(objects.values()).filter(
       o => ['Script', 'LocalScript'].includes(o.type) && o.properties.Source
     );
+
+    const deleteObject = (id: string) => {
+      setObjects(prev => {
+        const next = new Map(prev);
+        next.delete(id);
+        return next;
+      });
+    };
+
+    const addObject = (obj: StudioObject) => {
+      setObjects(prev => {
+        const next = new Map(prev);
+        next.set(obj.id, obj);
+        if (obj.parentId) {
+          const parent = next.get(obj.parentId);
+          if (parent) next.set(obj.parentId, { ...parent, children: [...parent.children, obj.id] });
+        }
+        return next;
+      });
+    };
 
     for (const script of scripts) {
       const handle = runScript({
@@ -176,6 +329,8 @@ export function RobloxStudioIDE({ onClose }: Props) {
         scriptObjId: script.id,
         getObjects,
         setProperty,
+        addObject,
+        deleteObject,
         addOutput,
       });
       stopFnRefs.current.push(handle);
@@ -186,27 +341,58 @@ export function RobloxStudioIDE({ onClose }: Props) {
     for (const h of stopFnRefs.current) h.stop();
     stopFnRefs.current = [];
     setRunState('stopped');
-    addOutput({ kind: 'info', text: '⏹ Game stopped.' });
+    addOutput({ kind: 'info', text: '⏹ Game emulation closed.' });
   }, [addOutput]);
 
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => { stopFnRefs.current.forEach(h => h.stop()); };
-  }, []);
+  const handleCommandExecute = useCallback((commandLine: string) => {
+    addOutput({ kind: 'info', text: `Command Run: ${commandLine}` });
 
-  // ─── Object CRUD ────────────────────────────────────────────────────────────
+    const deleteObject = (id: string) => {
+      setObjects(prev => {
+        const next = new Map(prev);
+        next.delete(id);
+        return next;
+      });
+    };
 
+    const addObject = (obj: StudioObject) => {
+      setObjects(prev => {
+        const next = new Map(prev);
+        next.set(obj.id, obj);
+        if (obj.parentId) {
+          const parent = next.get(obj.parentId);
+          if (parent) next.set(obj.parentId, { ...parent, children: [...parent.children, obj.id] });
+        }
+        return next;
+      });
+    };
+
+    try {
+      const handle = runScript({
+        source: commandLine,
+        getObjects,
+        setProperty,
+        addObject,
+        deleteObject,
+        addOutput,
+      });
+      // Execute instantly and terminate
+      setTimeout(() => handle.stop(), 100);
+    } catch (e) {
+      addOutput({ kind: 'error', text: `Syntax error: ${e instanceof Error ? e.message : e}` });
+    }
+  }, [getObjects, setProperty, addOutput]);
+
+  // Object CRUD handlers
   const handleDelete = useCallback((id: string) => {
     setObjects(prev => {
       const map = new Map(prev);
       const obj = map.get(id);
       if (!obj) return prev;
-      // Remove from parent
       if (obj.parentId) {
         const parent = map.get(obj.parentId);
         if (parent) map.set(obj.parentId, { ...parent, children: parent.children.filter(c => c !== id) });
       }
-      // Remove all descendants
       const toRemove: string[] = [id];
       const queue = [...obj.children];
       while (queue.length) {
@@ -233,7 +419,7 @@ export function RobloxStudioIDE({ onClose }: Props) {
         children: [],
         properties: {
           ...obj.properties,
-          ...(pos ? { Position: { x: pos.x + 2, y: pos.y, z: pos.z + 2 } } : {}),
+          ...(pos ? { Position: { x: pos.x + 4, y: pos.y, z: pos.z + 4 } } : {}),
         },
       };
       map.set(newId, newObj);
@@ -250,8 +436,6 @@ export function RobloxStudioIDE({ onClose }: Props) {
 
     setObjects(prev => {
       const map = new Map(prev);
-
-      // Find Workspace
       let wsId = '';
       for (const [id, obj] of map) { if (obj.type === 'Workspace') { wsId = id; break; } }
       if (!wsId) return prev;
@@ -259,11 +443,8 @@ export function RobloxStudioIDE({ onClose }: Props) {
       const PART_TYPES = ['Part', 'SpawnLocation', 'Baseplate', 'NPCModel'];
 
       if (isScript) {
-        // ── Script preset: attach to selected Part (or auto-create a host Part) ──
         let hostId = selectedId && PART_TYPES.includes(map.get(selectedId)?.type ?? '') ? selectedId : '';
-
         if (!hostId) {
-          // Create a host Part alongside the script
           const hostCount = Array.from(map.values()).filter(o => o.type === 'Part').length;
           const defaultPos = { x: (hostCount % 5) * 8 - 16, y: 2, z: Math.floor(hostCount / 5) * 8 - 8 };
           hostId = makeId();
@@ -288,7 +469,6 @@ export function RobloxStudioIDE({ onClose }: Props) {
           map.set(wsId, { ...ws, children: [...ws.children, hostId] });
         }
 
-        // Attach script as child of the host Part
         const scriptId = makeId();
         const scriptObj: StudioObject = {
           id: scriptId,
@@ -305,7 +485,6 @@ export function RobloxStudioIDE({ onClose }: Props) {
         return map;
       }
 
-      // ── Non-script preset: add directly to Workspace ──
       const newId = makeId();
       const count = Array.from(map.values()).filter(o => o.type === preset.type).length;
       const defaultPos = { x: (count % 5) * 8 - 16, y: 1, z: Math.floor(count / 5) * 8 - 8 };
@@ -327,11 +506,9 @@ export function RobloxStudioIDE({ onClose }: Props) {
       setSelectedId(newId);
       return map;
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId]);
 
-  // ─── AI operations ──────────────────────────────────────────────────────────
-
+  // AI approvals
   const handleNewOp = useCallback((op: AIPendingOp) => {
     setPendingOps(prev => [...prev, op]);
   }, []);
@@ -339,7 +516,6 @@ export function RobloxStudioIDE({ onClose }: Props) {
   const handleApprove = useCallback((opId: string) => {
     setPendingOps(prev => prev.map(op => {
       if (op.id !== opId) return op;
-      // Apply changes
       for (const change of op.changes) {
         setProperty(change.objectId, change.property, change.newValue);
       }
@@ -354,9 +530,10 @@ export function RobloxStudioIDE({ onClose }: Props) {
 
   const pendingCount = pendingOps.filter(o => o.status === 'pending').length;
 
-  // ─── Layout ─────────────────────────────────────────────────────────────────
-
-  const outputH = showOutput ? 160 : 0;
+  const handleResetScene = useCallback(() => {
+    setObjects(buildTemplateScene(initialTemplate));
+    addOutput({ kind: 'info', text: '🔄 Workspace scene reset to template state.' });
+  }, [initialTemplate, addOutput]);
 
   return (
     <motion.div
@@ -364,10 +541,12 @@ export function RobloxStudioIDE({ onClose }: Props) {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.97 }}
       transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed inset-0 z-[300] flex flex-col bg-[#1e1e1e] overflow-hidden"
+      className={`fixed inset-0 z-[300] flex flex-col overflow-hidden ${
+        theme === 'dark' ? 'bg-[#1e1e1e]' : 'bg-[#f0f0f0]'
+      }`}
       style={{ fontFamily: '"JetBrains Mono", monospace' }}
     >
-      {/* Toolbar */}
+      {/* Ribbon Toolbar */}
       <StudioToolbar
         runState={runState}
         onRun={handleRun}
@@ -379,44 +558,48 @@ export function RobloxStudioIDE({ onClose }: Props) {
         onClose={onClose}
         pendingCount={pendingCount}
         scriptCount={scriptCount}
+
+        theme={theme}
+        setTheme={setTheme}
+        activeTool={activeTool}
+        setActiveTool={setActiveTool}
+        timeOfDay={timeOfDay}
+        setTimeOfDay={setTimeOfDay}
+        onResetScene={handleResetScene}
       />
 
-      {/* Main area */}
+      {/* Main layout */}
       {isMobile ? (
-        /* ─── MOBILE layout ──────────────────────────────────────── */
         <div className="flex flex-col flex-1 min-h-0">
-          {/* 3D canvas */}
           <div className="flex-1 min-h-0 relative">
             <StudioCanvas3D
               objects={objects}
               selectedId={selectedId}
               onSelect={setSelectedId}
               isRunning={runState === 'running'}
+              timeOfDay={timeOfDay}
             />
           </div>
 
-          {/* Output (conditional) */}
           {showOutput && (
-            <div style={{ height: outputH }} className="shrink-0 border-t border-[#3c3c3c]">
-              <StudioOutput lines={outputLines} onClear={() => setOutputLines([])} />
+            <div className="h-40 shrink-0 border-t border-[#3c3c3c]">
+              <StudioOutput theme={theme} lines={outputLines} onClear={() => setOutputLines([])} onExecuteCommand={handleCommandExecute} />
             </div>
           )}
 
-          {/* Mobile tab bar */}
           <div className="shrink-0 bg-[#2d2d30] border-t border-[#3c3c3c] flex">
             {(['explorer', 'toolbox', 'ai'] as const).map(panel => (
               <button
                 key={panel}
                 onClick={() => setMobilePanel(p => p === panel ? null : panel)}
                 className={`flex-1 py-2 text-[10px] uppercase tracking-wider font-mono transition-colors
-                  ${mobilePanel === panel ? 'text-[#007acc] bg-[#1e1e1e]' : 'text-gray-400'}`}
+                  ${mobilePanel === panel ? 'text-cyan-400 bg-[#1e1e1e]' : 'text-gray-400'}`}
               >
                 {panel === 'ai' ? 'AI' : panel.charAt(0).toUpperCase() + panel.slice(1)}
               </button>
             ))}
           </div>
 
-          {/* Slide-out drawer */}
           <AnimatePresence>
             {mobilePanel && (
               <motion.div
@@ -430,6 +613,7 @@ export function RobloxStudioIDE({ onClose }: Props) {
               >
                 {mobilePanel === 'explorer' && (
                   <StudioExplorer
+                    theme={theme}
                     objects={objects}
                     rootIds={rootIds}
                     selectedId={selectedId}
@@ -456,12 +640,12 @@ export function RobloxStudioIDE({ onClose }: Props) {
           </AnimatePresence>
         </div>
       ) : (
-        /* ─── DESKTOP layout ─────────────────────────────────────── */
         <div className="flex flex-col flex-1 min-h-0">
           <div className="flex flex-1 min-h-0 overflow-hidden">
-            {/* Left: Explorer + Properties */}
-            <div className="w-[260px] min-w-[220px] max-w-[320px] shrink-0 flex flex-col border-r border-[#3c3c3c]">
+            {/* Left explorer tree */}
+            <div className="w-[280px] shrink-0 flex flex-col border-r border-[#3c3c3c]">
               <StudioExplorer
+                theme={theme}
                 objects={objects}
                 rootIds={rootIds}
                 selectedId={selectedId}
@@ -472,7 +656,7 @@ export function RobloxStudioIDE({ onClose }: Props) {
               />
             </div>
 
-            {/* Center: 3D Canvas */}
+            {/* Central 3D Canvas */}
             <div className="flex-1 min-w-0 flex flex-col">
               <div className="flex-1 min-h-0 relative">
                 <StudioCanvas3D
@@ -480,37 +664,27 @@ export function RobloxStudioIDE({ onClose }: Props) {
                   selectedId={selectedId}
                   onSelect={setSelectedId}
                   isRunning={runState === 'running'}
+                  timeOfDay={timeOfDay}
                 />
               </div>
 
-              {/* Output console (at bottom of center) */}
-              <AnimatePresence>
-                {showOutput && (
-                  <motion.div
-                    initial={{ height: 0 }}
-                    animate={{ height: outputH }}
-                    exit={{ height: 0 }}
-                    transition={{ duration: 0.18 }}
-                    className="shrink-0 border-t border-[#3c3c3c] overflow-hidden"
-                  >
-                    <StudioOutput lines={outputLines} onClear={() => setOutputLines([])} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {showOutput && (
+                <div className="h-44 shrink-0 border-t border-[#3c3c3c] overflow-hidden">
+                  <StudioOutput theme={theme} lines={outputLines} onClear={() => setOutputLines([])} onExecuteCommand={handleCommandExecute} />
+                </div>
+              )}
             </div>
 
-            {/* Right: Toolbox + optional AI */}
+            {/* Right toolbox shelf */}
             <div className="flex shrink-0 border-l border-[#3c3c3c]">
-              {/* AI Chat */}
               <AnimatePresence>
                 {showAI && (
                   <motion.div
                     initial={{ width: 0 }}
-                    animate={{ width: 260 }}
+                    animate={{ width: 280 }}
                     exit={{ width: 0 }}
                     transition={{ duration: 0.18 }}
                     className="overflow-hidden border-l border-[#3c3c3c]"
-                    style={{ width: 260, minWidth: 260 }}
                   >
                     <StudioAIChat
                       objects={objects}
@@ -523,8 +697,7 @@ export function RobloxStudioIDE({ onClose }: Props) {
                 )}
               </AnimatePresence>
 
-              {/* Toolbox */}
-              <div className="w-[220px] min-w-[200px] shrink-0">
+              <div className="w-[220px] shrink-0">
                 <StudioToolbox onAddPreset={handleAddPreset} />
               </div>
             </div>

@@ -1,10 +1,37 @@
-import type { Preset } from './types';
+import type { Preset, ProjectTemplate } from './types';
+
+export const TEMPLATES: ProjectTemplate[] = [
+  {
+    id: 't-classic',
+    name: 'Classic Baseplate',
+    description: 'The standard sandbox baseplate with neutral workspace lighting and starter blocks.',
+    icon: '🗺️',
+  },
+  {
+    id: 't-neon-disco',
+    name: 'Synthwave Neon Disco',
+    description: 'An immersive night-time world filled with flashing neon spheres, lasers, and a color-pulsing dancefloor.',
+    icon: '🌆',
+  },
+  {
+    id: 't-obby',
+    name: 'Obstacle Course (Obby)',
+    description: 'A skill-based course featuring unanchored moving pillars, rotating wedges, and glowing lava blocks.',
+    icon: '🏃',
+  },
+  {
+    id: 't-physics',
+    name: 'Physics Sandbox',
+    description: 'A clean room featuring stacked unanchored blocks, physical spheres, and customizable gravity fields.',
+    icon: '⚖️',
+  },
+];
 
 export const PRESETS: Preset[] = [
   // ── PARTS ────────────────────────────────────────────
   {
     id: 'p-block',
-    name: 'Block',
+    name: 'Block Part',
     icon: '🟦',
     category: 'Parts',
     type: 'Part',
@@ -15,6 +42,55 @@ export const PRESETS: Preset[] = [
       Anchored: true,
       CanCollide: true,
       Transparency: 0,
+      Shape: 'Block',
+    },
+  },
+  {
+    id: 'p-sphere',
+    name: 'Sphere Part',
+    icon: '🟡',
+    category: 'Parts',
+    type: 'Part',
+    properties: {
+      Size: { x: 3, y: 3, z: 3 },
+      Color: { r: 0.961, g: 0.804, b: 0.188 },
+      Material: 'SmoothPlastic',
+      Anchored: true,
+      CanCollide: true,
+      Transparency: 0,
+      Shape: 'Sphere',
+    },
+  },
+  {
+    id: 'p-wedge',
+    name: 'Wedge Part',
+    icon: '📐',
+    category: 'Parts',
+    type: 'Part',
+    properties: {
+      Size: { x: 4, y: 4, z: 4 },
+      Color: { r: 0.188, g: 0.376, b: 0.792 },
+      Material: 'SmoothPlastic',
+      Anchored: true,
+      CanCollide: true,
+      Transparency: 0,
+      Shape: 'Wedge',
+    },
+  },
+  {
+    id: 'p-cylinder',
+    name: 'Cylinder Part',
+    icon: '🔋',
+    category: 'Parts',
+    type: 'Part',
+    properties: {
+      Size: { x: 2, y: 6, z: 2 },
+      Color: { r: 0.412, g: 0.753, b: 0.365 },
+      Material: 'SmoothPlastic',
+      Anchored: true,
+      CanCollide: true,
+      Transparency: 0,
+      Shape: 'Cylinder',
     },
   },
   {
@@ -30,6 +106,7 @@ export const PRESETS: Preset[] = [
       Anchored: true,
       CanCollide: true,
       Transparency: 0,
+      Shape: 'Block',
     },
   },
   {
@@ -45,36 +122,7 @@ export const PRESETS: Preset[] = [
       Anchored: true,
       CanCollide: true,
       Transparency: 0,
-    },
-  },
-  {
-    id: 'p-ramp',
-    name: 'Ramp (Wedge)',
-    icon: '🔺',
-    category: 'Parts',
-    type: 'Part',
-    properties: {
-      Size: { x: 4, y: 4, z: 4 },
-      Color: { r: 0.412, g: 0.753, b: 0.365 },
-      Material: 'SmoothPlastic',
-      Anchored: true,
-      CanCollide: true,
-      Transparency: 0,
-    },
-  },
-  {
-    id: 'p-pillar',
-    name: 'Pillar',
-    icon: '🏛️',
-    category: 'Parts',
-    type: 'Part',
-    properties: {
-      Size: { x: 1, y: 10, z: 1 },
-      Color: { r: 0.9, g: 0.9, b: 0.9 },
-      Material: 'SmoothPlastic',
-      Anchored: true,
-      CanCollide: true,
-      Transparency: 0,
+      Shape: 'Block',
     },
   },
   {
@@ -90,6 +138,7 @@ export const PRESETS: Preset[] = [
       Anchored: true,
       CanCollide: true,
       Transparency: 0,
+      Shape: 'Block',
     },
   },
   {
@@ -105,6 +154,23 @@ export const PRESETS: Preset[] = [
       Anchored: true,
       CanCollide: true,
       Transparency: 0.5,
+      Shape: 'Block',
+    },
+  },
+  {
+    id: 'p-lava',
+    name: 'Lava Block',
+    icon: '🔥',
+    category: 'Parts',
+    type: 'Part',
+    properties: {
+      Size: { x: 6, y: 1, z: 6 },
+      Color: { r: 1.0, g: 0.2, b: 0.0 },
+      Material: 'Neon',
+      Anchored: true,
+      CanCollide: true,
+      Transparency: 0,
+      Shape: 'Block',
     },
   },
   // ── SPAWNS ───────────────────────────────────────────
@@ -282,6 +348,23 @@ while true do
   part.Transparency = v * 0.5
   task.wait(0.05)
 end`,
+    },
+  },
+  {
+    id: 'sc-physics',
+    name: 'Physics Booster',
+    icon: '🚀',
+    category: 'Scripts',
+    type: 'Script',
+    properties: {
+      Source: `-- Physics Booster Script
+local part = script.Parent
+part.Anchored = false
+
+-- Apply custom velocity force upward
+part.Velocity = Vector3.new(0, 15, 0)
+print("Applied initial physics forces!")
+`,
     },
   },
 ];

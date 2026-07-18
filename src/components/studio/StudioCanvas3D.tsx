@@ -1,10 +1,10 @@
 import { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Grid, Html } from '@react-three/drei';
+import { OrbitControls, Grid, Sparkles } from '@react-three/drei';
 import * as THREE from 'three';
 import type { StudioObject, Vec3, Col3 } from './types';
 
-// ─── helpers ─────────────────────────────────────────────────────────────────
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function col3ToHex(c: Col3): string {
   const r = Math.round(c.r * 255).toString(16).padStart(2, '0');
@@ -17,12 +17,26 @@ function toColor(c?: Col3) {
   return c ? new THREE.Color(c.r, c.g, c.b) : new THREE.Color(0.6, 0.6, 0.6);
 }
 
-// ─── individual renderers ─────────────────────────────────────────────────────
+// ─── Individual Renderers ─────────────────────────────────────────────────────
 
 interface ObjProps {
   obj: StudioObject;
   selected: boolean;
   onClick: () => void;
+}
+
+function GeometrySelector({ shape, size }: { shape?: string; size: Vec3 }) {
+  if (shape === 'Sphere') {
+    return <sphereGeometry args={[size.x / 2, 32, 32]} />;
+  }
+  if (shape === 'Cylinder') {
+    return <cylinderGeometry args={[size.x / 2, size.z / 2, size.y, 32]} />;
+  }
+  if (shape === 'Wedge') {
+    // Custom wedge shape using direct BufferGeometry or a box deformation, simplified box fallback
+    return <boxGeometry args={[size.x, size.y, size.z]} />;
+  }
+  return <boxGeometry args={[size.x, size.y, size.z]} />;
 }
 
 function PartMesh({ obj, selected, onClick }: ObjProps) {
@@ -33,26 +47,67 @@ function PartMesh({ obj, selected, onClick }: ObjProps) {
   const col  = toColor(obj.properties.Color as Col3 | undefined);
   const mat  = (obj.properties.Material as string) ?? 'SmoothPlastic';
   const trans = (obj.properties.Transparency as number) ?? 0;
+  const shape = obj.properties.Shape;
 
   const isNeon = mat === 'Neon';
   const isGlass = mat === 'Glass';
 
+  useFrame(() => {
+    if (ref.current) {
+      ref.current.position.set(pos.x, pos.y, pos.z);
+      ref.current.rotation.set(
+        (rot.x * Math.PI) / 180,
+        (rot.y * Math.PI) / 180,
+        (rot.z * Math.PI) / 180
+      );
+    }
+  });
+
   return (
-    <group position={[pos.x, pos.y, pos.z]} rotation={[rot.x * Math.PI / 180, rot.y * Math.PI / 180, rot.z * Math.PI / 180]}>
+    <group>
       <mesh ref={ref} onClick={(e) => { e.stopPropagation(); onClick(); }} castShadow receiveShadow>
-        <boxGeometry args={[size.x, size.y, size.z]} />
-        {isNeon
-          ? <meshStandardMaterial color={col} emissive={col} emissiveIntensity={2} transparent={trans > 0} opacity={1 - trans} />
-          : isGlass
-          ? <meshPhysicalMaterial color={col} transparent opacity={Math.max(0.1, 1 - trans - 0.4)} roughness={0} metalness={0} transmission={0.6} />
-          : <meshLambertMaterial color={col} transparent={trans > 0} opacity={1 - trans} />
-        }
+        <GeometrySelector shape={shape} size={size} />
+        {isNeon ? (
+          <meshStandardMaterial
+            color={col}
+            emissive={col}
+            emissiveIntensity={obj.properties.GlowIntensity ?? 2}
+            transparent={trans > 0}
+            opacity={1 - trans}
+          />
+        ) : isGlass ? (
+          <meshPhysicalMaterial
+            color={col}
+            transparent
+            opacity={Math.max(0.1, 1 - trans - 0.4)}
+            roughness={0}
+            metalness={0.1}
+            transmission={0.8}
+            ior={1.5}
+          />
+        ) : (
+          <meshStandardMaterial
+            color={col}
+            roughness={mat === 'Metal' ? 0.2 : 0.7}
+            metalness={mat === 'Metal' ? 0.8 : 0.1}
+            transparent={trans > 0}
+            opacity={1 - trans}
+          />
+        )}
       </mesh>
       {selected && (
-        <lineSegments>
-          <edgesGeometry args={[new THREE.BoxGeometry(size.x + 0.05, size.y + 0.05, size.z + 0.05)]} />
-          <lineBasicMaterial color="#ffcc00" linewidth={2} />
-        </lineSegments>
+        <group position={[pos.x, pos.y, pos.z]} rotation={[(rot.x * Math.PI) / 180, (rot.y * Math.PI) / 180, (rot.z * Math.PI) / 180]}>
+          <lineSegments>
+            <edgesGeometry args={[
+              shape === 'Sphere'
+                ? new THREE.SphereGeometry(size.x / 2 + 0.05, 16, 16)
+                : shape === 'Cylinder'
+                ? new THREE.CylinderGeometry(size.x / 2 + 0.05, size.z / 2 + 0.05, size.y + 0.05, 16)
+                : new THREE.BoxGeometry(size.x + 0.05, size.y + 0.05, size.z + 0.05)
+            ]} />
+            <lineBasicMaterial color="#ffcc00" linewidth={2} />
+          </lineSegments>
+        </group>
       )}
     </group>
   );
@@ -63,32 +118,39 @@ function SpawnMesh({ obj, selected, onClick }: ObjProps) {
   const pos  = (obj.properties.Position as Vec3) ?? { x: 0, y: 0.5, z: 0 };
   const col  = toColor(obj.properties.Color as Col3 | undefined);
 
-  // Checkerboard texture
   const texture = useMemo(() => {
     const canvas = document.createElement('canvas');
-    canvas.width = canvas.height = 64;
+    canvas.width = canvas.height = 128;
     const ctx2d = canvas.getContext('2d')!;
     ctx2d.fillStyle = col3ToHex((obj.properties.Color as Col3) ?? { r: 0.106, g: 0.165, b: 0.208 });
-    ctx2d.fillRect(0, 0, 64, 64);
+    ctx2d.fillRect(0, 0, 128, 128);
     ctx2d.fillStyle = '#ffffff22';
-    ctx2d.fillRect(0, 0, 32, 32); ctx2d.fillRect(32, 32, 32, 32);
+    ctx2d.fillRect(0, 0, 64, 64);
+    ctx2d.fillRect(64, 64, 64, 64);
+    // Draw spawn logo 'R'
+    ctx2d.fillStyle = '#ffffff';
+    ctx2d.font = 'bold 48px monospace';
+    ctx2d.textAlign = 'center';
+    ctx2d.textBaseline = 'middle';
+    ctx2d.fillText('R', 64, 64);
+
     const tex = new THREE.CanvasTexture(canvas);
     tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-    tex.repeat.set(3, 3);
+    tex.repeat.set(1, 1);
     return tex;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [obj.properties.Color]);
 
   return (
     <group position={[pos.x, pos.y, pos.z]}>
       <mesh onClick={(e) => { e.stopPropagation(); onClick(); }} castShadow receiveShadow>
         <boxGeometry args={[size.x, size.y, size.z]} />
-        <meshLambertMaterial color={col} map={texture} />
+        <meshStandardMaterial color={col} map={texture} roughness={0.4} />
       </mesh>
-      {/* Spawn arrow indicator */}
+      {/* Dynamic particles above spawn */}
+      <Sparkles position={[0, size.y / 2 + 1, 0]} count={6} scale={size.x * 0.8} size={2} speed={0.5} color="#00ffcc" />
       <mesh position={[0, size.y / 2 + 0.6, 0]}>
-        <coneGeometry args={[0.4, 0.8, 8]} />
-        <meshLambertMaterial color="#00ff88" />
+        <coneGeometry args={[0.4, 0.8, 16]} />
+        <meshStandardMaterial color="#00ff88" emissive="#00ff88" emissiveIntensity={1} />
       </mesh>
       {selected && (
         <lineSegments>
@@ -110,39 +172,39 @@ function NPCMesh({ obj, selected, onClick }: ObjProps) {
       {/* Torso */}
       <mesh position={[0, bodyH / 2 + 1.2, 0]} castShadow>
         <boxGeometry args={[bodyW, bodyH, 0.8]} />
-        <meshLambertMaterial color={col} />
+        <meshStandardMaterial color={col} roughness={0.5} />
       </mesh>
       {/* Head */}
       <mesh position={[0, bodyH + 1.2 + headR * 1.2, 0]} castShadow>
         <boxGeometry args={[1.1, 1.1, 1.1]} />
-        <meshLambertMaterial color={col} />
+        <meshStandardMaterial color={col} roughness={0.5} />
       </mesh>
       {/* Eyes */}
       <mesh position={[-0.22, bodyH + 1.4 + headR * 1.2, 0.56]}>
         <boxGeometry args={[0.22, 0.18, 0.05]} />
-        <meshLambertMaterial color="#1a1a2e" />
+        <meshStandardMaterial color="#1a1a2e" />
       </mesh>
       <mesh position={[0.22, bodyH + 1.4 + headR * 1.2, 0.56]}>
         <boxGeometry args={[0.22, 0.18, 0.05]} />
-        <meshLambertMaterial color="#1a1a2e" />
+        <meshStandardMaterial color="#1a1a2e" />
       </mesh>
       {/* Arms */}
       <mesh position={[bodyW / 2 + 0.4, bodyH / 2 + 1.2, 0]} castShadow>
         <boxGeometry args={[0.6, bodyH * 0.9, 0.6]} />
-        <meshLambertMaterial color={col} />
+        <meshStandardMaterial color={col} roughness={0.5} />
       </mesh>
       <mesh position={[-(bodyW / 2 + 0.4), bodyH / 2 + 1.2, 0]} castShadow>
         <boxGeometry args={[0.6, bodyH * 0.9, 0.6]} />
-        <meshLambertMaterial color={col} />
+        <meshStandardMaterial color={col} roughness={0.5} />
       </mesh>
       {/* Legs */}
       <mesh position={[0.4, 0.6, 0]} castShadow>
         <boxGeometry args={[0.6, 1.2, 0.6]} />
-        <meshLambertMaterial color={col} />
+        <meshStandardMaterial color={col} roughness={0.5} />
       </mesh>
       <mesh position={[-0.4, 0.6, 0]} castShadow>
         <boxGeometry args={[0.6, 1.2, 0.6]} />
-        <meshLambertMaterial color={col} />
+        <meshStandardMaterial color={col} roughness={0.5} />
       </mesh>
       {selected && (
         <lineSegments>
@@ -164,12 +226,13 @@ function PointLightObj({ obj, selected, onClick }: ObjProps) {
     <group position={[pos.x, pos.y, pos.z]} onClick={(e) => { e.stopPropagation(); onClick(); }}>
       <pointLight color={col} intensity={brightness} distance={range} castShadow />
       <mesh>
-        <sphereGeometry args={[0.2, 8, 8]} />
+        <sphereGeometry args={[0.3, 16, 16]} />
         <meshStandardMaterial color={col} emissive={col} emissiveIntensity={3} />
       </mesh>
+      <Sparkles count={5} scale={1.2} size={1.5} speed={0.4} color={col} />
       {selected && (
         <mesh>
-          <sphereGeometry args={[0.3, 8, 8]} />
+          <sphereGeometry args={[0.45, 16, 16]} />
           <meshBasicMaterial color="#ffcc00" wireframe />
         </mesh>
       )}
@@ -178,10 +241,36 @@ function PointLightObj({ obj, selected, onClick }: ObjProps) {
 }
 
 function Baseplate() {
+  const gridTexture = useMemo(() => {
+    // Generate Classic Lego/Roblox grid Baseplate style
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = 128;
+    const ctx = canvas.getContext('2d')!;
+    ctx.fillStyle = '#6b9e6b';
+    ctx.fillRect(0, 0, 128, 128);
+    // Darker borders
+    ctx.strokeStyle = '#5a8d5a';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(0, 0, 128, 128);
+    // Small studs
+    ctx.fillStyle = '#7cae7c';
+    ctx.beginPath();
+    ctx.arc(32, 32, 10, 0, Math.PI * 2);
+    ctx.arc(96, 32, 10, 0, Math.PI * 2);
+    ctx.arc(32, 96, 10, 0, Math.PI * 2);
+    ctx.arc(96, 96, 10, 0, Math.PI * 2);
+    ctx.fill();
+
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    tex.repeat.set(128, 128);
+    return tex;
+  }, []);
+
   return (
     <mesh receiveShadow position={[0, -0.5, 0]}>
       <boxGeometry args={[512, 1, 512]} />
-      <meshLambertMaterial color="#6b9e6b" />
+      <meshStandardMaterial map={gridTexture} roughness={0.6} metalness={0.1} />
     </mesh>
   );
 }
@@ -192,9 +281,10 @@ interface SceneProps {
   objects: Map<string, StudioObject>;
   selectedId: string | null;
   onSelect: (id: string | null) => void;
+  timeOfDay: number; // 0 to 24 hours scale
 }
 
-function Scene({ objects, selectedId, onSelect }: SceneProps) {
+function Scene({ objects, selectedId, onSelect, timeOfDay }: SceneProps) {
   const { gl } = useThree();
 
   useEffect(() => {
@@ -210,13 +300,41 @@ function Scene({ objects, selectedId, onSelect }: SceneProps) {
     );
   }, [objects]);
 
+  // Lighting parameters derived from Time of Day
+  const { ambientIntensity, sunColor, sunIntensity, sunPosition, fogColor, skyColor } = useMemo(() => {
+    const isNight = timeOfDay < 6 || timeOfDay > 18;
+    let ratio = 1;
+    if (timeOfDay >= 6 && timeOfDay <= 12) ratio = (timeOfDay - 6) / 6;
+    else if (timeOfDay > 12 && timeOfDay <= 18) ratio = 1 - (timeOfDay - 12) / 6;
+    else ratio = 0; // complete night
+
+    return {
+      ambientIntensity: 0.15 + ratio * 0.5,
+      sunColor: isNight ? '#5566aa' : '#fff8ee',
+      sunIntensity: isNight ? 0.3 : 1.5,
+      sunPosition: [
+        50 * Math.cos((timeOfDay / 24) * Math.PI * 2),
+        80 * Math.sin((timeOfDay / 24) * Math.PI * 2),
+        30,
+      ] as [number, number, number],
+      fogColor: isNight ? '#050510' : '#87ceeb',
+      skyColor: isNight ? '#050515' : '#87ceeb',
+    };
+  }, [timeOfDay]);
+
   return (
     <>
+      {/* Sky color matches time of day */}
+      <color attach="background" args={[skyColor]} />
+      {/* Fog effect */}
+      <fog attach="fog" args={[fogColor, 100, 350]} />
+
       {/* Lighting */}
-      <ambientLight intensity={0.6} />
+      <ambientLight intensity={ambientIntensity} />
       <directionalLight
-        position={[50, 80, 30]}
-        intensity={1.2}
+        position={sunPosition}
+        color={sunColor}
+        intensity={sunIntensity}
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
@@ -227,9 +345,11 @@ function Scene({ objects, selectedId, onSelect }: SceneProps) {
         shadow-camera-top={100}
         shadow-camera-bottom={-100}
       />
-      <hemisphereLight args={['#87ceeb', '#6b9e6b', 0.4]} />
 
-      {/* Ground */}
+      {/* Hemisphere sky light */}
+      <hemisphereLight args={[skyColor, '#4b7e4b', 0.4]} />
+
+      {/* Ground Baseplate */}
       <Baseplate />
 
       {/* Grid overlay */}
@@ -238,14 +358,17 @@ function Scene({ objects, selectedId, onSelect }: SceneProps) {
         args={[100, 100]}
         cellSize={4}
         cellThickness={0.5}
-        cellColor="#555"
+        cellColor="#666"
         sectionSize={20}
         sectionThickness={1}
-        sectionColor="#777"
+        sectionColor="#888"
         fadeDistance={200}
         fadeStrength={1}
         followCamera={false}
       />
+
+      {/* Sparks during night / general environment dust */}
+      <Sparkles count={timeOfDay < 6 || timeOfDay > 18 ? 100 : 30} position={[0, 15, 0]} scale={80} size={1.2} speed={0.4} color="#ffffff" />
 
       {/* Studio objects */}
       {visibleObjects.map(obj => {
@@ -277,28 +400,26 @@ function Scene({ objects, selectedId, onSelect }: SceneProps) {
   );
 }
 
-// ─── Public component ─────────────────────────────────────────────────────────
+// ─── Public Component ─────────────────────────────────────────────────────────
 
 interface Props {
   objects: Map<string, StudioObject>;
   selectedId: string | null;
   onSelect: (id: string | null) => void;
   isRunning: boolean;
+  timeOfDay?: number; // 0 to 24 hours
 }
 
-export function StudioCanvas3D({ objects, selectedId, onSelect, isRunning }: Props) {
+export function StudioCanvas3D({ objects, selectedId, onSelect, isRunning, timeOfDay = 12 }: Props) {
   return (
     <div className="relative w-full h-full bg-[#87ceeb]">
-      {/* Sky gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#87ceeb] to-[#c9e8ff] pointer-events-none" />
-
       <Canvas
-        camera={{ position: [28, 22, 28], fov: 60, near: 0.1, far: 1000 }}
+        camera={{ position: [35, 25, 35], fov: 60, near: 0.1, far: 1000 }}
         shadows
         dpr={[1, 2]}
         style={{ width: '100%', height: '100%' }}
       >
-        <Scene objects={objects} selectedId={selectedId} onSelect={onSelect} />
+        <Scene objects={objects} selectedId={selectedId} onSelect={onSelect} timeOfDay={timeOfDay} />
       </Canvas>
 
       {/* Run mode indicator */}
@@ -309,8 +430,13 @@ export function StudioCanvas3D({ objects, selectedId, onSelect, isRunning }: Pro
         </div>
       )}
 
+      {/* Time of Day HUD Overlay */}
+      <div className="absolute top-2 right-2 bg-black/60 border border-white/10 px-3 py-1.5 rounded font-mono text-[9px] text-white/80 uppercase tracking-wider select-none">
+        🕒 Time: {String(Math.floor(timeOfDay)).padStart(2, '0')}:00 {timeOfDay >= 12 ? 'PM' : 'AM'}
+      </div>
+
       {/* Coords hint */}
-      <div className="absolute bottom-2 left-2 text-[9px] font-mono text-black/30 pointer-events-none">
+      <div className="absolute bottom-2 left-2 text-[9px] font-mono text-white/50 pointer-events-none drop-shadow">
         Left-click select · Orbit drag · Scroll zoom
       </div>
     </div>
