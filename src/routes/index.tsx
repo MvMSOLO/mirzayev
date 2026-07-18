@@ -25,6 +25,7 @@ import { KineticCursor } from "@/components/portfolio/KineticCursor";
 import { ScrollProgress } from "@/components/portfolio/ScrollProgress";
 import { InteractiveLabPlayground } from "@/components/portfolio/InteractiveLabPlayground";
 import { NeuralTimeline } from "@/components/portfolio/NeuralTimeline";
+import { RobloxStudio } from "@/components/portfolio/RobloxStudio";
 import { SecretConsole } from "@/components/secret/SecretConsole";
 import { PortalSwitcher } from "@/components/portfolio/PortalSwitcher";
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -90,6 +91,7 @@ function Shell() {
           <LazySection><WhatIDo /></LazySection>
           <LazySection><SkillsMarquee /></LazySection>
           <LazySection><SkillsDetail /></LazySection>
+          <LazySection><RobloxStudio /></LazySection>
           <LazySection><ToolkitGrid /></LazySection>
           <LazySection><AetherFlow /></LazySection>
           <LazySection><Work /></LazySection>
