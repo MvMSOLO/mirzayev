@@ -7,6 +7,7 @@ import { useSound } from "@/hooks/useSound";
 
 interface SecretTerminalProps {
   onGipnos: () => void;
+  onRobloxStudio: () => void;
 }
 
 type Line = { kind: "in" | "out" | "err" | "ok"; text: string };
@@ -42,6 +43,7 @@ const KNOWN_COMMANDS = [
   "matrix",
   "gipnos",
   "zen",
+  "robloxstudio",
   "exit",
   "close",
 ];
@@ -59,7 +61,7 @@ function scrollTo(id: string) {
   return false;
 }
 
-export function SecretTerminal({ onGipnos }: SecretTerminalProps) {
+export function SecretTerminal({ onGipnos, onRobloxStudio }: SecretTerminalProps) {
   const { lang, setLang } = useLang();
   const { mode, enter, exit, phase } = useUniverse();
   const { play, playClick, playOpen, playClose, toggleMute, isMuted } = useSound();
@@ -318,6 +320,20 @@ export function SecretTerminal({ onGipnos }: SecretTerminalProps) {
           setTimeout(() => setShowMatrix(false), 4200);
           break;
         }
+        case "robloxstudio": {
+          play("scan");
+          print(
+            lang === "uz"
+              ? "→ Roblox Studio IDE yuklanmoqda... 🟥"
+              : "→ Loading Roblox Studio IDE... 🟥",
+            "ok",
+          );
+          setTimeout(() => {
+            onRobloxStudio();
+            closeTerminal();
+          }, 600);
+          break;
+        }
         case "gipnos":
         case "gipnoz":
         case "hypnos": {
@@ -394,6 +410,7 @@ export function SecretTerminal({ onGipnos }: SecretTerminalProps) {
       playOpen,
       closeTerminal,
       onGipnos,
+      onRobloxStudio,
       print,
     ],
   );
