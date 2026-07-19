@@ -652,51 +652,72 @@ export function RobloxStudioIDE({ onClose, initialTemplate = 't-classic' }: Prop
               <button
                 key={panel}
                 onClick={() => setMobilePanel(p => p === panel ? null : panel)}
-                className={`flex-1 py-2 text-[10px] uppercase tracking-wider font-mono transition-colors
-                  ${mobilePanel === panel ? 'text-cyan-400 bg-[#1e1e1e]' : 'text-gray-400'}`}
+                className={`flex-1 py-3.5 text-[11px] font-bold uppercase tracking-wider font-mono transition-colors border-r last:border-0 border-[#3c3c3c]
+                  ${mobilePanel === panel ? 'text-cyan-400 bg-[#1e1e1e]' : 'text-gray-300'}`}
               >
-                {panel === 'ai' ? 'AI' : panel.charAt(0).toUpperCase() + panel.slice(1)}
+                {panel === 'ai' ? '🤖 AI Chat' : panel === 'toolbox' ? '🧰 Toolbox' : '📂 Explorer'}
               </button>
             ))}
           </div>
 
           <AnimatePresence>
             {mobilePanel && (
-              <motion.div
-                key={mobilePanel}
-                initial={{ y: '100%' }}
-                animate={{ y: 0 }}
-                exit={{ y: '100%' }}
-                transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-                className="fixed bottom-0 left-0 right-0 z-[400] bg-[#252526] border-t border-[#3c3c3c] shadow-2xl"
-                style={{ height: '60vh' }}
-              >
-                {mobilePanel === 'explorer' && (
-                  <StudioExplorer
-                    theme={theme}
-                    objects={objects}
-                    rootIds={rootIds}
-                    selectedId={selectedId}
-                    onSelect={setSelectedId}
-                    onDelete={handleDelete}
-                    onDuplicate={handleDuplicate}
-                    onPropChange={setProperty}
-                    onAddChild={handleAddChild}
-                  />
-                )}
-                {mobilePanel === 'toolbox' && (
-                  <StudioToolbox onAddPreset={handleAddPreset} />
-                )}
-                {mobilePanel === 'ai' && (
-                  <StudioAIChat
-                    objects={objects}
-                    pendingOps={pendingOps}
-                    onApprove={handleApprove}
-                    onReject={handleReject}
-                    onNewOp={handleNewOp}
-                  />
-                )}
-              </motion.div>
+              <>
+                {/* Backdrop overlay */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.5 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-[399] bg-black"
+                  onClick={() => setMobilePanel(null)}
+                />
+
+                <motion.div
+                  key={mobilePanel}
+                  initial={{ y: '100%' }}
+                  animate={{ y: 0 }}
+                  exit={{ y: '100%' }}
+                  transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+                  className="fixed bottom-0 left-0 right-0 z-[400] bg-[#252526] border-t border-[#444] shadow-2xl rounded-t-xl flex flex-col"
+                  style={{ height: '70vh' }}
+                >
+                  {/* Handlebar grab */}
+                  <div
+                    className="h-9 w-full flex items-center justify-center border-b border-[#3c3c3c] bg-[#2d2d30] rounded-t-xl shrink-0 cursor-pointer"
+                    onClick={() => setMobilePanel(null)}
+                  >
+                    <div className="w-12 h-1 bg-gray-500 rounded-full" />
+                  </div>
+
+                  <div className="flex-1 overflow-hidden">
+                    {mobilePanel === 'explorer' && (
+                      <StudioExplorer
+                        theme={theme}
+                        objects={objects}
+                        rootIds={rootIds}
+                        selectedId={selectedId}
+                        onSelect={setSelectedId}
+                        onDelete={handleDelete}
+                        onDuplicate={handleDuplicate}
+                        onPropChange={setProperty}
+                        onAddChild={handleAddChild}
+                      />
+                    )}
+                    {mobilePanel === 'toolbox' && (
+                      <StudioToolbox onAddPreset={handleAddPreset} />
+                    )}
+                    {mobilePanel === 'ai' && (
+                      <StudioAIChat
+                        objects={objects}
+                        pendingOps={pendingOps}
+                        onApprove={handleApprove}
+                        onReject={handleReject}
+                        onNewOp={handleNewOp}
+                      />
+                    )}
+                  </div>
+                </motion.div>
+              </>
             )}
           </AnimatePresence>
         </div>

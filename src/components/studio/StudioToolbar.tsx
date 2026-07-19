@@ -77,7 +77,7 @@ export function StudioToolbar({
       </div>
 
       {/* 2. Ribbon Tabs */}
-      <div className={`flex items-center px-1 h-7 ${
+      <div className={`flex items-center px-1 h-7 overflow-x-auto scrollbar-none touch-pan-x whitespace-nowrap ${
         theme === 'dark' ? 'bg-[#252526]' : 'bg-[#eaeaea]'
       }`}>
         {[
@@ -89,7 +89,7 @@ export function StudioToolbar({
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
-            className={`px-3.5 h-full flex items-center gap-1.5 text-[10px] uppercase tracking-wide font-mono transition-all rounded-t border-t-2 ${
+            className={`px-3.5 h-full inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wide font-mono transition-all rounded-t border-t-2 shrink-0 ${
               activeTab === tab.id
                 ? theme === 'dark'
                   ? 'bg-[#2d2d30] text-cyan-400 border-cyan-500'
@@ -104,14 +104,14 @@ export function StudioToolbar({
       </div>
 
       {/* 3. Upgraded Ribbon Bar Panel Tools */}
-      <div className={`p-1.5 h-14 flex items-center gap-4 overflow-x-auto min-w-0 ${
+      <div className={`p-1.5 h-14 flex items-center gap-4 overflow-x-auto scrollbar-none touch-pan-x whitespace-nowrap min-w-0 ${
         theme === 'dark' ? 'bg-[#2d2d30]' : 'bg-[#f3f3f3]'
       }`}>
         {/* TABS CONTENT: HOME */}
         {activeTab === 'home' && (
           <>
             {/* Tools group */}
-            <div className={`flex items-center gap-1 border-r pr-3 ${theme === 'dark' ? 'border-white/10' : 'border-black/10'}`}>
+            <div className={`inline-flex items-center gap-1 border-r pr-3 shrink-0 ${theme === 'dark' ? 'border-white/10' : 'border-black/10'}`}>
               <div className="flex flex-col text-[8px] font-mono uppercase tracking-widest opacity-40 justify-center h-full mr-1">Tools</div>
               {[
                 { id: 'select', label: 'Select', icon: '🎯' },
@@ -122,7 +122,7 @@ export function StudioToolbar({
                 <button
                   key={t.id}
                   onClick={() => setActiveTool(t.id as any)}
-                  className={`px-2 py-1 rounded text-[10px] font-mono flex items-center gap-1 transition-all ${
+                  className={`px-2 py-1 rounded text-[10px] font-mono inline-flex items-center gap-1 transition-all shrink-0 ${
                     activeTool === t.id
                       ? 'bg-cyan-500/25 border border-cyan-500/60 text-cyan-400 font-bold'
                       : 'hover:bg-white/10 border border-transparent'
@@ -135,10 +135,10 @@ export function StudioToolbar({
             </div>
 
             {/* Run state controls */}
-            <div className={`flex items-center gap-1.5 border-r pr-3 ${theme === 'dark' ? 'border-white/10' : 'border-black/10'}`}>
+            <div className={`inline-flex items-center gap-1.5 border-r pr-3 shrink-0 ${theme === 'dark' ? 'border-white/10' : 'border-black/10'}`}>
               <button
                 onClick={isRunning ? onStop : onRun}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded text-[10px] font-bold uppercase tracking-wider transition-all shadow-md ${
+                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded text-[10px] font-bold uppercase tracking-wider transition-all shadow-md shrink-0 ${
                   isRunning
                     ? 'bg-red-600 text-white hover:bg-red-500 shadow-red-900/20'
                     : 'bg-green-600 text-white hover:bg-green-500 shadow-green-900/20'
@@ -151,14 +151,14 @@ export function StudioToolbar({
               <button
                 onClick={onResetScene}
                 title="Restore default level template scene"
-                className="px-2 py-1 bg-amber-600 hover:bg-amber-500 text-white rounded text-[10px] font-mono transition-colors"
+                className="px-2 py-1 bg-amber-600 hover:bg-amber-500 text-white rounded text-[10px] font-mono transition-colors shrink-0"
               >
                 Reset Scene
               </button>
             </div>
 
             {/* Environment lighting */}
-            <div className="flex items-center gap-2">
+            <div className="inline-flex items-center gap-2 shrink-0">
               <span className="text-[9px] font-mono opacity-60 uppercase whitespace-nowrap">Time of Day</span>
               <input
                 type="range"
@@ -176,17 +176,17 @@ export function StudioToolbar({
         {/* TABS CONTENT: MODEL */}
         {activeTab === 'model' && (
           <>
-            <div className={`flex items-center gap-2 border-r pr-3 ${theme === 'dark' ? 'border-white/10' : 'border-black/10'}`}>
+            <div className={`inline-flex items-center gap-2 border-r pr-3 shrink-0 ${theme === 'dark' ? 'border-white/10' : 'border-black/10'}`}>
               <div className="text-[9px] font-mono opacity-60 uppercase">Snapping</div>
-              <button className={`px-2 py-1 rounded text-[9px] font-mono border ${
+              <button className={`px-2 py-1 rounded text-[9px] font-mono border shrink-0 ${
                 theme === 'dark' ? 'border-white/10 bg-white/5' : 'border-black/10 bg-black/5'
               }`}>Grid: 1 Stud</button>
-              <button className={`px-2 py-1 rounded text-[9px] font-mono border ${
+              <button className={`px-2 py-1 rounded text-[9px] font-mono border shrink-0 ${
                 theme === 'dark' ? 'border-white/10 bg-white/5' : 'border-black/10 bg-black/5'
               }`}>Rotate: 15°</button>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="inline-flex items-center gap-2 shrink-0">
               <span className="text-[9px] font-mono opacity-60 uppercase">Instance Shape modifiers</span>
               <span className="text-[10px] font-mono italic opacity-40">Use properties panel for custom shapes and physical behaviors</span>
             </div>
@@ -196,18 +196,18 @@ export function StudioToolbar({
         {/* TABS CONTENT: TEST */}
         {activeTab === 'test' && (
           <>
-            <div className="flex items-center gap-2">
+            <div className="inline-flex items-center gap-2 shrink-0">
               <button
                 onClick={onRun}
                 disabled={isRunning}
-                className="px-3 py-1 bg-green-700/40 text-green-300 hover:bg-green-700/60 rounded text-[10px] font-mono flex items-center gap-1.5 transition-colors disabled:opacity-40"
+                className="px-3 py-1 bg-green-700/40 text-green-300 hover:bg-green-700/60 rounded text-[10px] font-mono inline-flex items-center gap-1.5 transition-colors disabled:opacity-40 shrink-0"
               >
                 <Play className="size-3" /> Run Scripting Engine
               </button>
               <button
                 onClick={onStop}
                 disabled={!isRunning}
-                className="px-3 py-1 bg-red-700/40 text-red-300 hover:bg-red-700/60 rounded text-[10px] font-mono flex items-center gap-1.5 transition-colors disabled:opacity-40"
+                className="px-3 py-1 bg-red-700/40 text-red-300 hover:bg-red-700/60 rounded text-[10px] font-mono inline-flex items-center gap-1.5 transition-colors disabled:opacity-40 shrink-0"
               >
                 <Square className="size-3" /> Stop Execution
               </button>
@@ -219,10 +219,10 @@ export function StudioToolbar({
         {activeTab === 'view' && (
           <>
             {/* Window panels toggles */}
-            <div className={`flex items-center gap-1 border-r pr-3 ${theme === 'dark' ? 'border-white/10' : 'border-black/10'}`}>
+            <div className={`inline-flex items-center gap-1 border-r pr-3 shrink-0 ${theme === 'dark' ? 'border-white/10' : 'border-black/10'}`}>
               <button
                 onClick={onToggleAI}
-                className={`px-2 py-1 rounded text-[10px] font-mono flex items-center gap-1 transition-all ${
+                className={`px-2 py-1 rounded text-[10px] font-mono inline-flex items-center gap-1 transition-all shrink-0 ${
                   showAI ? 'bg-purple-600/30 border border-purple-500/50 text-purple-400' : 'opacity-60 hover:opacity-100'
                 }`}
               >
@@ -232,7 +232,7 @@ export function StudioToolbar({
 
               <button
                 onClick={onToggleOutput}
-                className={`px-2 py-1 rounded text-[10px] font-mono flex items-center gap-1 transition-all ${
+                className={`px-2 py-1 rounded text-[10px] font-mono inline-flex items-center gap-1 transition-all shrink-0 ${
                   showOutput ? 'bg-[#007acc]/30 border border-[#007acc]/50 text-blue-400' : 'opacity-60 hover:opacity-100'
                 }`}
               >
@@ -242,11 +242,11 @@ export function StudioToolbar({
             </div>
 
             {/* Theme switcher */}
-            <div className="flex items-center gap-2">
-              <span className="text-[9px] font-mono opacity-60 uppercase">Theme</span>
+            <div className="inline-flex items-center gap-2 shrink-0">
+              <span className="text-[9px] font-mono opacity-60 uppercase font-bold">Theme</span>
               <button
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className={`px-2 py-1 text-[10px] font-mono rounded border ${
+                className={`px-2 py-1 text-[10px] font-mono rounded border shrink-0 ${
                   theme === 'dark'
                     ? 'bg-[#1e1e1e] border-[#3c3c3c] text-white hover:bg-white/5'
                     : 'bg-[#ffffff] border-[#cccccc] text-black hover:bg-black/5'

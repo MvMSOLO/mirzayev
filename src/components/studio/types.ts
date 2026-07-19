@@ -81,7 +81,7 @@ export interface Preset {
   id: string;
   name: string;
   icon: string;
-  category: 'Parts' | 'Spawns' | 'NPCs' | 'Effects' | 'Scripts';
+  category: 'Parts' | 'Spawns' | 'NPCs' | 'Effects' | 'Scripts' | 'Models' | 'Audio' | 'UI' | 'Weapons' | 'Structures';
   properties: Record<string, unknown>;
   type: ObjectType;
   children?: PresetChildDef[];

@@ -255,18 +255,18 @@ function PropertyPanel({ obj, onChange, theme = 'dark' }: PropPanelProps) {
   };
 
   const Vec3Row = ({ label, val, prop }: { label: string; val: {x:number;y:number;z:number}; prop: string }) => (
-    <div className="mb-2">
+    <div className="mb-2 w-full min-w-0">
       <div className="text-[9px] uppercase tracking-wider text-gray-500 mb-0.5">{label}</div>
-      <div className="flex gap-1">
+      <div className="grid grid-cols-3 gap-1 md:flex md:gap-1 w-full">
         {(['x','y','z'] as const).map(ax => (
-          <label key={ax} className="flex items-center gap-0.5 flex-1">
-            <span className="text-[9px] text-gray-500 w-2">{ax.toUpperCase()}</span>
+          <label key={ax} className="flex items-center gap-0.5 min-w-0">
+            <span className="text-[9px] text-gray-500 w-2 shrink-0">{ax.toUpperCase()}</span>
             <input
               type="number"
               step={0.5}
               value={Number((val[ax] ?? 0).toFixed(2))}
               onChange={e => set(prop, { ...val, [ax]: parseFloat(e.target.value) || 0 })}
-              className={`w-full border text-[10px] font-mono px-1 py-0.5 rounded focus:border-[#0078d4] outline-none ${
+              className={`w-full min-w-0 border text-[10px] font-mono px-1 py-0.5 rounded focus:border-[#0078d4] outline-none ${
                 theme === 'dark' ? 'bg-[#1e1e1e] border-[#3c3c3c] text-gray-200' : 'bg-white border-[#ccc] text-black'
               }`}
             />

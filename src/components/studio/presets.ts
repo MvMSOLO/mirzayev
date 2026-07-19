@@ -367,7 +367,212 @@ print("Applied initial physics forces!")
 `,
     },
   },
+  // ── MODELS (Expanded) ─────────────────────────────────
+  {
+    id: 'm-campfire',
+    name: 'Cozy Campfire Set',
+    icon: '🔥',
+    category: 'Models',
+    type: 'Part',
+    properties: {
+      Size: { x: 4, y: 0.5, z: 4 },
+      Color: { r: 0.4, g: 0.25, b: 0.1 },
+      Material: 'Wood',
+      Anchored: true,
+      CanCollide: true,
+      Transparency: 0,
+    },
+  },
+  {
+    id: 'm-portal',
+    name: 'Ethereal Portal',
+    icon: '🌀',
+    category: 'Models',
+    type: 'Part',
+    properties: {
+      Size: { x: 1, y: 8, z: 6 },
+      Color: { r: 0.6, g: 0.1, b: 0.9 },
+      Material: 'ForceField',
+      Anchored: true,
+      CanCollide: false,
+      Transparency: 0.3,
+    },
+  },
+  {
+    id: 'm-treasure',
+    name: 'Treasure Chest',
+    icon: '🪙',
+    category: 'Models',
+    type: 'Part',
+    properties: {
+      Size: { x: 3, y: 2, z: 2 },
+      Color: { r: 0.85, g: 0.65, b: 0.15 },
+      Material: 'Metal',
+      Anchored: true,
+      CanCollide: true,
+    },
+  },
+  {
+    id: 'm-turbine',
+    name: 'Wind Turbine',
+    icon: '🌬️',
+    category: 'Models',
+    type: 'Part',
+    properties: {
+      Size: { x: 2, y: 15, z: 2 },
+      Color: { r: 0.95, g: 0.95, b: 0.95 },
+      Material: 'SmoothPlastic',
+      Anchored: true,
+    },
+  },
+  // ── WEAPONS (Expanded) ────────────────────────────────
+  {
+    id: 'w-sword',
+    name: 'Classic Linked Sword',
+    icon: '⚔️',
+    category: 'Weapons',
+    type: 'Part',
+    properties: {
+      Size: { x: 1, y: 5, z: 1 },
+      Color: { r: 0.7, g: 0.7, b: 0.8 },
+      Material: 'Metal',
+      Anchored: false,
+    },
+  },
+  {
+    id: 'w-laser',
+    name: 'Sci-Fi Laser Gun',
+    icon: '🔫',
+    category: 'Weapons',
+    type: 'Part',
+    properties: {
+      Size: { x: 0.8, y: 1.5, z: 3 },
+      Color: { r: 0.2, g: 0.8, b: 1 },
+      Material: 'Glass',
+      Anchored: false,
+    },
+  },
+  {
+    id: 'w-rocket',
+    name: 'Rocket Launcher',
+    icon: '🚀',
+    category: 'Weapons',
+    type: 'Part',
+    properties: {
+      Size: { x: 1.5, y: 1.5, z: 6 },
+      Color: { r: 0.15, g: 0.15, b: 0.15 },
+      Material: 'SmoothPlastic',
+      Anchored: false,
+    },
+  },
+  // ── STRUCTURES (Expanded) ─────────────────────────────
+  {
+    id: 'st-house',
+    name: 'Red Brick House Set',
+    icon: '🏠',
+    category: 'Structures',
+    type: 'Part',
+    properties: {
+      Size: { x: 12, y: 8, z: 12 },
+      Color: { r: 0.7, g: 0.3, b: 0.25 },
+      Material: 'Brick',
+      Anchored: true,
+    },
+  },
+  {
+    id: 'st-bridge',
+    name: 'Suspension Bridge Set',
+    icon: '🌉',
+    category: 'Structures',
+    type: 'Part',
+    properties: {
+      Size: { x: 40, y: 2, z: 6 },
+      Color: { r: 0.35, g: 0.35, b: 0.35 },
+      Material: 'Metal',
+      Anchored: true,
+    },
+  },
+  {
+    id: 'st-pillar',
+    name: 'Ancient Temple Pillar',
+    icon: '🏛️',
+    category: 'Structures',
+    type: 'Part',
+    properties: {
+      Size: { x: 3, y: 14, z: 3 },
+      Color: { r: 0.85, g: 0.85, b: 0.8 },
+      Material: 'Marble',
+      Anchored: true,
+    },
+  },
+  {
+    id: 'st-arch',
+    name: 'Neon Arch Gateway',
+    icon: '⛩️',
+    category: 'Structures',
+    type: 'Part',
+    properties: {
+      Size: { x: 16, y: 1, z: 4 },
+      Color: { r: 1, g: 0, b: 0.5 },
+      Material: 'Neon',
+      Anchored: true,
+    },
+  },
+  // ── AUDIO (Expanded) ──────────────────────────────────
+  {
+    id: 'au-ambient',
+    name: 'Synthwave Ambient loop',
+    icon: '🎵',
+    category: 'Audio',
+    type: 'Part',
+    properties: {
+      Size: { x: 1, y: 1, z: 1 },
+      Color: { r: 0.9, g: 0.3, b: 0.9 },
+      Material: 'Neon',
+      Anchored: true,
+    },
+  },
+  {
+    id: 'au-nature',
+    name: 'Forest Birds Sounds',
+    icon: '🐦',
+    category: 'Audio',
+    type: 'Part',
+    properties: {
+      Size: { x: 1, y: 1, z: 1 },
+      Color: { r: 0.3, g: 0.8, b: 0.3 },
+      Material: 'SmoothPlastic',
+      Anchored: true,
+    },
+  },
+  // ── UI (Expanded) ────────────────────────────────────
+  {
+    id: 'ui-leaderboard',
+    name: 'Global Leaderboard Panel',
+    icon: '📊',
+    category: 'UI',
+    type: 'Part',
+    properties: {
+      Size: { x: 12, y: 8, z: 0.5 },
+      Color: { r: 0.1, g: 0.1, b: 0.15 },
+      Material: 'Glass',
+      Anchored: true,
+    },
+  },
+  {
+    id: 'ui-dialog',
+    name: 'Interactive NPC Dialogue UI',
+    icon: '💬',
+    category: 'UI',
+    type: 'Part',
+    properties: {
+      Size: { x: 8, y: 3, z: 0.2 },
+      Color: { r: 0.95, g: 0.95, b: 0.95 },
+      Material: 'SmoothPlastic',
+      Anchored: true,
+    },
+  }
 ];
 
-export const PRESET_CATEGORIES = ['Parts', 'Spawns', 'NPCs', 'Effects', 'Scripts'] as const;
+export const PRESET_CATEGORIES = ['Parts', 'Spawns', 'NPCs', 'Effects', 'Scripts', 'Models', 'Audio', 'UI', 'Weapons', 'Structures'] as const;
 export type PresetCategory = typeof PRESET_CATEGORIES[number];
