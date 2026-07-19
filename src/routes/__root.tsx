@@ -205,16 +205,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      // preload fetches the CSS early but does NOT block rendering — the inline
+      // loadFonts script below applies it asynchronously after first paint.
       {
         rel: "preload",
         as: "style",
-        href: "https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,600&family=Inter+Tight:wght@300;400;500;600&display=optional",
-      },
-      {
-        rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,600&family=Inter+Tight:wght@300;400;500;600&display=optional",
       },
     ],
@@ -225,11 +223,30 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
+const FONT_URL =
+  "https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,600&family=Inter+Tight:wght@300;400;500;600&display=optional";
+
+// Async font loader — runs the loadCSS pattern (preload → stylesheet on load).
+// Fonts are preloaded early (via the <link rel="preload"> in head()), but they
+// are applied as a stylesheet only AFTER the browser's load event so they never
+// block FCP or LCP. With display=optional the fallback is used for first visits;
+// repeat visits get custom fonts instantly from the HTTP cache.
+const loadFontsScript = `(function(){
+  var l=document.createElement('link');
+  l.rel='preload';l.as='style';
+  l.href='${FONT_URL}';
+  l.onload=function(){this.onload=null;this.rel='stylesheet';};
+  document.head.appendChild(l);
+})();`;
+
 function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
         <HeadContent />
+        {/* Non-blocking font application — must be inside <head> so it fires
+            before layout but after HeadContent has registered the preconnects. */}
+        <script dangerouslySetInnerHTML={{ __html: loadFontsScript }} />
       </head>
       <body>
         {/* Skip-to-content for keyboard / screen-reader users */}
