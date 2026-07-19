@@ -14,6 +14,19 @@ interface Update {
 
 const updates: Update[] = [
   {
+    version: "v7.0.0",
+    date: "2026.08",
+    tag: "major",
+    title: { uz: "V7 — Roblox Studio Pro", en: "V7 — Roblox Studio Pro Simulator" },
+    items: [
+      { uz: "Roblox Studio simulyatori to'liq qayta qurildi", en: "Roblox Studio Simulator fully rebuilt with custom templates" },
+      { uz: "Fizika, tortishish kuchi va to'qnashuv javoblari qo'shildi", en: "Integrated rigid-body physics, gravity, and restitution collisions" },
+      { uz: "Dynamic Instance.new va .Touched/.Changed hodisalar tizimi", en: "Added dynamic Instance.new() constructor and touched/changed event streams" },
+      { uz: "Roblox uslubidagi Ribbon Tablar, asboblar paneli va 3D shakllar", en: "Immersive Roblox-style Ribbon tab bar, tools, and Cylinders/Spheres shapes" },
+      { uz: "Kun va tun tsikli (Time of Day slider) va real vaqt soyalar", en: "Time of Day slider control with responsive sky & soft shadows cycle" },
+    ],
+  },
+  {
     version: "v6.0.0",
     date: "2026.07",
     tag: "major",

@@ -2,9 +2,12 @@
 //  Roblox Studio IDE Simulator — Sandboxed Luau Engine (JS subset interpreter)
 //  Supports: variables, arithmetic, loops, if/else, functions, Color3, Vector3,
 //  wait/task.wait, print, game.Workspace / workspace property access & mutation.
+//  Upgraded with dynamic Instance creation, Touched/Changed events, and Part destroying.
 // ──────────────────────────────────────────────────────────────────────────────
 
-import type { StudioObject, OutputLine, Vec3, Col3 } from './types';
+import type { StudioObject, OutputLine, Vec3, Col3, ObjectType } from './types';
+
+function makeId() { return `obj_${Math.random().toString(36).slice(2, 9)}`; }
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -43,12 +46,15 @@ interface ExecCtx {
   running: boolean;
   getObjects(): Map<string, StudioObject>;
   setProperty(id: string, prop: string, val: unknown): void;
+  addObject?(obj: StudioObject): void;
+  deleteObject?(id: string): void;
   addOutput(line: Omit<OutputLine, 'id' | 'ts'>): void;
   scriptObjId?: string; // id of the Script object being run (for script.Parent)
+  // Event listeners
+  listeners?: Map<string, Array<{ event: string; fn: LuaFn }>>;
 }
 
-// ─── Env (variable scope chain) ────────────────────────────────────────────────
-
+// Env (variable scope chain)
 class Env {
   private store = new Map<string, LuaVal>();
   constructor(public parent?: Env) {}
@@ -63,8 +69,7 @@ class Env {
   }
 }
 
-// ─── Tokenizer ─────────────────────────────────────────────────────────────────
-
+// Tokenizer
 type TT =
   | 'NUM' | 'STR' | 'NAME'
   | 'PLUS' | 'MINUS' | 'STAR' | 'SLASH' | 'DSLASH' | 'PERCENT' | 'CARET' | 'HASH'
@@ -202,8 +207,7 @@ function tokenize(src: string): Tok[] {
   return toks;
 }
 
-// ─── AST ───────────────────────────────────────────────────────────────────────
-
+// AST definitions
 type Expr =
   | { k: 'num'; v: number }
   | { k: 'str'; v: string }
@@ -239,8 +243,7 @@ type Stmt =
   | { k: 'continue' }
   | { k: 'fn';    name: string; func: Expr; local?: boolean };
 
-// ─── Parser ─────────────────────────────────────────────────────────────────────
-
+// Parser class
 class Parser {
   private pos = 0;
   constructor(private toks: Tok[]) {}
@@ -291,7 +294,6 @@ class Parser {
       }
     }
 
-    // assignment or call
     return this.parseExprStat();
   }
 
@@ -557,13 +559,29 @@ function luaArith(op: string, a: LuaVal, b: LuaVal): LuaVal {
   }
 }
 
+// Build event listener connection proxy
+function makeConnectionProxy(objectId: string, eventName: string, ctx: ExecCtx): LuaTable {
+  const proxy = mkTable();
+  proxy.hash.set('Connect', {
+    _t: 'fn',
+    call: async ([fn]: LuaVal[]) => {
+      if (fn && (fn as LuaFn)._t === 'fn') {
+        if (!ctx.listeners) ctx.listeners = new Map();
+        const list = ctx.listeners.get(objectId) ?? [];
+        list.push({ event: eventName, fn: fn as LuaFn });
+        ctx.listeners.set(objectId, list);
+        ctx.addOutput({ kind: 'info', text: `Connected event listener: ${eventName} on ${objectId}` });
+      }
+      return [mkTable()]; // Connection object dummy
+    }
+  } as LuaFn);
+  return proxy;
+}
+
 // Build the game / workspace proxy so scripts can read/write object props
 function buildGameProxy(ctx: ExecCtx, scriptParentId?: string): LuaTable {
   function makeObjProxy(id: string): LuaTable {
     const proxy: LuaTable = { _t: 'table', hash: new Map(), arr: [], _objId: id };
-
-    // Virtual properties via Proxy mechanics (we simulate via a table + __index)
-    // Instead of real JS Proxy we use the "get" helper called from evalField/evalIndex
     proxy.hash.set('__luastudio_obj__', id as unknown as LuaVal);
     return proxy;
   }
@@ -572,12 +590,6 @@ function buildGameProxy(ctx: ExecCtx, scriptParentId?: string): LuaTable {
   const game: LuaTable = { _t: 'table', hash: new Map(), arr: [], _svc: 'game' };
   game.hash.set('Workspace', workspace);
   game.hash.set('workspace', workspace);
-
-  // script.Parent
-  const scriptProxy = mkTable();
-  if (scriptParentId) {
-    scriptProxy.hash.set('Parent', makeObjProxy(scriptParentId));
-  }
 
   return game;
 }
@@ -595,7 +607,6 @@ function resolveGet(obj: LuaVal, key: string, ctx: ExecCtx): LuaVal {
       return ws ?? null;
     }
     if (t._svc === 'Workspace') {
-      // Try to find an object with this name in workspace
       const objs = ctx.getObjects();
       for (const [, obj] of objs) {
         if (obj.name === key) {
@@ -620,6 +631,14 @@ function resolveGet(obj: LuaVal, key: string, ctx: ExecCtx): LuaVal {
       return propToLua(stObj.properties[key]);
     }
 
+    if (key === 'Name') return stObj.name;
+    if (key === 'ClassName') return stObj.type;
+
+    // Event connections
+    if (key === 'Touched' || key === 'Changed') {
+      return makeConnectionProxy(stObj.id, key, ctx);
+    }
+
     // Child lookup
     for (const cid of stObj.children) {
       const child = objs.get(cid);
@@ -642,6 +661,11 @@ function copyObjProps(proxy: LuaTable, obj: StudioObject, ctx: ExecCtx) {
   for (const [k, v] of Object.entries(obj.properties)) {
     if (k !== 'Source') proxy.hash.set(k, propToLua(v));
   }
+  proxy.hash.set('Name', obj.name);
+  proxy.hash.set('ClassName', obj.type);
+  proxy.hash.set('Touched', makeConnectionProxy(obj.id, 'Touched', ctx));
+  proxy.hash.set('Changed', makeConnectionProxy(obj.id, 'Changed', ctx));
+
   // Methods as functions
   proxy.hash.set('FindFirstChild', {
     _t: 'fn',
@@ -668,6 +692,16 @@ function copyObjProps(proxy: LuaTable, obj: StudioObject, ctx: ExecCtx) {
       const t = mkTable(); t.arr = arr; return [t];
     },
   } as LuaFn);
+  proxy.hash.set('Destroy', {
+    _t: 'fn',
+    call: async () => {
+      if (ctx.deleteObject) {
+        ctx.deleteObject(obj.id);
+        ctx.addOutput({ kind: 'info', text: `Part Destroyed: ${obj.name}` });
+      }
+      return [];
+    }
+  } as LuaFn);
 }
 
 function propToLua(v: unknown): LuaVal {
@@ -690,7 +724,7 @@ function luaToNative(v: LuaVal, prop: string): unknown {
   const t = v as LuaTable;
   if (t._t !== 'table') return undefined;
   // Vec3
-  if (prop === 'Position' || prop === 'Size' || prop === 'Rotation') {
+  if (prop === 'Position' || prop === 'Size' || prop === 'Rotation' || prop === 'Velocity') {
     return { x: (t.hash.get('x') as number) ?? 0, y: (t.hash.get('y') as number) ?? 0, z: (t.hash.get('z') as number) ?? 0 };
   }
   // Color
@@ -700,7 +734,7 @@ function luaToNative(v: LuaVal, prop: string): unknown {
   return undefined;
 }
 
-// ─── Main evaluate function ──────────────────────────────────────────────────────
+// ─── Main evaluate class ──────────────────────────────────────────────────────
 
 class Evaluator {
   private osClockStart = Date.now();
@@ -779,6 +813,46 @@ class Evaluator {
         return [];
       }} as LuaFn,
       unpack: { _t:'fn', call: async ([t]:LuaVal[]) => (t as LuaTable).arr } as LuaFn,
+    });
+
+    // Instance constructor library (Instance.new)
+    const Instance = mkTable({
+      new: {
+        _t: 'fn',
+        call: async ([className, parent]: LuaVal[]) => {
+          const typeStr = luaToString(className) as ObjectType;
+          let parentId: string | null = null;
+          if (parent && (parent as LuaTable)._objId) {
+            parentId = (parent as LuaTable)._objId ?? null;
+          }
+
+          if (ctx.addObject) {
+            const newId = makeId();
+            const newObj: StudioObject = {
+              id: newId,
+              type: typeStr,
+              name: typeStr,
+              parentId,
+              properties: {
+                Position: { x: 0, y: 10, z: 0 },
+                Size: { x: 4, y: 4, z: 4 },
+                Color: { r: 1, g: 1, b: 1 },
+                Material: 'SmoothPlastic',
+                Anchored: true,
+                CanCollide: true,
+                Transparency: 0,
+              },
+              children: [],
+            };
+            ctx.addObject(newObj);
+            ctx.addOutput({ kind: 'info', text: `Instance.new created object: ${typeStr}` });
+            const p = mkTable();
+            copyObjProps(p, newObj, ctx);
+            return [p];
+          }
+          return [null];
+        }
+      } as LuaFn
     });
 
     // Color3
@@ -862,6 +936,7 @@ class Evaluator {
     env.set('Vector3', Vector3);
     env.set('CFrame', CFrame);
     env.set('BrickColor', BrickColor);
+    env.set('Instance', Instance);
     env.set('task', task);
     env.set('os', os);
     env.set('game', game);
@@ -1061,7 +1136,6 @@ class Evaluator {
     for (let i = 0; i < exprs.length - 1; i++) {
       results.push(await this.evalExpr(exprs[i], env));
     }
-    // last expr may be multi-return
     const last = await this.evalExprMulti(exprs[exprs.length - 1], env);
     results.push(...last);
     return results;
@@ -1176,18 +1250,27 @@ export interface RunScriptOptions {
   scriptObjId?: string;
   getObjects: () => Map<string, StudioObject>;
   setProperty: (id: string, prop: string, val: unknown) => void;
+  addObject?: (obj: StudioObject) => void;
+  deleteObject?: (id: string) => void;
   addOutput: (line: Omit<OutputLine, 'id' | 'ts'>) => void;
+  listeners?: Map<string, Array<{ event: string; fn: LuaFn }>>;
 }
 
-export function runScript(opts: RunScriptOptions): { stop: () => void } {
+export function runScript(opts: RunScriptOptions): { stop: () => void; listeners: Map<string, Array<{ event: string; fn: LuaFn }>> } {
   const ctx: ExecCtx = {
     running: true,
     getObjects: opts.getObjects,
     setProperty: opts.setProperty,
+    addObject: opts.addObject,
+    deleteObject: opts.deleteObject,
     addOutput: opts.addOutput,
     scriptObjId: opts.scriptObjId,
+    listeners: opts.listeners ?? new Map(),
   };
   const ev = new Evaluator(ctx);
   ev.run(opts.source).catch(() => {});
-  return { stop: () => { ctx.running = false; } };
+  return {
+    stop: () => { ctx.running = false; },
+    listeners: ctx.listeners ?? new Map(),
+  };
 }

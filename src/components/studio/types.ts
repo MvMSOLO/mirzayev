@@ -9,6 +9,8 @@ export type ObjectType =
   | 'Script' | 'LocalScript' | 'ModuleScript'
   | 'Humanoid' | 'NPCModel' | 'PointLight' | 'SurfaceGui' | 'ScreenGui';
 
+export type PartShape = 'Block' | 'Sphere' | 'Wedge' | 'Cylinder';
+
 export interface Vec3 { x: number; y: number; z: number }
 export interface Col3 { r: number; g: number; b: number } // 0-1 each
 
@@ -20,6 +22,7 @@ export interface StudioObject {
   properties: Record<string, unknown> & {
     Position?: Vec3;
     Size?: Vec3;
+    Rotation?: Vec3;
     Color?: Col3;
     Anchored?: boolean;
     CanCollide?: boolean;
@@ -28,11 +31,16 @@ export interface StudioObject {
     Source?: string; // Script source
     BrickColor?: string;
     Locked?: boolean;
+    Shape?: PartShape;
+    Velocity?: Vec3; // For physics engine simulation
+    Mass?: number;
+    GlowIntensity?: number;
+    Flicker?: boolean;
   };
   children: string[]; // child IDs ordered
 }
 
-export type RunState = 'stopped' | 'running';
+export type RunState = 'stopped' | 'running' | 'paused';
 
 export interface OutputLine {
   id: string;
@@ -73,8 +81,21 @@ export interface Preset {
   id: string;
   name: string;
   icon: string;
-  category: 'Parts' | 'Spawns' | 'NPCs' | 'Effects' | 'Scripts';
+  category: 'Parts' | 'Spawns' | 'NPCs' | 'Effects' | 'Scripts' | 'Models' | 'Audio' | 'UI' | 'Weapons' | 'Structures';
   properties: Record<string, unknown>;
   type: ObjectType;
   children?: PresetChildDef[];
+}
+
+// ── Studio Preferences ──────────────────────────────
+
+export type StudioTheme = 'dark' | 'light';
+export type TransformTool = 'select' | 'move' | 'scale' | 'rotate';
+
+export interface ProjectTemplate {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  previewUrl?: string;
 }
