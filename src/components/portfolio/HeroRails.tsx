@@ -3,7 +3,10 @@ import { useEffect, useState } from "react";
 
 export function HeroRails() {
   const { t } = useLang();
-  const [time, setTime] = useState("");
+  // Stable SSR placeholder — avoids CLS from empty → real value swap on mount.
+  // "00:00:00 UTC" has the same character width as the real time string,
+  // so no layout shift occurs when the live clock kicks in after hydration.
+  const [time, setTime] = useState("00:00:00 UTC");
   useEffect(() => {
     const tick = () => {
       const d = new Date();

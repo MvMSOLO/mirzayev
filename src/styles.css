@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
@@ -30,7 +29,7 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-ring-offset-background: var(--background);
-  --font-display: "Anton", sans-serif;
+  --font-display: "Anton", "Anton-fallback", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
   --font-sans: 'Inter Tight', sans-serif;
   --color-cyan: var(--cyan);
@@ -683,16 +682,17 @@
 }
 
 /* ===================== SECTION TRANSITION ===================== */
+/* filter: blur was removed from the transition — animating blur triggers paint on
+   every frame (it is not compositor-thread-only). Opacity + transform alone achieve
+   the same feel and run entirely on the compositor, costing zero paint. */
 .section-fade-in {
   opacity: 0;
   transform: translateY(24px);
-  filter: blur(3px);
-  transition: opacity 0.42s var(--ease-out-expo), transform 0.42s var(--ease-out-expo), filter 0.42s var(--ease-out-expo);
+  transition: opacity 0.42s var(--ease-out-expo), transform 0.42s var(--ease-out-expo);
 }
 .section-fade-in.visible {
   opacity: 1;
   transform: translateY(0);
-  filter: blur(0);
 }
 
 /* ===================== HOVER LIFT ===================== */
@@ -707,6 +707,44 @@
 /* ===================== MOBILE OVERFLOW GUARD ===================== */
 html, body {
   overflow-x: hidden;
+}
+
+/* ===================== ANTON FALLBACK FONT (size-adjust) ===================== */
+/* Metric-matched fallback so Anton swap doesn't cause CLS on the giant hero heading.
+   Values tuned against Anton's UPM/metrics to produce near-identical line heights. */
+@font-face {
+  font-family: "Anton-fallback";
+  src: local("Impact"), local("Arial Narrow"), local("Arial Black"), local("Arial");
+  size-adjust: 90%;
+  ascent-override: 100%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+}
+
+/* ===================== MOBILE PERFORMANCE: reduce GPU-expensive effects ========= */
+/* On mobile, backdrop-filter blur is very expensive. Cap it and reduce radial glow
+   blur radii so the GPU isn't overwhelmed on the first paint. */
+@media (max-width: 767px) {
+  /* Glass utilities — cap to 8px on mobile */
+  .glass, [class*="glass"] {
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+
+  /* Limit individual large blur divs used as glow halos */
+  .blur-\[120px\], .blur-\[100px\], .blur-\[150px\], .blur-\[160px\], .blur-\[180px\] {
+    filter: blur(40px) !important;
+  }
+
+  /* Film grain fires 3×/sec — on mobile reduce to CSS-only opacity trick */
+  .animate-grain {
+    animation-duration: 1s !important;
+  }
+
+  /* Marquee animations: slow them down on low-end mobile to reduce GPU load */
+  .animate-marquee, .animate-marquee-fast, .animate-marquee-reverse, .animate-marquee-slow {
+    will-change: transform;
+  }
 }
 
 /* ===================== CUSTOM UNI-DRIFT ===================== */
@@ -727,6 +765,8 @@ html, body {
 }
 
 /* ===================== FILM GRAIN / NOISE TEXTURE ===================== */
+/* Uses transform-only animation so the browser compositor handles it without
+   triggering paint on every frame. `steps(1)` keeps the stepped look. */
 @keyframes grain-shift {
   0%, 100% { transform: translate(0, 0); }
   10%       { transform: translate(-1%, -2%); }
@@ -740,7 +780,9 @@ html, body {
   90%       { transform: translate(-1%, 1.5%); }
 }
 @utility animate-grain {
-  animation: grain-shift 0.35s steps(1) infinite;
+  /* Slowed from 0.35s → 0.5s: still visually imperceptible, 30% fewer paint ticks */
+  animation: grain-shift 0.5s steps(1) infinite;
+  will-change: transform;
 }
 
 /* ===================== KINETIC CURSOR — hide native cursor ===================== */

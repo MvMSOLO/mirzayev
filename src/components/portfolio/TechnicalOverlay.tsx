@@ -6,13 +6,23 @@ export function TechnicalOverlay() {
   const coordXRef = useRef<HTMLSpanElement>(null);
   const coordYRef = useRef<HTMLSpanElement>(null);
 
-  const [dynamicData] = useState(() => ({
-    year: new Date().getFullYear(),
-    streamId: Math.random().toString(16).slice(2, 10).toUpperCase(),
-    hexBlocks: Array.from({ length: 6 }, () =>
-      Math.random().toString(16).slice(2, 6).toUpperCase()
-    ),
-  }));
+  // Use stable seed values to prevent SSR/client hydration mismatch.
+  // Dynamic hex blocks are set in useEffect (client-only) so they never
+  // diverge between the server render and the initial client render.
+  const [dynamicData, setDynamicData] = useState({
+    year: 2026,
+    streamId: "A1B2C3D4",
+    hexBlocks: ["A1B2", "C3D4", "E5F6", "0789", "ABCD", "EF01"],
+  });
+  useEffect(() => {
+    setDynamicData({
+      year: new Date().getFullYear(),
+      streamId: Math.random().toString(16).slice(2, 10).toUpperCase(),
+      hexBlocks: Array.from({ length: 6 }, () =>
+        Math.random().toString(16).slice(2, 6).toUpperCase()
+      ),
+    });
+  }, []);
 
   // Ticking metrics — slowed to 1.5s cadence (was 800ms), display via refs
   const cpuRef = useRef<HTMLSpanElement>(null);
