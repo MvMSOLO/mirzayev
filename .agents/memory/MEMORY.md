@@ -1,2 +1,3 @@
 - [Parallel design subagents on shared concerns](parallel-design-subagents.md) — briefs must name the exact shared hook/file to reuse, or subagents invent duplicate incompatible versions.
 - [Hidden terminal + illusion gallery pattern](hidden-terminal-illusion-gallery.md) — contract file + central copy registry + independent visual files for "many distinct X behind one trigger" easter eggs.
+- [Lighthouse / CWV optimization patterns](lighthouse-cwv-optimization.md) — display=optional + matched fallback for font-swap CLS, React.lazy on TanStack Start, mobile backdrop-filter budget, hydration-safe random/date on SSR.
