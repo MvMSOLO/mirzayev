@@ -1,8 +1,8 @@
 import { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Grid, Sparkles } from '@react-three/drei';
+import { OrbitControls, Grid, Sparkles, TransformControls } from '@react-three/drei';
 import * as THREE from 'three';
-import type { StudioObject, Vec3, Col3 } from './types';
+import type { StudioObject, Vec3, Col3, TransformTool } from './types';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -23,6 +23,7 @@ interface ObjProps {
   obj: StudioObject;
   selected: boolean;
   onClick: () => void;
+  onSelectMesh: (mesh: THREE.Object3D | null) => void;
 }
 
 function GeometrySelector({ shape, size }: { shape?: string; size: Vec3 }) {
@@ -32,14 +33,10 @@ function GeometrySelector({ shape, size }: { shape?: string; size: Vec3 }) {
   if (shape === 'Cylinder') {
     return <cylinderGeometry args={[size.x / 2, size.z / 2, size.y, 32]} />;
   }
-  if (shape === 'Wedge') {
-    // Custom wedge shape using direct BufferGeometry or a box deformation, simplified box fallback
-    return <boxGeometry args={[size.x, size.y, size.z]} />;
-  }
   return <boxGeometry args={[size.x, size.y, size.z]} />;
 }
 
-function PartMesh({ obj, selected, onClick }: ObjProps) {
+function PartMesh({ obj, selected, onClick, onSelectMesh }: ObjProps) {
   const ref = useRef<THREE.Mesh>(null!);
   const size = (obj.properties.Size as Vec3) ?? { x: 4, y: 1, z: 4 };
   const pos  = (obj.properties.Position as Vec3) ?? { x: 0, y: size.y / 2, z: 0 };
@@ -62,6 +59,12 @@ function PartMesh({ obj, selected, onClick }: ObjProps) {
       );
     }
   });
+
+  useEffect(() => {
+    if (selected && ref.current) {
+      onSelectMesh(ref.current);
+    }
+  }, [selected, onSelectMesh]);
 
   return (
     <group>
@@ -113,7 +116,8 @@ function PartMesh({ obj, selected, onClick }: ObjProps) {
   );
 }
 
-function SpawnMesh({ obj, selected, onClick }: ObjProps) {
+function SpawnMesh({ obj, selected, onClick, onSelectMesh }: ObjProps) {
+  const ref = useRef<THREE.Group>(null!);
   const size = (obj.properties.Size as Vec3) ?? { x: 6, y: 1, z: 6 };
   const pos  = (obj.properties.Position as Vec3) ?? { x: 0, y: 0.5, z: 0 };
   const col  = toColor(obj.properties.Color as Col3 | undefined);
@@ -127,7 +131,6 @@ function SpawnMesh({ obj, selected, onClick }: ObjProps) {
     ctx2d.fillStyle = '#ffffff22';
     ctx2d.fillRect(0, 0, 64, 64);
     ctx2d.fillRect(64, 64, 64, 64);
-    // Draw spawn logo 'R'
     ctx2d.fillStyle = '#ffffff';
     ctx2d.font = 'bold 48px monospace';
     ctx2d.textAlign = 'center';
@@ -136,17 +139,21 @@ function SpawnMesh({ obj, selected, onClick }: ObjProps) {
 
     const tex = new THREE.CanvasTexture(canvas);
     tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-    tex.repeat.set(1, 1);
     return tex;
   }, [obj.properties.Color]);
 
+  useEffect(() => {
+    if (selected && ref.current) {
+      onSelectMesh(ref.current);
+    }
+  }, [selected, onSelectMesh]);
+
   return (
-    <group position={[pos.x, pos.y, pos.z]}>
+    <group ref={ref} position={[pos.x, pos.y, pos.z]}>
       <mesh onClick={(e) => { e.stopPropagation(); onClick(); }} castShadow receiveShadow>
         <boxGeometry args={[size.x, size.y, size.z]} />
         <meshStandardMaterial color={col} map={texture} roughness={0.4} />
       </mesh>
-      {/* Dynamic particles above spawn */}
       <Sparkles position={[0, size.y / 2 + 1, 0]} count={6} scale={size.x * 0.8} size={2} speed={0.5} color="#00ffcc" />
       <mesh position={[0, size.y / 2 + 0.6, 0]}>
         <coneGeometry args={[0.4, 0.8, 16]} />
@@ -162,13 +169,20 @@ function SpawnMesh({ obj, selected, onClick }: ObjProps) {
   );
 }
 
-function NPCMesh({ obj, selected, onClick }: ObjProps) {
+function NPCMesh({ obj, selected, onClick, onSelectMesh }: ObjProps) {
+  const ref = useRef<THREE.Group>(null!);
   const pos = (obj.properties.Position as Vec3) ?? { x: 0, y: 0, z: 0 };
   const col = toColor(obj.properties.Color as Col3 | undefined);
   const bodyH = 3; const bodyW = 1.4; const headR = 0.6;
 
+  useEffect(() => {
+    if (selected && ref.current) {
+      onSelectMesh(ref.current);
+    }
+  }, [selected, onSelectMesh]);
+
   return (
-    <group position={[pos.x, pos.y, pos.z]} onClick={(e) => { e.stopPropagation(); onClick(); }}>
+    <group ref={ref} position={[pos.x, pos.y, pos.z]} onClick={(e) => { e.stopPropagation(); onClick(); }}>
       {/* Torso */}
       <mesh position={[0, bodyH / 2 + 1.2, 0]} castShadow>
         <boxGeometry args={[bodyW, bodyH, 0.8]} />
@@ -216,14 +230,21 @@ function NPCMesh({ obj, selected, onClick }: ObjProps) {
   );
 }
 
-function PointLightObj({ obj, selected, onClick }: ObjProps) {
+function PointLightObj({ obj, selected, onClick, onSelectMesh }: ObjProps) {
+  const ref = useRef<THREE.Group>(null!);
   const pos = (obj.properties.Position as Vec3) ?? { x: 0, y: 8, z: 0 };
   const col = toColor(obj.properties.Color as Col3 | undefined);
   const brightness = (obj.properties.Brightness as number) ?? 5;
   const range = (obj.properties.Range as number) ?? 16;
 
+  useEffect(() => {
+    if (selected && ref.current) {
+      onSelectMesh(ref.current);
+    }
+  }, [selected, onSelectMesh]);
+
   return (
-    <group position={[pos.x, pos.y, pos.z]} onClick={(e) => { e.stopPropagation(); onClick(); }}>
+    <group ref={ref} position={[pos.x, pos.y, pos.z]} onClick={(e) => { e.stopPropagation(); onClick(); }}>
       <pointLight color={col} intensity={brightness} distance={range} castShadow />
       <mesh>
         <sphereGeometry args={[0.3, 16, 16]} />
@@ -242,17 +263,14 @@ function PointLightObj({ obj, selected, onClick }: ObjProps) {
 
 function Baseplate() {
   const gridTexture = useMemo(() => {
-    // Generate Classic Lego/Roblox grid Baseplate style
     const canvas = document.createElement('canvas');
     canvas.width = canvas.height = 128;
     const ctx = canvas.getContext('2d')!;
     ctx.fillStyle = '#6b9e6b';
     ctx.fillRect(0, 0, 128, 128);
-    // Darker borders
     ctx.strokeStyle = '#5a8d5a';
     ctx.lineWidth = 4;
     ctx.strokeRect(0, 0, 128, 128);
-    // Small studs
     ctx.fillStyle = '#7cae7c';
     ctx.beginPath();
     ctx.arc(32, 32, 10, 0, Math.PI * 2);
@@ -282,10 +300,14 @@ interface SceneProps {
   selectedId: string | null;
   onSelect: (id: string | null) => void;
   timeOfDay: number; // 0 to 24 hours scale
+  activeTool: TransformTool;
+  onUpdateProperty?: (id: string, prop: string, val: unknown) => void;
 }
 
-function Scene({ objects, selectedId, onSelect, timeOfDay }: SceneProps) {
+function Scene({ objects, selectedId, onSelect, timeOfDay, activeTool, onUpdateProperty }: SceneProps) {
   const { gl } = useThree();
+  const [selectedMesh, setSelectedMesh] = useState<THREE.Object3D | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     gl.shadowMap.enabled = true;
@@ -300,13 +322,12 @@ function Scene({ objects, selectedId, onSelect, timeOfDay }: SceneProps) {
     );
   }, [objects]);
 
-  // Lighting parameters derived from Time of Day
   const { ambientIntensity, sunColor, sunIntensity, sunPosition, fogColor, skyColor } = useMemo(() => {
     const isNight = timeOfDay < 6 || timeOfDay > 18;
     let ratio = 1;
     if (timeOfDay >= 6 && timeOfDay <= 12) ratio = (timeOfDay - 6) / 6;
     else if (timeOfDay > 12 && timeOfDay <= 18) ratio = 1 - (timeOfDay - 12) / 6;
-    else ratio = 0; // complete night
+    else ratio = 0;
 
     return {
       ambientIntensity: 0.15 + ratio * 0.5,
@@ -322,14 +343,39 @@ function Scene({ objects, selectedId, onSelect, timeOfDay }: SceneProps) {
     };
   }, [timeOfDay]);
 
+  // Transform mode mapping
+  const gizmoMode = useMemo(() => {
+    if (activeTool === 'move') return 'translate';
+    if (activeTool === 'scale') return 'scale';
+    if (activeTool === 'rotate') return 'rotate';
+    return null;
+  }, [activeTool]);
+
+  const handleTransformChange = () => {
+    if (!selectedMesh || !selectedId || !onUpdateProperty) return;
+
+    if (gizmoMode === 'translate') {
+      const p = selectedMesh.position;
+      onUpdateProperty(selectedId, 'Position', { x: p.x, y: p.y, z: p.z });
+    } else if (gizmoMode === 'scale') {
+      const s = selectedMesh.scale;
+      // Extract original size multiplier
+      onUpdateProperty(selectedId, 'Size', { x: s.x * 4, y: s.y * 4, z: s.z * 4 });
+    } else if (gizmoMode === 'rotate') {
+      const r = selectedMesh.rotation;
+      onUpdateProperty(selectedId, 'Rotation', {
+        x: (r.x * 180) / Math.PI,
+        y: (r.y * 180) / Math.PI,
+        z: (r.z * 180) / Math.PI,
+      });
+    }
+  };
+
   return (
     <>
-      {/* Sky color matches time of day */}
       <color attach="background" args={[skyColor]} />
-      {/* Fog effect */}
       <fog attach="fog" args={[fogColor, 100, 350]} />
 
-      {/* Lighting */}
       <ambientLight intensity={ambientIntensity} />
       <directionalLight
         position={sunPosition}
@@ -338,21 +384,11 @@ function Scene({ objects, selectedId, onSelect, timeOfDay }: SceneProps) {
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
-        shadow-camera-near={0.5}
-        shadow-camera-far={500}
-        shadow-camera-left={-100}
-        shadow-camera-right={100}
-        shadow-camera-top={100}
-        shadow-camera-bottom={-100}
       />
-
-      {/* Hemisphere sky light */}
       <hemisphereLight args={[skyColor, '#4b7e4b', 0.4]} />
 
-      {/* Ground Baseplate */}
       <Baseplate />
 
-      {/* Grid overlay */}
       <Grid
         position={[0, 0.02, 0]}
         args={[100, 100]}
@@ -367,15 +403,21 @@ function Scene({ objects, selectedId, onSelect, timeOfDay }: SceneProps) {
         followCamera={false}
       />
 
-      {/* Sparks during night / general environment dust */}
       <Sparkles count={timeOfDay < 6 || timeOfDay > 18 ? 100 : 30} position={[0, 15, 0]} scale={80} size={1.2} speed={0.4} color="#ffffff" />
 
-      {/* Studio objects */}
+      {/* Render objects */}
       {visibleObjects.map(obj => {
-        const props: ObjProps = {
+        const props = {
           obj,
           selected: obj.id === selectedId,
-          onClick: () => onSelect(obj.id),
+          onClick: () => {
+            onSelect(obj.id);
+          },
+          onSelectMesh: (mesh: THREE.Object3D | null) => {
+            if (obj.id === selectedId) {
+              setSelectedMesh(mesh);
+            }
+          }
         };
         switch (obj.type) {
           case 'SpawnLocation': return <SpawnMesh key={obj.id} {...props} />;
@@ -385,17 +427,30 @@ function Scene({ objects, selectedId, onSelect, timeOfDay }: SceneProps) {
         }
       })}
 
+      {/* Transform gizmo controls */}
+      {selectedId && selectedMesh && gizmoMode && (
+        <TransformControls
+          object={selectedMesh}
+          mode={gizmoMode as any}
+          onObjectChange={handleTransformChange}
+          onChange={() => {}}
+        />
+      )}
+
       {/* Click background to deselect */}
       <mesh
         position={[0, -2, 0]}
         rotation={[-Math.PI / 2, 0, 0]}
-        onClick={() => onSelect(null)}
+        onClick={() => {
+          onSelect(null);
+          setSelectedMesh(null);
+        }}
       >
         <planeGeometry args={[1000, 1000]} />
         <meshBasicMaterial transparent opacity={0} />
       </mesh>
 
-      <OrbitControls makeDefault dampingFactor={0.08} enableDamping />
+      <OrbitControls makeDefault dampingFactor={0.08} enableDamping enabled={!isDragging} />
     </>
   );
 }
@@ -407,10 +462,12 @@ interface Props {
   selectedId: string | null;
   onSelect: (id: string | null) => void;
   isRunning: boolean;
-  timeOfDay?: number; // 0 to 24 hours
+  timeOfDay?: number;
+  activeTool: TransformTool;
+  onUpdateProperty?: (id: string, prop: string, val: unknown) => void;
 }
 
-export function StudioCanvas3D({ objects, selectedId, onSelect, isRunning, timeOfDay = 12 }: Props) {
+export function StudioCanvas3D({ objects, selectedId, onSelect, isRunning, timeOfDay = 12, activeTool, onUpdateProperty }: Props) {
   return (
     <div className="relative w-full h-full bg-[#87ceeb]">
       <Canvas
@@ -419,7 +476,14 @@ export function StudioCanvas3D({ objects, selectedId, onSelect, isRunning, timeO
         dpr={[1, 2]}
         style={{ width: '100%', height: '100%' }}
       >
-        <Scene objects={objects} selectedId={selectedId} onSelect={onSelect} timeOfDay={timeOfDay} />
+        <Scene
+          objects={objects}
+          selectedId={selectedId}
+          onSelect={onSelect}
+          timeOfDay={timeOfDay}
+          activeTool={activeTool}
+          onUpdateProperty={onUpdateProperty}
+        />
       </Canvas>
 
       {/* Run mode indicator */}
@@ -430,14 +494,12 @@ export function StudioCanvas3D({ objects, selectedId, onSelect, isRunning, timeO
         </div>
       )}
 
-      {/* Time of Day HUD Overlay */}
       <div className="absolute top-2 right-2 bg-black/60 border border-white/10 px-3 py-1.5 rounded font-mono text-[9px] text-white/80 uppercase tracking-wider select-none">
         🕒 Time: {String(Math.floor(timeOfDay)).padStart(2, '0')}:00 {timeOfDay >= 12 ? 'PM' : 'AM'}
       </div>
 
-      {/* Coords hint */}
       <div className="absolute bottom-2 left-2 text-[9px] font-mono text-white/50 pointer-events-none drop-shadow">
-        Left-click select · Orbit drag · Scroll zoom
+        Left-click select · Use Translate/Scale/Rotate modes in toolbar to drag objects · Orbit drag · Scroll zoom
       </div>
     </div>
   );

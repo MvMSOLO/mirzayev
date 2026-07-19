@@ -45,16 +45,18 @@ interface NodeProps {
   onDelete: (id: string) => void;
   onDuplicate: (id: string) => void;
   onRename: (id: string, name: string) => void;
+  onAddChild?: (parentId: string, type: ObjectType) => void;
 }
 
 function TreeNode({
   id, objects, selectedId, expandedIds, depth,
-  onSelect, onToggleExpand, onDelete, onDuplicate, onRename
+  onSelect, onToggleExpand, onDelete, onDuplicate, onRename, onAddChild
 }: NodeProps) {
   const [hovering, setHovering] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState('');
   const [ctx, setCtx] = useState<{ x: number; y: number } | null>(null);
+  const [showAddMenu, setShowAddMenu] = useState(false);
   const obj = objects.get(id);
   if (!obj) return null;
 
@@ -77,13 +79,16 @@ function TreeNode({
   return (
     <>
       <div
-        className={`group relative flex items-center gap-1 px-1 py-[3px] rounded cursor-pointer select-none text-[11px] font-mono
+        className={`group relative flex items-center gap-1 px-1 py-[3.5px] rounded cursor-pointer select-none text-[11px] font-mono
           ${isSelected ? 'bg-[#0078d4] text-white' : hovering ? 'bg-[#3c3c3c]/50 text-gray-200' : 'text-gray-300'}`}
         style={{ paddingLeft: `${4 + depth * 14}px` }}
         onClick={() => onSelect(id)}
         onDoubleClick={handleStartRename}
         onMouseEnter={() => setHovering(true)}
-        onMouseLeave={() => setHovering(false)}
+        onMouseLeave={() => {
+          setHovering(false);
+          setShowAddMenu(false);
+        }}
         onContextMenu={(e) => { e.preventDefault(); setCtx({ x: e.clientX, y: e.clientY }); }}
       >
         <span className="size-3 flex-shrink-0" onClick={(e) => { e.stopPropagation(); onToggleExpand(id); }}>
@@ -111,8 +116,42 @@ function TreeNode({
           <span className="truncate">{obj.name}</span>
         )}
 
-        {hovering && !isSelected && !isEditing && (
+        {/* Quick inline action triggers */}
+        {(hovering || isSelected) && !isEditing && (
           <span className="ml-auto flex items-center gap-1 pr-1 bg-black/10 rounded px-1">
+            {onAddChild && ['Workspace', 'Part', 'Folder', 'Model'].includes(obj.type) && (
+              <div className="relative">
+                <button
+                  className="p-0.5 hover:text-green-400 transition-colors"
+                  onClick={(e) => { e.stopPropagation(); setShowAddMenu(!showAddMenu); }}
+                  title="Add Instance Child"
+                >
+                  <Plus className="size-2.5" />
+                </button>
+                {showAddMenu && (
+                  <div className="absolute right-0 top-4 z-[502] bg-[#252526] border border-[#3c3c3c] rounded shadow-xl py-1 min-w-[100px] text-[9px]">
+                    {[
+                      { label: '➕ Part', type: 'Part' },
+                      { label: '📜 Script', type: 'Script' },
+                      { label: '💡 Light', type: 'PointLight' },
+                      { label: '📁 Folder', type: 'Folder' },
+                    ].map(item => (
+                      <button
+                        key={item.type}
+                        className="w-full text-left px-2 py-1 text-gray-200 hover:bg-[#0078d4] font-mono"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onAddChild(id, item.type as ObjectType);
+                          setShowAddMenu(false);
+                        }}
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
             <button
               className="p-0.5 hover:text-cyan-400 transition-colors"
               onClick={(e) => { e.stopPropagation(); handleStartRename(); }}
@@ -168,6 +207,7 @@ function TreeNode({
           onDelete={onDelete}
           onDuplicate={onDuplicate}
           onRename={onRename}
+          onAddChild={onAddChild}
         />
       ))}
     </>
@@ -191,7 +231,6 @@ interface PropPanelProps {
 function PropertyPanel({ obj, onChange, theme = 'dark' }: PropPanelProps) {
   const set = (prop: string, val: unknown) => onChange(obj.id, prop, val);
 
-  // Read categorized properties
   const pos = (obj.properties.Position as { x:number;y:number;z:number }) ?? { x:0, y:0, z:0 };
   const size = (obj.properties.Size as { x:number;y:number;z:number }) ?? { x:4, y:1, z:4 };
   const rot = (obj.properties.Rotation as { x:number;y:number;z:number }) ?? { x:0, y:0, z:0 };
@@ -206,7 +245,6 @@ function PropertyPanel({ obj, onChange, theme = 'dark' }: PropPanelProps) {
   const hasGeom = ['Part','SpawnLocation','Baseplate','NPCModel'].includes(obj.type);
   const hasSource = ['Script','LocalScript','ModuleScript'].includes(obj.type);
 
-  // Sections toggle
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
   const toggleSection = (sec: string) => {
     setCollapsedSections(prev => {
@@ -240,7 +278,6 @@ function PropertyPanel({ obj, onChange, theme = 'dark' }: PropPanelProps) {
 
   return (
     <div className="p-2 font-mono text-[11px] text-gray-300 overflow-y-auto h-full space-y-3">
-      {/* Header */}
       <div className="flex items-center gap-1.5 pb-2 border-b border-[#3c3c3c]">
         {getIcon(obj.type)}
         <span className="font-bold text-white truncate">{obj.name}</span>
@@ -258,7 +295,6 @@ function PropertyPanel({ obj, onChange, theme = 'dark' }: PropPanelProps) {
         </button>
         {!collapsedSections.has('appearance') && (
           <div className="pt-2 space-y-2.5">
-            {/* Color */}
             {obj.properties.Color !== undefined && (
               <div>
                 <div className="text-[9px] uppercase tracking-wider text-gray-500 mb-0.5">Color3</div>
@@ -282,7 +318,6 @@ function PropertyPanel({ obj, onChange, theme = 'dark' }: PropPanelProps) {
               </div>
             )}
 
-            {/* Material */}
             {obj.properties.Material !== undefined && (
               <div>
                 <div className="text-[9px] uppercase tracking-wider text-gray-500 mb-0.5">Material</div>
@@ -298,7 +333,6 @@ function PropertyPanel({ obj, onChange, theme = 'dark' }: PropPanelProps) {
               </div>
             )}
 
-            {/* Transparency */}
             {obj.properties.Transparency !== undefined && (
               <div>
                 <div className="text-[9px] uppercase tracking-wider text-gray-500 mb-0.5">
@@ -332,7 +366,6 @@ function PropertyPanel({ obj, onChange, theme = 'dark' }: PropPanelProps) {
               {obj.type !== 'NPCModel' && <Vec3Row label="Size" val={size} prop="Size" />}
               <Vec3Row label="Rotation" val={rot} prop="Rotation" />
 
-              {/* Shape selector */}
               {obj.type === 'Part' && (
                 <div>
                   <div className="text-[9px] uppercase tracking-wider text-gray-500 mb-0.5">Part Shape</div>
@@ -366,7 +399,6 @@ function PropertyPanel({ obj, onChange, theme = 'dark' }: PropPanelProps) {
           </button>
           {!collapsedSections.has('physics') && (
             <div className="pt-2 space-y-2.5">
-              {/* Anchored toggle */}
               {obj.properties.Anchored !== undefined && (
                 <div className="flex items-center gap-2">
                   <input
@@ -380,7 +412,6 @@ function PropertyPanel({ obj, onChange, theme = 'dark' }: PropPanelProps) {
                 </div>
               )}
 
-              {/* CanCollide toggle */}
               {obj.properties.CanCollide !== undefined && (
                 <div className="flex items-center gap-2">
                   <input
@@ -394,7 +425,6 @@ function PropertyPanel({ obj, onChange, theme = 'dark' }: PropPanelProps) {
                 </div>
               )}
 
-              {/* Velocity */}
               {!anchored && (
                 <Vec3Row label="Velocity Force" val={vel} prop="Velocity" />
               )}
@@ -442,11 +472,12 @@ interface Props {
   onDelete: (id: string) => void;
   onDuplicate: (id: string) => void;
   onPropChange: (id: string, prop: string, val: unknown) => void;
+  onAddChild?: (parentId: string, type: ObjectType) => void;
   theme?: StudioTheme;
 }
 
 export function StudioExplorer({
-  objects, rootIds, selectedId, onSelect, onDelete, onDuplicate, onPropChange, theme = 'dark',
+  objects, rootIds, selectedId, onSelect, onDelete, onDuplicate, onPropChange, onAddChild, theme = 'dark',
 }: Props) {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(() => {
     const s = new Set<string>();
@@ -474,14 +505,21 @@ export function StudioExplorer({
     <div className={`flex flex-col h-full border-r ${
       theme === 'dark' ? 'bg-[#252526] border-[#3c3c3c] text-white' : 'bg-white border-[#ccc] text-black'
     }`}>
-      {/* Explorer Header */}
-      <div className={`px-3 py-2 border-b shrink-0 ${
+      <div className={`px-3 py-2 border-b shrink-0 flex items-center justify-between ${
         theme === 'dark' ? 'bg-[#2d2d30] border-[#3c3c3c]' : 'bg-[#f0f0f0] border-[#ccc]'
       }`}>
         <span className="text-[10px] uppercase tracking-widest text-gray-400 font-mono">Explorer</span>
+        <button
+          onClick={() => {
+            if (onAddChild) onAddChild('Workspace', 'Part');
+          }}
+          className="p-1 hover:bg-white/10 rounded flex items-center gap-1 text-[9px] text-cyan-400 font-mono font-bold"
+          title="Add Part to Workspace"
+        >
+          <Plus className="size-3" /> Part
+        </button>
       </div>
 
-      {/* Tree View */}
       <div className="flex-1 overflow-y-auto min-h-0 py-1" style={{ maxHeight: '55%' }}>
         {rootIds.map(id => (
           <TreeNode
@@ -496,11 +534,11 @@ export function StudioExplorer({
             onDelete={onDelete}
             onDuplicate={onDuplicate}
             onRename={handleRename}
+            onAddChild={onAddChild}
           />
         ))}
       </div>
 
-      {/* Properties Header */}
       <div className={`px-3 py-2 border-y shrink-0 ${
         theme === 'dark' ? 'bg-[#2d2d30] border-[#3c3c3c]' : 'bg-[#f0f0f0] border-[#ccc]'
       }`}>
@@ -508,7 +546,6 @@ export function StudioExplorer({
         {selectedObj && <span className="ml-2 text-[9px] text-[#007acc]">{selectedObj.name}</span>}
       </div>
 
-      {/* Properties list */}
       <div className="flex-1 overflow-y-auto min-h-0">
         {selectedObj
           ? <PropertyPanel obj={selectedObj} onChange={onPropChange} theme={theme} />

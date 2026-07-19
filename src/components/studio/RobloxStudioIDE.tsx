@@ -298,6 +298,28 @@ export function RobloxStudioIDE({ onClose, initialTemplate = 't-classic' }: Prop
     setRunState('running');
     setShowOutput(true);
     addOutput({ kind: 'info', text: '▶ Virtual server engine started. Luau scripts initializing...' });
+  }, [addOutput]);
+
+  const handleStop = useCallback(() => {
+    for (const h of stopFnRefs.current) h.stop();
+    stopFnRefs.current = [];
+    setRunState('stopped');
+    addOutput({ kind: 'info', text: '⏹ Game emulation closed.' });
+  }, [addOutput]);
+
+  const scriptSourcesHash = useMemo(() => {
+    return Array.from(objects.values())
+      .filter(o => ['Script', 'LocalScript'].includes(o.type))
+      .map(o => `${o.id}:${o.properties.Source ?? ''}`)
+      .join('|||');
+  }, [objects]);
+
+  useEffect(() => {
+    if (runState !== 'running') return;
+
+    // Stop previous runner handles
+    for (const h of stopFnRefs.current) h.stop();
+    stopFnRefs.current = [];
 
     const scripts = Array.from(objects.values()).filter(
       o => ['Script', 'LocalScript'].includes(o.type) && o.properties.Source
@@ -335,14 +357,9 @@ export function RobloxStudioIDE({ onClose, initialTemplate = 't-classic' }: Prop
       });
       stopFnRefs.current.push(handle);
     }
-  }, [objects, getObjects, setProperty, addOutput]);
-
-  const handleStop = useCallback(() => {
-    for (const h of stopFnRefs.current) h.stop();
-    stopFnRefs.current = [];
-    setRunState('stopped');
-    addOutput({ kind: 'info', text: '⏹ Game emulation closed.' });
-  }, [addOutput]);
+    addOutput({ kind: 'info', text: '⚡ Live Script Hot-Reloaded successfully.' });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scriptSourcesHash, runState]);
 
   const handleCommandExecute = useCallback((commandLine: string) => {
     addOutput({ kind: 'info', text: `Command Run: ${commandLine}` });
@@ -430,6 +447,47 @@ export function RobloxStudioIDE({ onClose, initialTemplate = 't-classic' }: Prop
       return map;
     });
   }, []);
+
+  const handleAddChild = useCallback((parentId: string, type: ObjectType) => {
+    setObjects(prev => {
+      const map = new Map(prev);
+      const parent = map.get(parentId);
+      if (!parent) return prev;
+
+      const newId = makeId();
+      const count = Array.from(map.values()).filter(o => o.type === type).length;
+
+      const newObj: StudioObject = {
+        id: newId,
+        type,
+        name: `${type}${count > 0 ? String(count + 1) : ''}`,
+        parentId,
+        properties: type === 'Script' ? {
+          Source: `-- Custom Child Script\nlocal part = script.Parent\nwhile true do\n  print("Child script running!")\n  task.wait(2)\nend\n`,
+        } : type === 'PointLight' ? {
+          Color: { r: 1, g: 0.9, b: 0.8 },
+          Brightness: 5,
+          Range: 16,
+          Position: { x: 0, y: 4, z: 0 },
+        } : {
+          Size: { x: 4, y: 4, z: 4 },
+          Position: { x: 0, y: 2, z: 0 },
+          Color: { r: 0.5, g: 0.5, b: 0.5 },
+          Material: 'SmoothPlastic',
+          Anchored: true,
+          CanCollide: true,
+          Transparency: 0,
+        },
+        children: [],
+      };
+
+      map.set(newId, newObj);
+      map.set(parentId, { ...parent, children: [...parent.children, newId] });
+      setSelectedId(newId);
+      addOutput({ kind: 'info', text: `Added child: ${newObj.name} under ${parent.name}` });
+      return map;
+    });
+  }, [addOutput]);
 
   const handleAddPreset = useCallback((preset: Preset) => {
     const isScript = ['Script', 'LocalScript', 'ModuleScript'].includes(preset.type);
@@ -578,6 +636,8 @@ export function RobloxStudioIDE({ onClose, initialTemplate = 't-classic' }: Prop
               onSelect={setSelectedId}
               isRunning={runState === 'running'}
               timeOfDay={timeOfDay}
+              activeTool={activeTool}
+              onUpdateProperty={setProperty}
             />
           </div>
 
@@ -621,6 +681,7 @@ export function RobloxStudioIDE({ onClose, initialTemplate = 't-classic' }: Prop
                     onDelete={handleDelete}
                     onDuplicate={handleDuplicate}
                     onPropChange={setProperty}
+                    onAddChild={handleAddChild}
                   />
                 )}
                 {mobilePanel === 'toolbox' && (
@@ -653,6 +714,7 @@ export function RobloxStudioIDE({ onClose, initialTemplate = 't-classic' }: Prop
                 onDelete={handleDelete}
                 onDuplicate={handleDuplicate}
                 onPropChange={setProperty}
+                onAddChild={handleAddChild}
               />
             </div>
 
@@ -665,6 +727,8 @@ export function RobloxStudioIDE({ onClose, initialTemplate = 't-classic' }: Prop
                   onSelect={setSelectedId}
                   isRunning={runState === 'running'}
                   timeOfDay={timeOfDay}
+                  activeTool={activeTool}
+                  onUpdateProperty={setProperty}
                 />
               </div>
 
