@@ -569,10 +569,11 @@ export function MusicPlayer({ isMenuOpen }: { isMenuOpen: boolean }) {
 
             {/* Search Input */}
             <div className="p-3 border-b border-white/10 flex items-center gap-2">
-              <Search className="w-4 h-4 text-white/50" />
+              <Search className="w-4 h-4 text-white/50" aria-hidden="true" />
               <input
                 type="text"
                 placeholder={t("music.search")}
+                aria-label={t("music.search")}
                 value={search}
                 onChange={(e) => handleSearch(e.target.value)}
                 onKeyDown={handleKeyDown}

@@ -239,18 +239,18 @@ export const Philosophy = memo(function Philosophy() {
 
                   {/* Step Text details */}
                   <div className="flex-1">
-                    <span className="text-[10px] font-mono tracking-widest text-white/40 font-bold uppercase block mb-1">
+                    <span className="text-[10px] font-mono tracking-widest text-white/60 font-bold uppercase block mb-1">
                       {step.tag}
                     </span>
-                    <h4 className="font-display text-2xl md:text-3xl uppercase tracking-tight text-white group-hover:text-accent transition-colors">
+                    <h3 className="font-display text-2xl md:text-3xl uppercase tracking-tight text-white group-hover:text-accent transition-colors">
                       {step.title}
-                    </h4>
+                    </h3>
                   </div>
 
                   {/* Chevron helper */}
                   <ChevronRight
                     className={`w-5 h-5 transition-transform duration-400 ${
-                      isActive ? "text-accent translate-x-0" : "text-white/40 group-hover:translate-x-2 group-hover:text-accent"
+                      isActive ? "text-accent translate-x-0" : "text-white/60 group-hover:translate-x-2 group-hover:text-accent"
                     }`}
                   />
                 </button>
@@ -488,7 +488,7 @@ export const Philosophy = memo(function Philosophy() {
 
                   {/* Simulated Terminal Output for tests */}
                   <div className="flex-1 bg-[#0a090c] rounded-lg p-5 font-mono text-[12px] text-left text-emerald-400 space-y-2 overflow-hidden max-h-[180px] border border-emerald-500/30 relative shadow-[inset_0_0_20px_rgba(16,185,129,0.05)]">
-                    <div className="absolute top-2 right-4 text-[9px] font-bold text-white/40 animate-pulse bg-emerald-500/20 px-2 py-1 rounded">RUNNING</div>
+                    <div className="absolute top-2 right-4 text-[9px] font-bold text-white/60 animate-pulse bg-emerald-500/20 px-2 py-1 rounded">RUNNING</div>
 
                     <div className="flex items-center gap-3 font-bold">
                       <span className="text-emerald-500 text-lg">✓</span>

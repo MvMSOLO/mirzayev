@@ -139,13 +139,13 @@ export const About = memo(function About() {
 
         {/* Text content */}
         <div className="space-y-8 relative z-10">
-          <h3 className="text-2xl md:text-3xl lg:text-4xl leading-snug font-display tracking-tight text-white drop-shadow-md">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl leading-snug font-display tracking-tight text-white drop-shadow-md">
             <WordReveal text={t("about.p1_pre")} sound />
             <span className="text-accent inline-block mx-2 drop-shadow-[0_0_15px_rgba(255,69,0,0.6)]">
               <WordReveal text="Avazbek Mirzayev" delay={0.2} />
             </span>
             <WordReveal text={t("about.p1_post")} delay={0.4} />
-          </h3>
+          </h2>
 
           <p className="text-base md:text-lg text-white/75 leading-[1.8] font-sans font-light">
             <WordReveal text={t("about.p2")} delay={0.6} />
@@ -204,12 +204,12 @@ export const About = memo(function About() {
                       ACTIVE
                     </span>
                   </div>
-                  <h4 className="font-display text-lg uppercase tracking-wider text-white group-hover:text-[var(--cyan)] transition-colors duration-300 mb-1.5 relative z-10 flex items-center gap-2">
+                  <h3 className="font-display text-lg uppercase tracking-wider text-white group-hover:text-[var(--cyan)] transition-colors duration-300 mb-1.5 relative z-10 flex items-center gap-2">
                     <span className="text-[var(--cyan)]/50 group-hover:text-[var(--cyan)] transition-colors duration-300">{nodeIcons[node.id]}</span>
                     {node.title[lang]}
-                  </h4>
-                  <p className="font-mono text-[10px] text-white/38 mb-3 font-semibold relative z-10">{node.subtitle[lang]}</p>
-                  <p className="text-xs text-white/48 leading-[1.7] group-hover:text-white/90 transition-colors duration-300 relative z-10 font-sans">
+                  </h3>
+                  <p className="font-mono text-[10px] text-white/60 mb-3 font-semibold relative z-10">{node.subtitle[lang]}</p>
+                  <p className="text-xs text-white/70 leading-[1.7] group-hover:text-white/90 transition-colors duration-300 relative z-10 font-sans">
                     {node.desc[lang]}
                   </p>
                 </motion.div>
@@ -262,7 +262,7 @@ export const About = memo(function About() {
             {/* Divider line */}
             <div className="h-px w-0 group-hover:w-full bg-gradient-to-r from-accent/60 to-transparent transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] mb-3 relative z-10" />
 
-            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-white/40 font-bold relative z-10 group-hover:text-white/80 transition-colors duration-400">
+            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-white/60 font-bold relative z-10 group-hover:text-white/80 transition-colors duration-400">
               {s.k}
             </p>
           </motion.div>
