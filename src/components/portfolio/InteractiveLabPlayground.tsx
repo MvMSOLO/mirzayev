@@ -333,6 +333,15 @@ export function InteractiveLabPlayground() {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
+    let visible = true;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+      },
+      { threshold: 0 }
+    );
+    io.observe(canvas);
+
     // Initialize preset state
     presetStateRef.current = {};
     const mouse = mouseRef.current;
@@ -557,6 +566,10 @@ export function InteractiveLabPlayground() {
 
     // --- ANIMATION LOOP RENDER ---
     const tick = () => {
+      if (!visible) {
+        animationFrameRef.current = requestAnimationFrame(tick);
+        return;
+      }
       // Clear canvas with trace/decay effect for satisfy motion blur
       ctx.fillStyle = "rgba(10, 10, 10, 0.22)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1295,6 +1308,7 @@ export function InteractiveLabPlayground() {
 
     return () => {
       window.removeEventListener("resize", resizeCanvas);
+      io.disconnect();
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
@@ -1543,6 +1557,7 @@ export function InteractiveLabPlayground() {
                   step="0.05"
                   value={attack}
                   onChange={(e) => setAttack(parseFloat(e.target.value))}
+                  aria-label="Attack time in seconds"
                   className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent"
                 />
               </div>
@@ -1559,6 +1574,7 @@ export function InteractiveLabPlayground() {
                   step="0.05"
                   value={decay}
                   onChange={(e) => setDecay(parseFloat(e.target.value))}
+                  aria-label="Decay time in seconds"
                   className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent"
                 />
               </div>
@@ -1575,6 +1591,7 @@ export function InteractiveLabPlayground() {
                   step="0.05"
                   value={sustain}
                   onChange={(e) => setSustain(parseFloat(e.target.value))}
+                  aria-label="Sustain level percentage"
                   className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent"
                 />
               </div>
@@ -1591,6 +1608,7 @@ export function InteractiveLabPlayground() {
                   step="0.05"
                   value={release}
                   onChange={(e) => setRelease(parseFloat(e.target.value))}
+                  aria-label="Release time in seconds"
                   className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent"
                 />
               </div>
@@ -1616,6 +1634,7 @@ export function InteractiveLabPlayground() {
                     step="0.5"
                     value={lfoRate}
                     onChange={(e) => setLfoRate(parseFloat(e.target.value))}
+                    aria-label="LFO Rate in Hertz"
                     className="w-16 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent"
                   />
                 </div>
@@ -1628,6 +1647,7 @@ export function InteractiveLabPlayground() {
                     step="5"
                     value={lfoDepth}
                     onChange={(e) => setLfoDepth(parseInt(e.target.value))}
+                    aria-label="LFO Depth percentage"
                     className="w-16 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent"
                   />
                 </div>

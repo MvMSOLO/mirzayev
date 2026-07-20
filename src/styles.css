@@ -302,8 +302,8 @@
 /* ===================== SLIDE UP FAST ===================== */
 @keyframes slide-up-fast {
   /* Offset +29% (14→18px) and duration +26% (0.38→0.48s) for a more visible scroll-reveal cascade. */
-  from { opacity: 0; transform: translateY(18px); filter: blur(4px); }
-  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 @utility animate-slide-up-fast {
   animation: slide-up-fast 0.48s var(--ease-out-expo) forwards;
@@ -321,8 +321,8 @@
 /* ===================== CARD ENTER 3D ===================== */
 @keyframes card-enter {
   /* Offset +33% (18→24px) and duration +25% (0.48→0.6s): cards settle in with more presence. */
-  from { opacity: 0; transform: perspective(600px) rotateX(14deg) translateY(24px) scale(0.95); filter: blur(6px); }
-  to { opacity: 1; transform: perspective(600px) rotateX(0deg) translateY(0) scale(1); filter: blur(0); }
+  from { opacity: 0; transform: perspective(600px) rotateX(14deg) translateY(24px) scale(0.95); }
+  to { opacity: 1; transform: perspective(600px) rotateX(0deg) translateY(0) scale(1); }
 }
 @utility animate-card-enter {
   animation: card-enter 0.6s var(--ease-out-expo) forwards;
@@ -927,12 +927,10 @@ html, body {
   from {
     opacity: 0;
     transform: translateY(40px) scale(0.96);
-    filter: blur(8px);
   }
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
-    filter: blur(0px);
   }
 }
 @utility animate-scroll-appear {

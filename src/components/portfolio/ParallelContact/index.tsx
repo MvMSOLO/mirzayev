@@ -200,6 +200,7 @@ export function ParallelContact() {
                   <input
                     value={values[f.key] || ""}
                     onChange={(e) => setValues({ ...values, [f.key]: e.target.value })}
+                    aria-label={f.label[lang]}
                     className={`w-full bg-transparent border-0 text-2xl md:text-3xl focus:outline-none ${portal.id === "secret" ? "font-mono" : "font-display"}`}
                     style={{ color: portal.accent }}
                     placeholder={portal.id === "secret" ? "████ ████" : "..."}
@@ -214,6 +215,7 @@ export function ParallelContact() {
                   value={values.contact || ""}
                   onChange={(e) => setValues({ ...values, contact: e.target.value })}
                   type="email"
+                  aria-label={lang === "uz" ? "SIGNAL / EMAIL" : "SIGNAL / EMAIL"}
                   className="w-full bg-transparent border-0 text-2xl md:text-3xl focus:outline-none font-mono"
                   style={{ color: portal.accent }}
                   placeholder="you@planet.earth"

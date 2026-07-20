@@ -406,6 +406,7 @@ export const Hero = memo(function Hero() {
                   step="1"
                   value={cpuLoad}
                   onChange={(e) => handleSliderChange(parseInt(e.target.value))}
+                  aria-label="CPU Overclock core frequency slider"
                   className="w-full h-2 bg-black/50 border border-white/10 rounded-lg appearance-none cursor-pointer accent-accent relative z-10"
                 />
               </div>
