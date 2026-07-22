@@ -16,11 +16,11 @@ export function useLenis() {
     gsap.registerPlugin(ScrollTrigger);
 
     const lenis = new Lenis({
-      duration: 0.82,
+      duration: 0.55,          // 0.82 dan kamaytirish: footer tezroq
       smoothWheel: true,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // expo ease out
-      touchMultiplier: 2.4,
-      wheelMultiplier: 1.1,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      touchMultiplier: 3.8,    // mobil uchun ancha tez
+      wheelMultiplier: 1.8,    // mouse wheel ham tez
       infinite: false,
     });
 
