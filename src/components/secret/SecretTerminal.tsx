@@ -8,7 +8,8 @@ import { useNavigate } from "@tanstack/react-router";
 
 interface SecretTerminalProps {
   onGipnos: () => void;
-  onRobloxStudio: () => void;
+  onRobloxStudio?: () => void;
+  onScripts: () => void;
 }
 
 type Line = { kind: "in" | "out" | "err" | "ok"; text: string };
@@ -45,6 +46,7 @@ const KNOWN_COMMANDS = [
   "gipnos",
   "zen",
   "robloxstudio",
+  "scripts",
   "exit",
   "close",
 ];
@@ -62,7 +64,7 @@ function scrollTo(id: string) {
   return false;
 }
 
-export function SecretTerminal({ onGipnos, onRobloxStudio }: SecretTerminalProps) {
+export function SecretTerminal({ onGipnos, onRobloxStudio, onScripts }: SecretTerminalProps) {
   const { lang, setLang } = useLang();
   const { mode, enter, exit, phase } = useUniverse();
   const { play, playClick, playOpen, playClose, toggleMute, isMuted } = useSound();
@@ -168,8 +170,8 @@ export function SecretTerminal({ onGipnos, onRobloxStudio }: SecretTerminalProps
           playClick();
           print(
             lang === "uz"
-              ? "help · clear · whoami · about · skills · social · contact · date · mode [kinetic|creative] · lang [uz|en] · mute · ls · cd <bo'lim> · matrix · gipnos · exit"
-              : "help · clear · whoami · about · skills · social · contact · date · mode [kinetic|creative] · lang [uz|en] · mute · ls · cd <section> · matrix · gipnos · exit",
+              ? "help · clear · whoami · about · skills · social · contact · date · mode [kinetic|creative] · lang [uz|en] · mute · ls · cd <bo'lim> · matrix · gipnos · scripts · exit"
+              : "help · clear · whoami · about · skills · social · contact · date · mode [kinetic|creative] · lang [uz|en] · mute · ls · cd <section> · matrix · gipnos · scripts · exit",
           );
           break;
         }
@@ -322,6 +324,22 @@ export function SecretTerminal({ onGipnos, onRobloxStudio }: SecretTerminalProps
           setTimeout(() => setShowMatrix(false), 4200);
           break;
         }
+        case "scripts":
+        case "script":
+        case "hub": {
+          play("scan");
+          print(
+            lang === "uz"
+              ? "→ Scripts Hub yuklanmoqda... 📱 Delta uchun 1000+ script"
+              : "→ Loading Scripts Hub... 📱 1000+ scripts for Delta",
+            "ok",
+          );
+          setTimeout(() => {
+            onScripts();
+            setOpen(false);
+          }, 500);
+          break;
+        }
         case "robloxstudio": {
           play("scan");
           print(
@@ -413,6 +431,7 @@ export function SecretTerminal({ onGipnos, onRobloxStudio }: SecretTerminalProps
       closeTerminal,
       onGipnos,
       onRobloxStudio,
+      onScripts,
       print,
     ],
   );
